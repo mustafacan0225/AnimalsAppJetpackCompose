@@ -47,6 +47,16 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    productFlavors {
+        create("dev") {
+            applicationId = "com.mustafacan.basecompose.dev"
+        }
+
+        create("prod") {
+            applicationId = "com.mustafacan.basecompose"
+        }
+    }
 }
 
 dependencies {
