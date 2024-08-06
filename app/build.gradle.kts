@@ -48,6 +48,7 @@ android {
         }
     }
 
+    flavorDimensions += "default"
     productFlavors {
         create("dev") {
             applicationId = "com.mustafacan.basecompose.dev"
@@ -60,7 +61,7 @@ android {
 }
 
 dependencies {
-
+    implementation(project(mapOf("path" to ":domain")))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
