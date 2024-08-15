@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
 }
 
@@ -32,16 +33,21 @@ android {
         jvmTarget = "1.8"
     }
 
+    flavorDimensions += "default"
     productFlavors {
         create("dev") {
-            buildConfigField("String", "BASE_API_URL", "https://freetestapi.com/api/v1/")
+            buildConfigField("String", "BASE_API_URL", project.properties["API_URL_DEV"].toString())
 
         }
 
         create("prod") {
-            buildConfigField("String", "BASE_API_URL", "https://freetestapi.com/api/v1/")
+            buildConfigField("String", "BASE_API_URL", project.properties["API_URL_PROD"].toString())
 
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
 }
@@ -57,7 +63,7 @@ dependencies {
 
     //hilt
     implementation(libs.hilt)
-    implementation(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
 
     //retrofit
     implementation(libs.retrofit)
@@ -66,3 +72,8 @@ dependencies {
     //logging-interceptor
     implementation(libs.logging.interceptor)
 }
+
+// Allow references to generated code
+/*kapt {
+    correctErrorTypes = true
+}*/

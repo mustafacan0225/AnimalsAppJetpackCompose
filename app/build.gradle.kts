@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -51,11 +53,11 @@ android {
     flavorDimensions += "default"
     productFlavors {
         create("dev") {
-            applicationId = "com.mustafacan.basecompose.dev"
+            applicationId = "com.mustafacan.animalsapp.dev"
         }
 
         create("prod") {
-            applicationId = "com.mustafacan.basecompose"
+            applicationId = "com.mustafacan.animalsapp"
         }
     }
 }
@@ -78,4 +80,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }
