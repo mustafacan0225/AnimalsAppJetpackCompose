@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mustafacan.animalsapp.ui.components.shimmer.sampleShimmerLayouts
 import com.mustafacan.animalsapp.ui.components.toolbar.Toolbar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +33,10 @@ fun BirdsScreen() {
         Toolbar(title = "Animals App - Birds")
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(15.dp),
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -48,6 +54,8 @@ fun BirdsScreen() {
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
                 textAlign = TextAlign.Center
             )
+
+            sampleShimmerLayouts()
         }
     }
 
