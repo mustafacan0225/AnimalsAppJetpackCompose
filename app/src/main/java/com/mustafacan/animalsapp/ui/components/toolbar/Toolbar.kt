@@ -1,18 +1,15 @@
-package com.mustafacan.animalsapp.ui.toolbar
+package com.mustafacan.animalsapp.ui.components.toolbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,23 +64,28 @@ fun Toolbar(
         },
         actions = {
             actionList?.forEach { action ->
-                if (action.imageVector == Icons.Filled.Notifications) {
+                val actionWithBadge = action as? ToolbarAction.WithBadge
+                if (actionWithBadge != null) {
                     Box(modifier = Modifier.padding(12.dp)) {
                         IconButton(onClick = { action.onAction() }) {
                             Icon(
-                                modifier = Modifier.size(42.dp),
+                                //modifier = Modifier.size(42.dp),
                                 imageVector = action.imageVector,
                                 contentDescription = "",
                             )
                         }
-                        Badge(
-                            modifier = Modifier
-                                .border(1.dp, color = Color.White, shape = CircleShape)
-                                .align(Alignment.TopEnd)
-                                .clip(CircleShape)
-                        ) {
-                            Text(text = "5")
+
+                        if (actionWithBadge?.badgeValue?.value?: 0 > 0) {
+                            Badge(
+                                modifier = Modifier
+                                    .border(1.dp, color = Color.White, shape = CircleShape)
+                                    .align(Alignment.TopEnd)
+                                    .clip(CircleShape)
+                            ) {
+                                Text(text = "${actionWithBadge?.badgeValue?.value?: 0}")
+                            }
                         }
+
                     }
                 } else {
                     IconButton(onClick = { action.onAction() }) {

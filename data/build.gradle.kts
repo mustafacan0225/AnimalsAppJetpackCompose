@@ -71,6 +71,9 @@ dependencies {
 
     //logging-interceptor
     implementation(libs.logging.interceptor)
+
+    //moshi-kotlin
+    implementation(libs.moshi.kotlin)
 }
 
 // Allow references to generated code
