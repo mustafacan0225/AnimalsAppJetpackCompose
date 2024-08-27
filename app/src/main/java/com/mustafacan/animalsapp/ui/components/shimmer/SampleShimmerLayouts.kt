@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+
+
 @Composable
 fun sampleShimmerLayouts() {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -35,7 +37,8 @@ fun sampleShimmerLayouts() {
             repeat(10) {
                 ShimmerEffect(
                     modifier = Modifier
-                        .size(60.dp).padding(5.dp)
+                        .size(60.dp)
+                        .padding(5.dp)
                         .background(Color.LightGray, RoundedCornerShape(50)),
                     durationMillis = 1000
                 )

@@ -1,6 +1,10 @@
 package com.mustafacan.data.di
 
 import android.content.Context
+import com.mustafacan.data.BuildConfig
+import com.mustafacan.data.remote.api.BirdsServices
+import com.mustafacan.data.remote.api.CatsServices
+import com.mustafacan.data.remote.api.DogsServices
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -27,7 +31,7 @@ object ApiModule {
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return loggingInterceptor
     }
 
@@ -55,7 +59,7 @@ object ApiModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(/*BuildConfig.BASE_URL*/ "YOUR_BASE_URL")
+            .baseUrl(BuildConfig.BASE_API_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -69,10 +73,22 @@ object ApiModule {
             .build()
     }
 
-    /*@Provides
+    @Provides
     @Singleton
-    fun provideService(retrofit: Retrofit): OddHistoryService {
-        return retrofit.create(OddHistoryService::class.java)
-    }*/
+    fun provideCatsService(retrofit: Retrofit): CatsServices {
+        return retrofit.create(CatsServices::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDogsService(retrofit: Retrofit): DogsServices {
+        return retrofit.create(DogsServices::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBirdsService(retrofit: Retrofit): BirdsServices {
+        return retrofit.create(BirdsServices::class.java)
+    }
 
 }

@@ -3,4 +3,7 @@
     <string name="bottom_menu_title_dogs">Dogs</string>
     <string name="bottom_menu_title_cats">Cats</string>
     <string name="bottom_menu_title_birds">Birds</string>
+    <string name="retry">Retry</string>
+    <string name="empty">No data found to display</string>
+    <string name="error_message">An error occurred</string>
 </resources>
