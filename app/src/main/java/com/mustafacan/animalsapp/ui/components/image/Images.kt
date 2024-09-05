@@ -14,7 +14,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.mustafacan.animalsapp.R
+
 
 @Composable
 fun LoadCircleImage(url: String) {
@@ -25,7 +29,7 @@ fun LoadCircleImage(url: String) {
         error = painterResource(id = R.drawable.loading),
         contentDescription = "",
         alignment = Alignment.Center,
-        contentScale = ContentScale.FillBounds
+        contentScale = ContentScale.Crop
     )
 }
 
@@ -38,5 +42,18 @@ fun LoadImage(url: String) {
         error = painterResource(id = R.drawable.loading),
         contentDescription = "",
         alignment = Alignment.Center,
+    )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadCircleImageGlide(url: String) {
+    GlideImage(modifier = Modifier.size(80.dp)
+        .clip(CircleShape),
+        model = url,
+        loading = placeholder(R.drawable.imgloading),
+        contentDescription = "",
+        alignment = Alignment.Center,
+        contentScale = ContentScale.FillBounds
     )
 }

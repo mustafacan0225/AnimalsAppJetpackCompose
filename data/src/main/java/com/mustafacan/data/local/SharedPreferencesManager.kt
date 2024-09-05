@@ -2,9 +2,10 @@ package com.mustafacan.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.squareup.moshi.Moshi
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class SharedPreferencesManager(context: Context, val moshi: Moshi) {
+class SharedPreferencesManager(context: Context) {
 
     private var sharedPreferences: SharedPreferences
 
@@ -40,16 +41,53 @@ class SharedPreferencesManager(context: Context, val moshi: Moshi) {
     fun getValueLong(key: String): Long = sharedPreferences.getLong(key, 0)
     fun getValueInt(key: String): Int = sharedPreferences.getInt(key, 0)
 
-    inline fun <reified T : Any> getValueModel(key: String): T? {
-        getValueString(key)?.let {
-            return moshi.adapter(T::class.java).fromJson(it)
-        }
-        return null
+    inline fun <reified T> saveModel(key: String, item: T) {
+        try {
+            setValue(key, Gson().toJson(item))
+        } catch (e: Exception) {}
+
     }
 
-    inline fun < reified T : Any> saveModel(key: String, model: T) {
-        val jsonData: String = moshi.adapter(T::class.java).toJson(model)
-        setValue(key,jsonData)
+    inline fun <reified T> getModel(key: String): T? {
+        try {
+            val type = object : TypeToken<T>() {}.type
+            return Gson().fromJson(getValueString(key), type)
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    inline fun <reified T> addItemToList(key: String, item: T) {
+        try {
+            val savedList = getList<T>(key).toMutableList()
+            savedList.add(item)
+            setValue(key, Gson().toJson(savedList))
+        } catch (e: Exception) {}
+
+    }
+
+    inline fun <reified T> removeItemFromList(key: String, item: T) {
+        try {
+            val savedList = getList<T>(key).toMutableList()
+            savedList.remove(item)
+            setValue(key, Gson().toJson(savedList))
+        } catch (e: Exception) {}
+
+    }
+
+    fun <T> putList(key: String, list: List<T>) {
+        try {
+            saveModel(key, Gson().toJson(list))
+        } catch (e: Exception) {}
+    }
+
+    inline fun <reified T> getList(key: String): List<T> {
+        val listJson = getValueString(key)
+        if (!listJson.isNullOrBlank()) {
+            val type = object : TypeToken<List<T>>() {}.type
+            return Gson().fromJson(listJson, type)
+        }
+        return listOf()
     }
 
 }

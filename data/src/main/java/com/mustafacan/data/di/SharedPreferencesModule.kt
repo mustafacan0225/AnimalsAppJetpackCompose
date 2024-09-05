@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object SharedPreferencesModule {
     @Singleton
     @Provides
-    fun provideSharedPreferences(@ApplicationContext context: Context, moshi: Moshi): SharedPreferencesManager {
-        return SharedPreferencesManager(context, moshi)
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferencesManager {
+        return SharedPreferencesManager(context)
     }
 }

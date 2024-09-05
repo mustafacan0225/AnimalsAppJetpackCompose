@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.plugin.parcelize)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
 
@@ -51,6 +52,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.google.code.gson)
+
+    implementation(libs.kotlinx.serialization.json)
 
     //hilt
     implementation(libs.hilt)

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
 }
@@ -85,7 +86,9 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)
 
     implementation(libs.coil)
+    implementation(libs.glide)
 }

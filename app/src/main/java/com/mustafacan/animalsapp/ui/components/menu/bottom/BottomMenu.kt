@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mustafacan.animalsapp.R
@@ -35,15 +37,14 @@ fun BottomMenu(
         //cutoutShape = RoundedCornerShape(50)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+        val currentDestination = navBackStackEntry?.destination
 
         items.forEachIndexed { index, item ->
-            val route = item.route
-            val context = LocalContext.current
-            NavigationBarItem(selected = currentRoute?.contains(item.route)?: false,
+
+            NavigationBarItem(selected = currentDestination?.hierarchy?.any { it.hasRoute(item::class) } == true,
                 label = { Text(text = stringResource(id = item.titleResource), maxLines = 1) },
                 onClick = {
-                    navController.navigate(item.route) {
+                    navController.navigate(item) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }

@@ -29,7 +29,6 @@ class BirdsViewModel @Inject constructor(private val getBirdsUseCase: GetBirdsUs
                         Log.d("response", "birds api request error: " + result.exception.errorMessage)
                     }
 
-                    else -> {}
                 }
 
             }

@@ -10,6 +10,7 @@ import com.mustafacan.domain.usecase.cats.GetCatsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
@@ -17,6 +18,15 @@ class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
     init {
         Log.d("initVM", "initVM CatsViewModel")
         getCats()
+        getLocalCats()
+    }
+
+    var catList: List<Cat> = listOf()
+
+    fun getLocalCats() {
+        localDataSource.getCat()?.let {
+            Log.d("localcat:", it.name + " - " + it.origin)
+        }
     }
 
     fun getCats() {
@@ -24,14 +34,15 @@ class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
             getCatsUseCase.runUseCase { result ->
                 when(result) {
                     is ApiResponse.Success<List<Cat>> -> {
+                        catList = result.data
                         Log.d("response", "cat count: " + result.data.size.toString())
+                        localDataSource.saveCat(result.data.get(2))
                     }
 
                     is ApiResponse.Error<List<Cat>> -> {
                         Log.d("response", "cats api request error: " + result.exception.errorMessage)
                     }
 
-                    else -> {}
                 }
 
             }
@@ -40,10 +51,12 @@ class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
 
     fun incrementCounter() {
         localDataSource.setTest(localDataSource.getTest() + 1)
+        localDataSource.addCat(catList.get(Random.nextInt(0,30)))
     }
 
     fun decrementCounter() {
         localDataSource.setTest(localDataSource.getTest() - 1)
+        println(localDataSource.getCats())
     }
 
     /*var counter = localDataSource.getTestFlow()

@@ -16,18 +16,18 @@ fun NavigationMain(
 
     NavHost(
         navController = navController,
-        startDestination = NavDestinationItem.Dogs.route
+        startDestination = NavDestinationItem.Dogs
     ) {
 
-        composable(NavDestinationItem.Dogs.route) {
+        composable<NavDestinationItem.Dogs> {
             NavigationDogs()
         }
 
-        composable(NavDestinationItem.Cats.route) {
+        composable<NavDestinationItem.Cats> {
             CatsScreen()
         }
 
-        composable(NavDestinationItem.Birds.route) {
+        composable<NavDestinationItem.Birds> {
             BirdsScreen()
         }
 

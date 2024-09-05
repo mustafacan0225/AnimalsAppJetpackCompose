@@ -42,15 +42,10 @@ object ApiModule {
         @ApplicationContext context: Context
     ): OkHttpClient {
 
-
-        //val sslPinning: SSLPinning = SSLPinningImpl()
-        //sslPinning.initSSLWithCertificate(context,R.raw.)
-
         return OkHttpClient.Builder()
             .connectTimeout(CLIENT_TIME_OUT, TimeUnit.SECONDS)
             .readTimeout(CLIENT_TIME_OUT, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
-            //.sslSocketFactory(sslPinning.getSSLSocketFactory(),sslPinning.getTrustManager())
             .addInterceptor(loggingInterceptor)
             .build()
     }

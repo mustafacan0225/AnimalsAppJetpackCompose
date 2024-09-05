@@ -22,10 +22,12 @@ import com.mustafacan.animalsapp.ui.components.toolbar.ToolbarAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DogDetailScreen(navController: NavController) {
-    val viewModel = hiltViewModel<DogDetailViewModel>()
-    var counter = viewModel.localDataSource.getTestFlow().collectAsState(initial = 0)
-    val actionList = listOf(ToolbarAction.Favorites(action = { Log.d("action", "Clicked Favorites") }, badge = counter))
+fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel) {
+    println("dog id: " + viewModel.dog?.name)
+    /* var counter = viewModel.localDataSource.getTestFlow().collectAsState(initial = 0)
+    val actionList = listOf(ToolbarAction.Favorites(action = { Log.d("action", "Clicked Favorites") }, badge = counter))*/
+    val actionList =
+        listOf(ToolbarAction.OpenSettings(action = {  }))
     Column(
         Modifier
             .fillMaxWidth()
