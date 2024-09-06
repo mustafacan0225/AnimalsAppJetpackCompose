@@ -1,15 +1,12 @@
 package com.mustafacan.animalsapp.ui.components.image
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -22,14 +19,15 @@ import com.mustafacan.animalsapp.R
 
 @Composable
 fun LoadCircleImage(url: String) {
-    AsyncImage(modifier = Modifier.size(80.dp)
+    AsyncImage(modifier = Modifier
+        .size(80.dp)
         .clip(CircleShape),
         model = url,
-        placeholder = painterResource(id = R.drawable.loading),
-        error = painterResource(id = R.drawable.loading),
+        placeholder = painterResource(id = R.drawable.loadingimage),
+        error = painterResource(id = R.drawable.loadingimage),
         contentDescription = "",
         alignment = Alignment.Center,
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.FillBounds
     )
 }
 
@@ -48,12 +46,12 @@ fun LoadImage(url: String) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun LoadCircleImageGlide(url: String) {
-    GlideImage(modifier = Modifier.size(80.dp)
+    GlideImage(modifier = Modifier.wrapContentSize()
         .clip(CircleShape),
         model = url,
         loading = placeholder(R.drawable.imgloading),
         contentDescription = "",
         alignment = Alignment.Center,
-        contentScale = ContentScale.FillBounds
+        contentScale = ContentScale.FillBounds,
     )
 }

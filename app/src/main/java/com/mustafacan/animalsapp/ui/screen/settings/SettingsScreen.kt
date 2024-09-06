@@ -27,7 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,20 +43,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mustafacan.animalsapp.R
+import com.mustafacan.animalsapp.ui.model.enums.SearchType
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForSettings
-import com.mustafacan.animalsapp.ui.screen.dogs.DogsScreenReducer
 
 @Composable
 fun SettingsScreenWithPopup(
     currentViewTypeForList: ViewTypeForList,
     currentViewTypeForSettings: ViewTypeForSettings,
-    saveSettings: (ViewTypeForList, ViewTypeForSettings) -> Unit,
+    currentSearchType: SearchType,
+    saveSettings: (ViewTypeForList, ViewTypeForSettings, SearchType) -> Unit,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismiss() }
     ) {
-        SettingsContent(currentViewTypeForList, currentViewTypeForSettings, saveSettings, onDismiss)
+        SettingsContent(currentViewTypeForList, currentViewTypeForSettings, currentSearchType, saveSettings, onDismiss)
     }
 }
 
@@ -66,7 +66,8 @@ fun SettingsScreenWithPopup(
 fun SettingsScreenWithBottomSheet(
     currentViewTypeForList: ViewTypeForList,
     currentViewTypeForSettings: ViewTypeForSettings,
-    saveSettings: (ViewTypeForList, ViewTypeForSettings) -> Unit,
+    currentSearchType: SearchType,
+    saveSettings: (ViewTypeForList, ViewTypeForSettings, SearchType) -> Unit,
     onDismiss: () -> Unit
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState()
@@ -76,7 +77,7 @@ fun SettingsScreenWithBottomSheet(
         sheetState = modalBottomSheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() },
     ) {
-        SettingsContent(currentViewTypeForList, currentViewTypeForSettings, saveSettings, onDismiss)
+        SettingsContent(currentViewTypeForList, currentViewTypeForSettings, currentSearchType, saveSettings, onDismiss)
     }
 }
 
@@ -84,7 +85,8 @@ fun SettingsScreenWithBottomSheet(
 fun SettingsContent(
     currentViewTypeForList: ViewTypeForList,
     currentViewTypeForSettings: ViewTypeForSettings,
-    saveSettings: (ViewTypeForList, ViewTypeForSettings) -> Unit,
+    currentSearchType: SearchType,
+    saveSettings: (ViewTypeForList, ViewTypeForSettings, SearchType) -> Unit,
     onDismiss: () -> Unit
 ) {
     var stateOfViewTypeForList by remember { mutableStateOf(currentViewTypeForList) }
@@ -93,6 +95,8 @@ fun SettingsContent(
     var stateOfViewTypeSettings by remember { mutableStateOf(currentViewTypeForSettings) }
     val viewTypeForSettingsOptions = listOf(ViewTypeForSettings.POPUP, ViewTypeForSettings.BOTTOM_SHEET)
 
+    var stateOfSearchType by remember { mutableStateOf(currentSearchType) }
+    val searchTypeForSettingsOptions = listOf(SearchType.LOCAL_SEARCH, SearchType.REMOTE_SEARCH)
 
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -213,10 +217,51 @@ fun SettingsContent(
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = stringResource(id = R.string.search_type_description),
+                    fontWeight = FontWeight.Bold
+                )
+
+                Column(Modifier.selectableGroup()) {
+                    searchTypeForSettingsOptions.forEach { type ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .selectable(
+                                    selected = if (type == SearchType.LOCAL_SEARCH) {
+                                        stateOfSearchType == SearchType.LOCAL_SEARCH
+                                    } else {
+                                        stateOfSearchType == SearchType.REMOTE_SEARCH
+                                    },
+                                    onClick = { stateOfSearchType = type },
+                                    role = Role.RadioButton
+                                )
+                                .padding(top = 5.dp)
+                        ) {
+                            RadioButton(
+                                selected = if (type == SearchType.LOCAL_SEARCH) {
+                                    stateOfSearchType == SearchType.LOCAL_SEARCH
+                                } else {
+                                    stateOfSearchType == SearchType.REMOTE_SEARCH
+                                },
+                                onClick = null
+                            )
+                            Text(
+                                text = stringResource(id = type.resId),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(start = 4.dp)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Button(modifier = Modifier
                     .padding(10.dp, 5.dp, 10.dp, if (currentViewTypeForSettings == ViewTypeForSettings.POPUP) 5.dp else 25.dp)
                     .align(alignment = Alignment.CenterHorizontally),
-                    onClick = { saveSettings(stateOfViewTypeForList, stateOfViewTypeSettings) }) {
+                    onClick = { saveSettings(stateOfViewTypeForList, stateOfViewTypeSettings, stateOfSearchType) }) {
                     Text(
                         text = stringResource(id = R.string.settings_apply),
                         color = Color.White

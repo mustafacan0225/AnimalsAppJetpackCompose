@@ -1,20 +1,13 @@
 package com.mustafacan.animalsapp.ui.screen.dogs
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import com.mustafacan.animalsapp.ui.base.Reducer
+import com.mustafacan.animalsapp.ui.model.enums.SearchType
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForSettings
 import com.mustafacan.data.local.LocalDataSource
 import com.mustafacan.domain.model.dogs.Dog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent, DogsScreenReducer.DogsScreenEffect> {
 
@@ -28,7 +21,8 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         object OpenSettings : DogsScreenEvent()
         object CloseSettings : DogsScreenEvent()
         data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
-        data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings) : DogsScreenEvent()
+        data class DataChanged(val list: List<Dog>? = null) : DogsScreenEvent()
+        data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : DogsScreenEvent()
     }
 
     @Immutable
@@ -42,8 +36,10 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         val loading: Boolean,
         val errorMessage: String?,
         val dogs: List<Dog>?,
+        val dogsBackup: List<Dog>?,
         val viewTypeForList: ViewTypeForList,
         val viewTypeForSettings: ViewTypeForSettings,
+        val searchType: SearchType,
         val showSettings: Boolean,
         val testValue: Flow<Int>
     ) : Reducer.ViewState {
@@ -53,6 +49,8 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
                     loading = true,
                     errorMessage = null,
                     dogs = null,
+                    dogsBackup = null,
+                    searchType = SearchType.LOCAL_SEARCH,
                     viewTypeForList = ViewTypeForList.LAZY_COLUMN,
                     viewTypeForSettings = ViewTypeForSettings.POPUP,
                     showSettings = false,
@@ -92,6 +90,13 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
                 previousState.copy(
                     loading = false,
                     errorMessage = event.errorMessage,
+                    dogs = event.list,
+                    dogsBackup = event.list
+                ) to null
+            }
+
+            is DogsScreenEvent.DataChanged -> {
+                previousState.copy(
                     dogs = event.list
                 ) to null
             }
@@ -100,6 +105,7 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
                 previousState.copy(
                     viewTypeForList = event.viewTypeDogs,
                     viewTypeForSettings = event.viewTypeForSettings,
+                    searchType = event.searchType,
                     showSettings = false
                 ) to null
             }

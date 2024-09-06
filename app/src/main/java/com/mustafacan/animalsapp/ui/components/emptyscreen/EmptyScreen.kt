@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.mustafacan.animalsapp.R
 
 @Composable
-fun EmptyScreen(text: String, retryOnClick: () -> Unit) {
+fun EmptyResultForApiRequest(text: String, retryOnClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,5 +62,34 @@ fun EmptyScreen(text: String, retryOnClick: () -> Unit) {
             Text(text = stringResource(id = R.string.retry), color = Color.White)
         }
 
+    }
+}
+
+@Composable
+fun EmptyResultForSearch() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "",
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        Text(
+            text = "Not Found",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            textAlign = TextAlign.Center,
+            color = Color.Black
+        )
     }
 }

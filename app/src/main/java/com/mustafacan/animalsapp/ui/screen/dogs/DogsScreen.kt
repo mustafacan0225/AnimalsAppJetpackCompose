@@ -1,21 +1,22 @@
 package com.mustafacan.animalsapp.ui.screen.dogs
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,19 +26,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafacan.animalsapp.R
-import com.mustafacan.animalsapp.ui.components.emptyscreen.EmptyScreen
-import com.mustafacan.animalsapp.ui.components.image.LoadCircleImageGlide
+import com.mustafacan.animalsapp.ui.components.emptyscreen.EmptyResultForApiRequest
+import com.mustafacan.animalsapp.ui.components.emptyscreen.EmptyResultForSearch
+import com.mustafacan.animalsapp.ui.components.image.LoadCircleImage
 import com.mustafacan.animalsapp.ui.components.loading.LoadingErrorScreen
 import com.mustafacan.animalsapp.ui.components.loading.LoadingScreen
+import com.mustafacan.animalsapp.ui.components.searchbar.MySearchBar
 import com.mustafacan.animalsapp.ui.components.toolbar.Toolbar
 import com.mustafacan.animalsapp.ui.components.toolbar.ToolbarAction
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
@@ -47,10 +51,6 @@ import com.mustafacan.animalsapp.ui.screen.settings.SettingsScreenWithBottomShee
 import com.mustafacan.animalsapp.ui.screen.settings.SettingsScreenWithPopup
 import com.mustafacan.animalsapp.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.domain.model.dogs.Dog
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,6 +83,12 @@ fun DogsScreen(navController: NavController) {
             .padding(0.dp)
     ) {
         Toolbar(title = "Animals App - Dogs", actionList = actionListForToolbar)
+        if (!state.value.dogsBackup.isNullOrEmpty()) {
+            MySearchBar(
+                searchType = state.value.searchType,
+                onLocalSearch = { viewModel.localSearch(it) },
+                onRemoteSearch = { viewModel.remoteSearch(it) })
+        }
         DogListContent(viewModel, state)
     }
 
@@ -146,36 +152,52 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
         })
     } else if (uiState.value.dogs != null && !uiState.value.dogs!!.isEmpty()) {
         if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_VERTICAL_GRID) {
-            DogListForLazyVerticalGrid(uiState = uiState,
+            DogListForLazyVerticalGrid(dogList = uiState.value.dogs!!,
                 clickedItem = { dog ->
                     println("clicked item ${dog.name}")
                     viewModel.navigateToDogDetail(dog)
                 })
         } else if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_COLUMN) {
-            DogListForLazyColumn(uiState = uiState,
+            DogListForLazyColumn(dogList = uiState.value.dogs!!,
                 clickedItem = { dog ->
                     println("clicked item ${dog.name}")
                     viewModel.navigateToDogDetail(dog)
                 })
         }
-    } else {
-        EmptyScreen(text = stringResource(id = R.string.empty),
+    } else if (uiState.value.dogsBackup.isNullOrEmpty()) {
+        EmptyResultForApiRequest(text = stringResource(id = R.string.empty),
             retryOnClick = {
                 viewModel.callDogs()
             })
+    } else if (!uiState.value.dogsBackup.isNullOrEmpty() && uiState.value.dogs.isNullOrEmpty()) {
+        EmptyResultForSearch()
     }
 
     if (uiState.value.showSettings) {
         if (uiState.value.viewTypeForSettings == ViewTypeForSettings.POPUP) {
             SettingsScreenWithPopup(uiState.value.viewTypeForList,
                 uiState.value.viewTypeForSettings,
-                saveSettings = { viewTypeDogs, viewTypeSettings -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings)},
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() }
             )
         } else if (uiState.value.viewTypeForSettings == ViewTypeForSettings.BOTTOM_SHEET) {
             SettingsScreenWithBottomSheet(uiState.value.viewTypeForList,
                 uiState.value.viewTypeForSettings,
-                saveSettings = { viewTypeDogs, viewTypeSettings -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings)},
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() }
             )
         }
@@ -184,25 +206,40 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
 }
 
 @Composable
-fun DogListForLazyColumn(uiState: State<DogsScreenReducer.DogsScreenState>, clickedItem: (dog: Dog) -> Unit) {
+fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
     LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        items(uiState.value.dogs!!) { dog ->
+        items(dogList) { dog ->
             Card(
                 Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
-                    .background(Color.White)
-                    .clickable { clickedItem(dog) }
+                    .clickable { clickedItem(dog) },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.padding(start = 10.dp)) {
-                        //LoadCircleImageGlide(url = dog.image ?: "")
-                        LoadCircleImageGlide(url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg")
-
+                Row(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .background(Color.White),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)                       // clip to the circle shape
+                            .border(2.dp, Color.Gray, CircleShape),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        LoadCircleImage(url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg")
                     }
 
                     Column(modifier = Modifier.padding(10.dp)) {
@@ -216,7 +253,7 @@ fun DogListForLazyColumn(uiState: State<DogsScreenReducer.DogsScreenState>, clic
                             text = dog.origin ?: ""
                         )
 
-                        Text(text = dog.temperament ?: "")
+                        Text(text = dog.temperament ?: "", maxLines = 1)
                     }
                 }
             }
@@ -226,7 +263,7 @@ fun DogListForLazyColumn(uiState: State<DogsScreenReducer.DogsScreenState>, clic
 }
 
 @Composable
-fun DogListForLazyVerticalGrid(uiState: State<DogsScreenReducer.DogsScreenState>, clickedItem: (dog: Dog) -> Unit) {
+fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
     LazyVerticalGrid(
         modifier =
         Modifier
@@ -234,12 +271,16 @@ fun DogListForLazyVerticalGrid(uiState: State<DogsScreenReducer.DogsScreenState>
             .padding(10.dp),
         columns = GridCells.Fixed(2)
     ) {
-        items(uiState.value.dogs!!) { dog ->
+        items(dogList) { dog ->
             Card(
                 Modifier
                     .padding(10.dp)
-                    .background(Color.White).
-                    clickable { clickedItem(dog) }
+                    .clickable { clickedItem(dog) },
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
@@ -252,7 +293,17 @@ fun DogListForLazyVerticalGrid(uiState: State<DogsScreenReducer.DogsScreenState>
                             .padding(top = 5.dp, start = 5.dp, end = 5.dp)
                     )
                     // LoadCircleImageGlide(url = dog.image ?: "")
-                    LoadCircleImageGlide(url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg")
+                    Card(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)                       // clip to the circle shape
+                            .border(2.dp, Color.Gray, CircleShape),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White,
+                        )
+                    ) {
+                        LoadCircleImage(url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg")
+                    }
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -267,4 +318,6 @@ fun DogListForLazyVerticalGrid(uiState: State<DogsScreenReducer.DogsScreenState>
     }
 
 }
+
+
 

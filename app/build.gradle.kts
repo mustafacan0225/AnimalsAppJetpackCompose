@@ -91,4 +91,6 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.glide)
+
+    implementation(libs.constraintlayout)
 }

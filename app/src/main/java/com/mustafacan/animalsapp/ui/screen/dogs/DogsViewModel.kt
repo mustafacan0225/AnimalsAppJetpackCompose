@@ -2,10 +2,10 @@ package com.mustafacan.animalsapp.ui.screen.dogs
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.animalsapp.R
 import com.mustafacan.animalsapp.ui.base.BaseViewModel
+import com.mustafacan.animalsapp.ui.model.enums.SearchType
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForSettings
 import com.mustafacan.data.local.LocalDataSource
@@ -14,11 +14,8 @@ import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -76,6 +73,24 @@ class DogsViewModel @Inject constructor(
         }
     }
 
+    fun localSearch(query: String) {
+        var result: List<Dog> = listOf()
+        if (query.isEmpty()) {
+            result = state.value.dogsBackup!!
+        } else {
+            result = state.value.dogsBackup!!.filter {
+                it.name?.lowercase()?.contains(query.lowercase()) ?: false
+                        || it.origin?.lowercase()?.contains(query.lowercase()) ?: false
+            }
+        }
+
+        sendEvent(DogsScreenReducer.DogsScreenEvent.DataChanged(result))
+    }
+
+    fun remoteSearch(query: String) {
+        println("remote search: $query")
+    }
+
     fun navigateToDogDetail(dog: Dog) {
         sendEventForEffect(DogsScreenReducer.DogsScreenEvent.DogDetail(dog))
     }
@@ -88,7 +103,7 @@ class DogsViewModel @Inject constructor(
         sendEvent(DogsScreenReducer.DogsScreenEvent.CloseSettings)
     }
 
-    fun settingsUpdated(viewTypeForList: ViewTypeForList, viewTypeForSettings: ViewTypeForSettings) {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings))
+    fun settingsUpdated(viewTypeForList: ViewTypeForList, viewTypeForSettings: ViewTypeForSettings, searchType: SearchType) {
+        sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
     }
 }

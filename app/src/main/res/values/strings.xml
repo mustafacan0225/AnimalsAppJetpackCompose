@@ -13,4 +13,7 @@
     <string name="view_mode_settings_popup">Popup</string>
     <string name="view_mode_settings_bottomsheet">Bottomsheet</string>
     <string name="view_mode_settings_description">select view type for settings</string>
+    <string name="search_type_description">select type for search settings</string>
+    <string name="search_type_locale">Locale Search(From Current List)</string>
+    <string name="search_type_remote">Remote Search (From API)</string>
 </resources>

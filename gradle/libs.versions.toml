@@ -23,6 +23,7 @@ coil = "2.4.0"
 glide = "1.0.0-beta01"
 kotlinxSerialization = "1.9.0"
 kotlinxSerializationJson = "1.6.3"
+constraintlayout = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref 
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
