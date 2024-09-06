@@ -8,4 +8,6 @@ class DogsRemoteDataSource @Inject constructor(private val api: DogsServices) :
     ResponseWrapper() {
 
     suspend fun getDogs() = getResult { api.getDogs() }
+
+    suspend fun search(query: String) = getResult { api.search(query) }
 }

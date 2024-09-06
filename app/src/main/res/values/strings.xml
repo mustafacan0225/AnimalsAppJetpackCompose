@@ -16,4 +16,6 @@
     <string name="search_type_description">select type for search settings</string>
     <string name="search_type_locale">Locale Search(From Current List)</string>
     <string name="search_type_remote">Remote Search (From API)</string>
+    <string name="search_placeholder_remote">search from remote</string>
+    <string name="search_placeholder_local">search from locale</string>
 </resources>

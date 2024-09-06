@@ -18,9 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.mustafacan.animalsapp.R
 import com.mustafacan.animalsapp.ui.model.enums.SearchType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +34,12 @@ fun MySearchBar(
 ) {
     var text by rememberSaveable { mutableStateOf("") }
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight()
-        .padding(top = 10.dp)) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(top = 10.dp)
+    ) {
         val (searchBar, textViewCancel) = createRefs()
 
         androidx.compose.material3.SearchBar(
@@ -48,6 +52,7 @@ fun MySearchBar(
             },
             onSearch = {
                 if (searchType == SearchType.REMOTE_SEARCH) {
+                    onRemoteSearch(text)
                 }
             },
             modifier = Modifier.constrainAs(searchBar) {
@@ -59,7 +64,15 @@ fun MySearchBar(
                 )
                 width = Dimension.fillToConstraints
             },
-            placeholder = { Text(text = "Search...") },
+            placeholder = {
+                Text(
+                    text = if (searchType == SearchType.REMOTE_SEARCH) stringResource(
+                        id = R.string.search_placeholder_remote
+                    ) else stringResource(
+                        id = R.string.search_placeholder_local
+                    )
+                )
+            },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
             trailingIcon = {
                 if (text.isNotEmpty()) {
@@ -93,7 +106,8 @@ fun MySearchBar(
                         centerVerticallyTo(parent)
                         end.linkTo(parent.end, margin = 20.dp)
                     }
-                    .clickable { text = ""
+                    .clickable {
+                        text = ""
                         onRemoteSearch("")
                     })
         }

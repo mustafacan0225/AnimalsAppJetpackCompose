@@ -11,4 +11,8 @@ class DogsRepositoryImpl @Inject constructor(private val remoteDataSource: DogsR
         return remoteDataSource.getDogs()
     }
 
+    override suspend fun search(query: String): ApiResponse<List<Dog>> {
+        return remoteDataSource.search(query)
+    }
+
 }

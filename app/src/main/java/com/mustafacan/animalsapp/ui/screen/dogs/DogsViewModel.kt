@@ -12,6 +12,7 @@ import com.mustafacan.data.local.LocalDataSource
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.SearchForDogsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class DogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val localDataSource: LocalDataSource,
-    private val getDogsUseCase: GetDogsUseCase
+    private val getDogsUseCase: GetDogsUseCase,
+    private val searchForDogsUseCase: SearchForDogsUseCase
 ) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
         DogsScreenReducer.DogsScreenEffect>(initialState = DogsScreenReducer.DogsScreenState.initial(localDataSource),
             reducer = DogsScreenReducer()) {
@@ -88,7 +90,30 @@ class DogsViewModel @Inject constructor(
     }
 
     fun remoteSearch(query: String) {
-        println("remote search: $query")
+        if (query.isEmpty()) {
+            sendEvent(DogsScreenReducer.DogsScreenEvent.DataChanged(state.value.dogsBackup!!))
+        } else {
+            sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
+            viewModelScope.launch {
+                //delay for test
+                delay(3000)
+
+                searchForDogsUseCase.runUseCase(query) { result ->
+                    when (result) {
+                        is ApiResponse.Success<List<Dog>> -> {
+                            sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(result.data, null))
+                        }
+
+                        is ApiResponse.Error<List<Dog>> -> {
+                            sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(null, context.getString(
+                                R.string.error_message)))
+                        }
+                    }
+
+                }
+            }
+        }
+
     }
 
     fun navigateToDogDetail(dog: Dog) {

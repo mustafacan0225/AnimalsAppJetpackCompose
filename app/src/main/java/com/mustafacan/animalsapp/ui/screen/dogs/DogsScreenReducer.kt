@@ -17,10 +17,10 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         data class DogDetailWithId(val dogId: String) : DogsScreenEvent()
         data class DogDetail(val dog: Dog) : DogsScreenEvent()
         data class UpdateDogIsFollowed(val dogId: String, val isFollowed: Boolean) : DogsScreenEvent()
-        object Retry : DogsScreenEvent()
         object OpenSettings : DogsScreenEvent()
         object CloseSettings : DogsScreenEvent()
         data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
+        data class DataReceivedWithSearch(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
         data class DataChanged(val list: List<Dog>? = null) : DogsScreenEvent()
         data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : DogsScreenEvent()
     }
@@ -69,21 +69,12 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
 
             is DogsScreenEvent.Loading -> {
                 previousState.copy(
-                    loading = true,
-                    errorMessage = null,
-                    dogs = null
+                    loading = true
                 ) to null
             }
 
             is DogsScreenEvent.DogDetail -> {
-                println("called event ${event.dog.name}")
                 previousState.copy() to DogsScreenEffect.NavigateToDogDetail(event.dog)
-            }
-
-            is DogsScreenEvent.Retry -> {
-                previousState.copy(
-                    loading = true
-                ) to null
             }
 
             is DogsScreenEvent.DataReceived -> {
@@ -92,6 +83,14 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
                     errorMessage = event.errorMessage,
                     dogs = event.list,
                     dogsBackup = event.list
+                ) to null
+            }
+
+            is DogsScreenEvent.DataReceivedWithSearch -> {
+                previousState.copy(
+                    loading = false,
+                    errorMessage = event.errorMessage,
+                    dogs = event.list,
                 ) to null
             }
 
