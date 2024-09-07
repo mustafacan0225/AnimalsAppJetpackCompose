@@ -70,15 +70,15 @@ fun SettingsScreenWithBottomSheet(
     saveSettings: (ViewTypeForList, ViewTypeForSettings, SearchType) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val modalBottomSheetState = rememberModalBottomSheetState()
-
+    val modalBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalBottomSheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
+        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         SettingsContent(currentViewTypeForList, currentViewTypeForSettings, currentSearchType, saveSettings, onDismiss)
     }
+
 }
 
 @Composable
@@ -153,8 +153,10 @@ fun SettingsContent(
                                     } else {
                                         stateOfViewTypeForList == ViewTypeForList.LAZY_VERTICAL_GRID
                                     },
-                                    onClick = { stateOfViewTypeForList = type
-                                              Log.d("selected", type.name)},
+                                    onClick = {
+                                        stateOfViewTypeForList = type
+                                        Log.d("selected", type.name)
+                                    },
                                     role = Role.RadioButton
                                 )
                                 .padding(top = 5.dp)
@@ -259,7 +261,12 @@ fun SettingsContent(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Button(modifier = Modifier
-                    .padding(10.dp, 5.dp, 10.dp, if (currentViewTypeForSettings == ViewTypeForSettings.POPUP) 5.dp else 25.dp)
+                    .padding(
+                        10.dp,
+                        5.dp,
+                        10.dp,
+                        if (currentViewTypeForSettings == ViewTypeForSettings.POPUP) 5.dp else 25.dp
+                    )
                     .align(alignment = Alignment.CenterHorizontally),
                     onClick = { saveSettings(stateOfViewTypeForList, stateOfViewTypeSettings, stateOfSearchType) }) {
                     Text(
@@ -268,7 +275,10 @@ fun SettingsContent(
                     )
                 }
 
+
+
             }
         }
     }
+
 }
