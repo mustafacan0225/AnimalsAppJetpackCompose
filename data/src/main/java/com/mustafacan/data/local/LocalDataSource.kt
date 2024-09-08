@@ -1,5 +1,6 @@
 package com.mustafacan.data.local
-import android.util.Log
+import com.mustafacan.data.local.datasource.sharedpref.SharedPreferencesManager
+import com.mustafacan.data.local.datasource.sharedpref.observeKey
 import com.mustafacan.domain.model.cats.Cat
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

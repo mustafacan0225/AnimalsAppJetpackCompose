@@ -77,6 +77,11 @@ dependencies {
 
     //gson
     implementation(libs.google.code.gson)
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 }
 
 // Allow references to generated code

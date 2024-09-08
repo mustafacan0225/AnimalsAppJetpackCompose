@@ -1,8 +1,7 @@
 package com.mustafacan.data.di
 
 import android.content.Context
-import com.mustafacan.data.local.SharedPreferencesManager
-import com.squareup.moshi.Moshi
+import com.mustafacan.data.local.datasource.sharedpref.SharedPreferencesManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

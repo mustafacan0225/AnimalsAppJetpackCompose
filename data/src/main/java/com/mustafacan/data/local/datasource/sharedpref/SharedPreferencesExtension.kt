@@ -1,4 +1,4 @@
-package com.mustafacan.data.local
+package com.mustafacan.data.local.datasource.sharedpref
 
 import android.content.SharedPreferences
 import kotlinx.coroutines.flow.Flow

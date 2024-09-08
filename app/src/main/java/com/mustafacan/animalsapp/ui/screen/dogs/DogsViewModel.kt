@@ -9,6 +9,7 @@ import com.mustafacan.animalsapp.ui.model.enums.SearchType
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForSettings
 import com.mustafacan.data.local.LocalDataSource
+import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
@@ -26,10 +27,11 @@ import javax.inject.Inject
 class DogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val localDataSource: LocalDataSource,
+    private val localDataSourceDogs: LocalDataSourceDogs,
     private val getDogsUseCase: GetDogsUseCase,
     private val searchForDogsUseCase: SearchForDogsUseCase
 ) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
-        DogsScreenReducer.DogsScreenEffect>(initialState = DogsScreenReducer.DogsScreenState.initial(localDataSource),
+        DogsScreenReducer.DogsScreenEffect>(initialState = DogsScreenReducer.DogsScreenState.initial(localDataSource, localDataSourceDogs),
             reducer = DogsScreenReducer()) {
     init {
         Log.d("initVM", "initVM DogsViewModel")
@@ -43,7 +45,6 @@ class DogsViewModel @Inject constructor(
                     Log.d("listenpref2:", "state value - " + it.toString())
                 }
             }
-
         }
 
     }
@@ -129,6 +130,9 @@ class DogsViewModel @Inject constructor(
     }
 
     fun settingsUpdated(viewTypeForList: ViewTypeForList, viewTypeForSettings: ViewTypeForSettings, searchType: SearchType) {
+        localDataSourceDogs.saveListTypeForDogList(viewTypeForList.name)
+        localDataSourceDogs.saveSettingsTypeForDogList(viewTypeForSettings.name)
+        localDataSourceDogs.saveSearchTypeForDogList(searchType.name)
         sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
     }
 }

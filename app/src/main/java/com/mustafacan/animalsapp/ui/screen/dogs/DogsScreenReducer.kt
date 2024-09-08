@@ -6,6 +6,7 @@ import com.mustafacan.animalsapp.ui.model.enums.SearchType
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForList
 import com.mustafacan.animalsapp.ui.model.enums.ViewTypeForSettings
 import com.mustafacan.data.local.LocalDataSource
+import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
 import kotlinx.coroutines.flow.Flow
 
@@ -44,15 +45,15 @@ class DogsScreenReducer () :Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         val testValue: Flow<Int>
     ) : Reducer.ViewState {
         companion object {
-             fun initial(localDataSource: LocalDataSource): DogsScreenState {
+             fun initial(localDataSource: LocalDataSource, localDataSourceDogs: LocalDataSourceDogs): DogsScreenState {
                 return DogsScreenState(
                     loading = true,
                     errorMessage = null,
                     dogs = null,
                     dogsBackup = null,
-                    searchType = SearchType.LOCAL_SEARCH,
-                    viewTypeForList = ViewTypeForList.LAZY_COLUMN,
-                    viewTypeForSettings = ViewTypeForSettings.POPUP,
+                    searchType = enumValueOf(localDataSourceDogs.getSearchTypeForDogList() ?: SearchType.LOCAL_SEARCH.name) as SearchType,
+                    viewTypeForList = enumValueOf(localDataSourceDogs.getListTypeForDogList() ?: ViewTypeForList.LAZY_COLUMN.name) as ViewTypeForList,
+                    viewTypeForSettings = enumValueOf(localDataSourceDogs.getSettingsTypeForDogList() ?: ViewTypeForSettings.POPUP.name) as ViewTypeForSettings,
                     showSettings = false,
                     testValue = localDataSource.getTestFlow()
                 )
