@@ -1,7 +1,6 @@
-package com.mustafacan.animalsapp.ui.base
+package com.mustafacan.ui_common.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.mustafacan.data.BuildConfig
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,15 +34,6 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
     private val _effects = Channel<Effect>(capacity = Channel.CONFLATED)
     val effect = _effects.receiveAsFlow()
 
-    //optional
-    /*val timeCapsule: TimeCapsule<State> = TimeTravelCapsule { storedState ->
-        _state.tryEmit(storedState)
-    }*/
-
-    init {
-        //timeCapsule.addState(initialState)
-    }
-
     fun sendEffect(effect: Effect) {
         _effects.trySend(effect)
     }
@@ -53,21 +43,12 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
 
         val success = _state.tryEmit(newState)
 
-        //optional
-        /*if (BuildConfig.DEBUG && success) {
-            timeCapsule.addState(newState)
-        }*/
     }
 
     fun sendEventForEffect(event: Event) {
         val (newState, effect) = reducer.reduce(_state.value, event)
 
         val success = _state.tryEmit(newState)
-
-        //optional
-        /*if (BuildConfig.DEBUG && success) {
-            timeCapsule.addState(newState)
-        }*/
 
         effect?.let {
             sendEffect(it)

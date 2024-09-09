@@ -23,4 +23,4 @@ rootProject.name = "AnimalsApp"
 include(":app")
 include(":domain")
 include(":data")
- 
+include(":ui_common")
