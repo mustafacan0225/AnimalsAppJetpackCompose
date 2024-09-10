@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -167,7 +168,8 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
             DogListForLazyColumn(dogList = uiState.value.dogs!!,
                 clickedItem = { dog ->
                     println("clicked item ${dog.name}")
-                    viewModel.navigateToDogDetail(dog)
+                    viewModel.addFavoriteDog(dog)
+                    //viewModel.navigateToDogDetail(dog)
                 })
         }
     } else if (uiState.value.dogsBackup.isNullOrEmpty()) {

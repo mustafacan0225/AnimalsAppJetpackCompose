@@ -7,7 +7,9 @@ import com.mustafacan.data.local.LocalDataSource
 import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
+import com.mustafacan.domain.usecase.dogs.AddFavoriteDogToLocalDatabase
 import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.GetFavoriteDogsFromLocalDatabase
 import com.mustafacan.domain.usecase.dogs.SearchForDogsUseCase
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
@@ -29,7 +31,9 @@ class DogsViewModel @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val localDataSourceDogs: LocalDataSourceDogs,
     private val getDogsUseCase: GetDogsUseCase,
-    private val searchForDogsUseCase: SearchForDogsUseCase
+    private val searchForDogsUseCase: SearchForDogsUseCase,
+    private val addFavoriteDogUseCase: AddFavoriteDogToLocalDatabase,
+    private val getFavoriteDogsUseCase: GetFavoriteDogsFromLocalDatabase
 ) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
         DogsScreenReducer.DogsScreenEffect>(initialState = DogsScreenReducer.DogsScreenState.initial(localDataSource, localDataSourceDogs),
     reducer = DogsScreenReducer()) {
@@ -47,12 +51,35 @@ class DogsViewModel @Inject constructor(
             }
         }
 
+        viewModelScope.launch {
+            getFavoriteDogsUseCase.runUseCase { result ->
+                viewModelScope.launch {
+                    result.stateIn(this).collectLatest { favoriteList ->
+                        Log.d("room-test", "favorite list: " + favoriteList)
+                    }
+                }
+
+            }
+        }
+
     }
 
 
     fun callDogs() {
         sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
         getDogs()
+    }
+
+    fun addFavoriteDog(dog: Dog) {
+        viewModelScope.launch {
+            addFavoriteDogUseCase.runUseCase(dog, success = {
+                Log.d("room-test", "added favorite dog " + dog.name)
+            })
+        }
+    }
+
+    fun getFavoriteDog() {
+
     }
 
     fun getDogs() {
