@@ -64,6 +64,8 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":ui_common")))
+    implementation(project(mapOf("path" to ":ui_dogs")))
     implementation(project(mapOf("path" to ":domain")))
     implementation(project(mapOf("path" to ":data")))
     implementation(libs.androidx.core.ktx)

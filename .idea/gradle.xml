@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/ui_common" />
+            <option value="$PROJECT_DIR$/ui_dogs" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

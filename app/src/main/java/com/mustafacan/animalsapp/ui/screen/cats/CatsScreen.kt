@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.mustafacan.animalsapp.ui.components.toolbar.Toolbar
+import com.mustafacan.ui_common.components.toolbar.Toolbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

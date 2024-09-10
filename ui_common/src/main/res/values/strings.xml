@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ui_common</string>
+    <string name="bottom_menu_title_dogs">Dogs</string>
+    <string name="bottom_menu_title_cats">Cats</string>
+    <string name="bottom_menu_title_birds">Birds</string>
     <string name="search_placeholder_remote">search from remote</string>
     <string name="search_placeholder_local">search from locale</string>
     <string name="search_type_locale">Locale Search(From Current List)</string>
@@ -13,4 +16,5 @@
     <string name="view_mode_settings_description">select view type for settings</string>
     <string name="retry">Retry</string>
     <string name="empty">No data found to display</string>
+    <string name="settings_apply">Apply</string>
 </resources>

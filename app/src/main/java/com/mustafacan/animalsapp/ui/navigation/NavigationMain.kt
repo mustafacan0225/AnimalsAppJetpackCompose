@@ -7,7 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.animalsapp.ui.screen.birds.BirdsScreen
 import com.mustafacan.animalsapp.ui.screen.cats.CatsScreen
-import com.mustafacan.animalsapp.ui.screen.dogs.DogsScreen
+import com.mustafacan.ui_common.navigation.root.NavDestinationItem
+import com.mustafacan.ui_dogs.feature.navigation.NavigationDogs
 
 @Composable
 fun NavigationMain(
