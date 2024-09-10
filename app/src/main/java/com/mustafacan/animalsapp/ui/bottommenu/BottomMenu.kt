@@ -1,4 +1,4 @@
-package com.mustafacan.animalsapp.ui.components.menu.bottom
+package com.mustafacan.animalsapp.ui.bottommenu
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar

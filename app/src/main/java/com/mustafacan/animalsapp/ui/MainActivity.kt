@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.mustafacan.animalsapp.ui.components.menu.bottom.BottomMenu
+import com.mustafacan.animalsapp.ui.bottommenu.BottomMenu
 import com.mustafacan.animalsapp.ui.navigation.NavigationMain
 import com.mustafacan.animalsapp.ui.theme.AnimalsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
