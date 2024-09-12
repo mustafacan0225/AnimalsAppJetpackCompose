@@ -1,15 +1,16 @@
 package com.mustafacan.ui_dogs.feature.dogs
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,7 +18,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -35,6 +40,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafacan.ui_common.model.enums.*
 import com.mustafacan.domain.model.dogs.Dog
@@ -99,53 +106,6 @@ fun DogsScreen(navController: NavController) {
         DogListContent(viewModel, state)
     }
 
-    /*var counter = viewModel.localDataSource.getTestFlow().collectAsState(initial = 0)
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(0.dp)) {
-
-        Toolbar(title = "Animals App - Dogs")
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                /*.border(
-                    border = BorderStroke(
-                        1.dp, MaterialTheme.colorScheme.primary
-                    ), MaterialTheme.shapes.large
-                )*/,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                "Dog Screen Content",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
-                textAlign = TextAlign.Center
-            )
-
-            Button(modifier = Modifier
-                .padding(10.dp, 5.dp, 10.dp, 5.dp)
-                .align(alignment = Alignment.CenterHorizontally),
-                onClick = { navController.navigate(NavDestinationItem.DogsDetail.route) },
-                shape = MaterialTheme.shapes.large,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(text = "Detail Page", color = Color.White)
-            }
-
-            Text(
-                "Result: ${counter.value}",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp),
-                textAlign = TextAlign.Center
-            )
-        }
-
-    }*/
-
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -163,13 +123,20 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
                 clickedItem = { dog ->
                     println("clicked item ${dog.name}")
                     viewModel.navigateToDogDetail(dog)
+                }, addFavorite = { dog ->
+                    viewModel.addFavoriteDog(dog.copy(isFavorite = true))
+                }, deleteFavorite = { dog ->
+                    viewModel.deleteFavoriteDog(dog)
                 })
         } else if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_COLUMN) {
-            DogListForLazyColumn(dogList = uiState.value.dogs!!,
+                DogListForLazyColumn(dogList = uiState.value.dogs!!,
                 clickedItem = { dog ->
                     println("clicked item ${dog.name}")
-                    viewModel.addFavoriteDog(dog)
-                    //viewModel.navigateToDogDetail(dog)
+                    viewModel.navigateToDogDetail(dog)
+                }, addFavorite = { dog ->
+                    viewModel.addFavoriteDog(dog.copy(isFavorite = true))
+                }, deleteFavorite = { dog ->
+                    viewModel.deleteFavoriteDog(dog)
                 })
         }
     } else if (uiState.value.dogsBackup.isNullOrEmpty()) {
@@ -214,7 +181,9 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
 }
 
 @Composable
-fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
+fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit, addFavorite: (dog:Dog) -> Unit, deleteFavorite: (dog:Dog) -> Unit) {
+
+    //var list by remember { mutableStateOf(dogList) }
     LazyColumn(
         Modifier
             .fillMaxSize()
@@ -229,20 +198,30 @@ fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White,
                 ),
+                border = BorderStroke(1.dp, if(dog.isFavorite?: false) Color.Red else Color.White),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-                Row(
+
+                ConstraintLayout(
                     modifier = Modifier
-                        .padding(start = 10.dp)
-                        .background(Color.White),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(10.dp)
                 ) {
+                    val (image, dogInfoLayaout, favoriteIcon) = createRefs()
+
                     Card(
                         modifier = Modifier
                             .size(80.dp)
-                            .clip(CircleShape)                       // clip to the circle shape
-                            .border(2.dp, Color.Gray, CircleShape),
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape)
+                            .constrainAs(image) {
+                                centerVerticallyTo(parent)
+                                start.linkTo(parent.start)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                            },
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White,
                         )
@@ -250,7 +229,14 @@ fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
                         CircleImage(url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg")
                     }
 
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.constrainAs(dogInfoLayaout) {
+                        centerVerticallyTo(parent)
+                        start.linkTo(image.end, margin = 10.dp)
+                        end.linkTo(favoriteIcon.start, margin = 10.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        width = Dimension.fillToConstraints
+                    }) {
                         Text(
                             text = dog.name ?: "",
                             fontWeight = FontWeight.Black
@@ -263,7 +249,26 @@ fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
 
                         Text(text = dog.temperament ?: "", maxLines = 1)
                     }
+
+                    IconButton( onClick = {
+                        if (dog.isFavorite?: false)
+                            deleteFavorite(dog)
+                        else
+                            addFavorite(dog)
+                    }, modifier = Modifier.constrainAs(favoriteIcon) {
+                        centerVerticallyTo(parent)
+                        end.linkTo(parent.end)
+                    }) {
+                        Icon(
+                            imageVector = if(dog.isFavorite?: false) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "favorite",
+                            tint = if(dog.isFavorite?: false) Color.Red else Color.Black
+
+                        )
+                    }
+
                 }
+
             }
         }
     }
@@ -271,7 +276,7 @@ fun DogListForLazyColumn(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
 }
 
 @Composable
-fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit) {
+fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Unit, addFavorite: (dog:Dog) -> Unit, deleteFavorite: (dog:Dog) -> Unit) {
     LazyVerticalGrid(
         modifier =
         Modifier
@@ -287,6 +292,7 @@ fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Un
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White,
                 ),
+                border = BorderStroke(1.dp, if(dog.isFavorite?: false) Color.Red else Color.White),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
@@ -298,9 +304,9 @@ fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Un
                         maxLines = 1,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 5.dp, start = 5.dp, end = 5.dp)
+                            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                     )
-                    // LoadCircleImageGlide(url = dog.image ?: "")
+
                     Card(
                         modifier = Modifier
                             .size(80.dp)
@@ -315,11 +321,24 @@ fun DogListForLazyVerticalGrid(dogList: List<Dog>, clickedItem: (dog: Dog) -> Un
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(5.dp),
+                            .padding(top = 5.dp),
                         text = dog.origin ?: "",
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                     )
+
+                    IconButton(onClick = {
+                        if (dog.isFavorite?: false)
+                            deleteFavorite(dog)
+                        else
+                            addFavorite(dog)
+                    }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        Icon(
+                            imageVector = if(dog.isFavorite?: false) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "favorite",
+                            tint = if(dog.isFavorite?: false) Color.Red else Color.Black
+                        )
+                    }
                 }
             }
         }

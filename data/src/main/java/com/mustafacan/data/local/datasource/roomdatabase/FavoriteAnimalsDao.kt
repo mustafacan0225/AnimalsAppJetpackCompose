@@ -12,6 +12,9 @@ interface FavoriteAnimalsDao {
     @Query("SELECT * FROM favorite_dogs")
     fun getAll(): Flow<List<Dog>>
 
+    @Query("SELECT * FROM favorite_dogs")
+    fun getDogs(): List<Dog>
+
     @Insert
     suspend fun insertDog(dog: Dog)
 

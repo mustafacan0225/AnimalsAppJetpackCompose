@@ -11,8 +11,16 @@ class FavoriteAnimalsRepositoryImpl @Inject constructor(private val dao: Favorit
         dao.insertDog(dog)
     }
 
-    override suspend fun getDogList(): Flow<List<Dog>> {
+    override suspend fun deleteDog(dog: Dog) {
+        dao.deleteDog(dog)
+    }
+
+    override suspend fun getDogListFlow(): Flow<List<Dog>> {
         return dao.getAll()
+    }
+
+    override suspend fun getDogList(): List<Dog> {
+        return dao.getDogs()
     }
 
 

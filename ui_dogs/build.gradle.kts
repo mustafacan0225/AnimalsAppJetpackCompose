@@ -75,4 +75,5 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)
+    implementation(libs.constraintlayout)
 }

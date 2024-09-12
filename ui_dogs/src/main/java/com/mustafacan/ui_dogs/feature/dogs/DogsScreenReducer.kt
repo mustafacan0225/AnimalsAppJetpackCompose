@@ -10,7 +10,7 @@ import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
 import com.mustafacan.ui_common.viewmodel.Reducer
 import kotlinx.coroutines.flow.Flow
 
-class DogsScreenReducer () :
+class DogsScreenReducer() :
     Reducer<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent, DogsScreenReducer.DogsScreenEffect> {
 
     @Immutable
@@ -18,13 +18,25 @@ class DogsScreenReducer () :
         object Loading : DogsScreenEvent()
         data class DogDetailWithId(val dogId: String) : DogsScreenEvent()
         data class DogDetail(val dog: Dog) : DogsScreenEvent()
-        data class UpdateDogIsFollowed(val dogId: String, val isFollowed: Boolean) : DogsScreenEvent()
+        data class UpdateDogIsFollowed(val dog: Dog) : DogsScreenEvent()
         object OpenSettings : DogsScreenEvent()
         object CloseSettings : DogsScreenEvent()
-        data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
-        data class DataReceivedWithSearch(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
+        data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) :
+            DogsScreenEvent()
+        data class FavoriteAnimalCountChanged(val count: Int): DogsScreenEvent()
+
+        data class DataReceivedWithSearch(
+            val list: List<Dog>? = null,
+            val errorMessage: String? = null
+        ) : DogsScreenEvent()
+
         data class DataChanged(val list: List<Dog>? = null) : DogsScreenEvent()
-        data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : DogsScreenEvent()
+
+        data class SettingsUpdated(
+            val viewTypeDogs: ViewTypeForList,
+            val viewTypeForSettings: ViewTypeForSettings,
+            val searchType: SearchType
+        ) : DogsScreenEvent()
     }
 
     @Immutable
@@ -43,20 +55,34 @@ class DogsScreenReducer () :
         val viewTypeForSettings: ViewTypeForSettings,
         val searchType: SearchType,
         val showSettings: Boolean,
-        val testValue: Flow<Int>
+        val testValue: Flow<Int>,
+        val favoriteAnimalCount: Int
     ) : Reducer.ViewState {
         companion object {
-            fun initial(localDataSource: LocalDataSource, localDataSourceDogs: LocalDataSourceDogs): DogsScreenState {
+            fun initial(
+                localDataSource: LocalDataSource,
+                localDataSourceDogs: LocalDataSourceDogs
+            ): DogsScreenState {
                 return DogsScreenState(
                     loading = true,
                     errorMessage = null,
                     dogs = null,
                     dogsBackup = null,
-                    searchType = enumValueOf(localDataSourceDogs.getSearchTypeForDogList() ?: SearchType.LOCAL_SEARCH.name) as SearchType,
-                    viewTypeForList = enumValueOf(localDataSourceDogs.getListTypeForDogList() ?: ViewTypeForList.LAZY_COLUMN.name) as ViewTypeForList,
-                    viewTypeForSettings = enumValueOf(localDataSourceDogs.getSettingsTypeForDogList() ?: ViewTypeForSettings.POPUP.name) as ViewTypeForSettings,
+                    searchType = enumValueOf(
+                        localDataSourceDogs.getSearchTypeForDogList()
+                            ?: SearchType.LOCAL_SEARCH.name
+                    ) as SearchType,
+                    viewTypeForList = enumValueOf(
+                        localDataSourceDogs.getListTypeForDogList()
+                            ?: ViewTypeForList.LAZY_COLUMN.name
+                    ) as ViewTypeForList,
+                    viewTypeForSettings = enumValueOf(
+                        localDataSourceDogs.getSettingsTypeForDogList()
+                            ?: ViewTypeForSettings.POPUP.name
+                    ) as ViewTypeForSettings,
                     showSettings = false,
-                    testValue = localDataSource.getTestFlow()
+                    testValue = localDataSource.getTestFlow(),
+                    favoriteAnimalCount = 0
                 )
             }
         }
@@ -123,8 +149,29 @@ class DogsScreenReducer () :
                 ) to null
             }
 
+            is DogsScreenEvent.UpdateDogIsFollowed -> {
+                val list = previousState.dogsBackup
+                list?.forEach {
+                    if (it.id == event.dog.id) {
+                        it.isFavorite = event.dog.isFavorite
+                    }
+                }
+
+                val currentList = previousState.dogs
+                currentList?.forEach {
+                    if (it.id == event.dog.id) {
+                        it.isFavorite = event.dog.isFavorite
+                    }
+                }
+                previousState.copy(dogsBackup = list, dogs = currentList) to null
+            }
+
+            is DogsScreenEvent.FavoriteAnimalCountChanged -> {
+                previousState.copy(favoriteAnimalCount = event.count) to null
+            }
+
             is DogsScreenEvent.DogDetailWithId -> TODO()
-            is DogsScreenEvent.UpdateDogIsFollowed -> TODO()
+
         }
     }
 

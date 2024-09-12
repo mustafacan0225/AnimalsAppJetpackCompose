@@ -5,5 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoriteAnimalsRepository {
     suspend fun insertDog(dog: Dog)
-    suspend fun getDogList(): Flow<List<Dog>>
+    suspend fun deleteDog(dog: Dog)
+    suspend fun getDogListFlow(): Flow<List<Dog>>
+    suspend fun getDogList(): List<Dog>
 }

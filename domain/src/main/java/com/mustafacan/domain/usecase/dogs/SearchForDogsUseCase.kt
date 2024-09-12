@@ -6,7 +6,7 @@ import com.mustafacan.domain.repository.DogsRepository
 import javax.inject.Inject
 
 class SearchForDogsUseCase @Inject constructor(private val repository: DogsRepository) {
-    suspend fun runUseCase(query: String, result: (ApiResponse<List<Dog>>) -> Unit) {
-        result.invoke(repository.search(query))
+    suspend fun runUseCase(query: String): ApiResponse<List<Dog>> {
+        return repository.search(query)
     }
 }

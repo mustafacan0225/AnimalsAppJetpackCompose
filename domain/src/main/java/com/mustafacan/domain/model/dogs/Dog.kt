@@ -48,7 +48,9 @@ data class Dog(
 
     @ColumnInfo("image")
     @Serializable(with = UrlEncodedStringSerializer::class)
-    @SerializedName("image") var image: String? = null
+    @SerializedName("image") var image: String? = null,
+
+    @ColumnInfo("isFavorite") var isFavorite: Boolean? = false,
 ) : Parcelable
 
 object AnimalColorsConverters {
