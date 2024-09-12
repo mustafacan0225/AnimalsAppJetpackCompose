@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.navigation.compose)
+    implementation(libs.lottie.compose)
 }
