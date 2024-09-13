@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Toolbar(
-    title: String = "Animals App",
+    title: String = "",
     onBackPressed: (() -> Unit)? = null,
     actionList: List<ToolbarAction>? = null) {
 

@@ -76,4 +76,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)
     implementation(libs.constraintlayout)
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicator)
 }
