@@ -17,4 +17,13 @@
     <string name="retry">Retry</string>
     <string name="empty">No data found to display</string>
     <string name="settings_apply">Apply</string>
+
+    <string name="view_mode_tab_custom_indicator_without_icon">Custom Indicator Without Icon</string>
+    <string name="view_mode_tab_custom_indicator_with_icon">Custom Indicator With Icon</string>
+    <string name="view_mode_tab_custom_indicator_with_leading_icon">Custom Indicator With Leading Icon</string>
+    <string name="view_mode_tab_default_without_icon">Default Indicator Without Icon</string>
+    <string name="view_mode_tab_default_with_icon">Default Indicator With Icon</string>
+    <string name="view_mode_tab_default_with_leading_icon">Default Indicator With Leading Icon</string>
+
+    <string name="view_mode_tab_description">select view type for tab</string>
 </resources>

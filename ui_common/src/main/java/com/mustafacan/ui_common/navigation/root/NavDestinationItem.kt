@@ -13,7 +13,7 @@ import com.mustafacan.domain.model.dogs.Dog
 sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
 
     @Serializable
-    object Dogs : NavDestinationItem(R.string.bottom_menu_title_dogs, R.drawable.dog)
+    object Dogs : NavDestinationItem(R.string.bottom_menu_title_dogs, R.drawable.temperament)
 
     @Serializable
     data class DogDetailScreen(

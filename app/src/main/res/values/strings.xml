@@ -18,4 +18,5 @@
     <string name="search_type_remote">Remote Search (From API)</string>
     <string name="search_placeholder_remote">search from remote</string>
     <string name="search_placeholder_local">search from locale</string>
+
 </resources>
