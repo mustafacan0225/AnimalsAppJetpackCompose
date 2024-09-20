@@ -61,7 +61,6 @@ import com.mustafacan.ui_dogs.feature.settings.SettingsScreenWithBottomSheet
 import com.mustafacan.ui_dogs.feature.settings.SettingsScreenWithPopup
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DogsScreen(navController: NavController) {
     val viewModel = hiltViewModel<DogsViewModel>()
@@ -220,9 +219,6 @@ fun DogListForLazyColumn(
                 ) {
                     val (image, dogInfoLayaout, favoriteIcon) = createRefs()
 
-                    LaunchedEffect(key1 = dog.id) {
-
-                    }
                     Card(
                         modifier = Modifier
                             .width(80.dp)

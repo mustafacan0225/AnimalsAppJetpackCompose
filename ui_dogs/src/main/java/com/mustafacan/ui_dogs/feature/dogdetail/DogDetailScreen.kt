@@ -45,6 +45,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -58,7 +59,6 @@ import com.mustafacan.ui_common.components.tab.ScrollableTabRowWithDefaultIndica
 import com.mustafacan.ui_common.components.toolbar.Toolbar
 import com.mustafacan.ui_common.components.toolbar.ToolbarAction
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
-import com.mustafacan.ui_common.util.rememberFlowWithLifecycle
 import com.mustafacan.ui_dogs.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +66,6 @@ import com.mustafacan.ui_dogs.R
 fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel) {
     println("dog id: " + viewModel.dog?.name)
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val effect = rememberFlowWithLifecycle(viewModel.effect)
     val scope = rememberCoroutineScope()
     val pagerState = androidx.compose.foundation.pager.rememberPagerState(initialPage = 0) { 4 }
 
@@ -88,7 +87,7 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
         CreateTabBar(state, onClickTab = {
             viewModel.onClickTab(it)
         })
-        DogDetailContent(uiState = state)
+        DogDetailContent(uiState = state, viewModel)
 
 
         if (state.value.showSettings) {
@@ -170,27 +169,28 @@ fun CreateTabBar(
 }
 
 
-
-
 @Composable
-fun DogDetailContent(uiState: State<DogDetailScreenReducer.DogDetailScreenState>) {
+fun DogDetailContent(
+    uiState: State<DogDetailScreenReducer.DogDetailScreenState>,
+    viewModel: DogDetailViewModel
+) {
     uiState.value.pagerState?.let {
         HorizontalPager(state = it, modifier = Modifier.fillMaxSize()) { index ->
             when (index) {
                 0 -> {
-                    GeneralContent(uiState.value.dog!!)
+                    GeneralContent(uiState.value.dog!!.description?: "")
                 }
 
                 1 -> {
-                    Text(text = stringResource(id = uiState.value?.tabList!![index].first))
+                    InfoContent(uiState.value.dog!!)
                 }
 
                 2 -> {
-                    Text(text = stringResource(id = uiState.value?.tabList!![index].first))
+                    TemperamentContent(viewModel.getTemperament(uiState.value.dog!!))
                 }
 
                 3 -> {
-                    Text(text = stringResource(id = uiState.value?.tabList!![index].first))
+                    ColorsContent(uiState.value.dog!!.colors)
                 }
 
             }
@@ -201,7 +201,25 @@ fun DogDetailContent(uiState: State<DogDetailScreenReducer.DogDetailScreenState>
 }
 
 @Composable
-fun GeneralContent(dog: Dog) {
+fun GeneralContent(description: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.description)
+        )
+        Text(fontSize = 14.sp, text = description, textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+fun InfoContent(dog: Dog) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -210,25 +228,95 @@ fun GeneralContent(dog: Dog) {
     ) {
 
         Text(
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             text = stringResource(id = R.string.name)
         )
-        Text(fontSize = 18.sp, text = dog.name ?: "")
+        Text(fontSize = 14.sp, text = dog.name ?: "")
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             text = stringResource(id = R.string.breed_group)
         )
-        Text(fontSize = 18.sp, text = dog.breedGroup ?: "")
+        Text(fontSize = 14.sp, text = dog.breedGroup ?: "")
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            fontSize = 18.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             text = stringResource(id = R.string.origin)
         )
-        Text(fontSize = 18.sp, text = dog.origin ?: "")
+        Text(fontSize = 14.sp, text = dog.origin ?: "")
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.lifespan)
+        )
+        Text(fontSize = 14.sp, text = dog.lifespan ?: "")
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.size)
+        )
+        Text(fontSize = 14.sp, text = dog.size ?: "")
+    }
+}
+
+@Composable
+fun TemperamentContent(temperamentList: List<String>) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            fontSize = 14.sp,
+            text = stringResource(id = R.string.temperament_desc)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.tab_temperament)
+        )
+        temperamentList.forEach {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(fontSize = 14.sp, text = it, textAlign = TextAlign.Center)
+        }
+
+
+    }
+}
+
+@Composable
+fun ColorsContent(colors: List<String>) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            fontSize = 14.sp,
+            text = stringResource(id = R.string.colors_desc)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.tab_colors)
+        )
+        colors.forEach {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(fontSize = 14.sp, text = it, textAlign = TextAlign.Center)
+        }
+
+
     }
 }
 

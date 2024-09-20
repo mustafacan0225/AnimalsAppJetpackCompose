@@ -15,7 +15,7 @@ import com.mustafacan.ui_dogs.feature.dogs.DogsScreen
 import kotlin.reflect.typeOf
 
 @Composable
-fun NavigationDogs() {
+fun NavigationDogs(callbackBottomMenuVisibility: (visibility: Boolean) -> Unit) {
     val navController = rememberNavController()
 
     NavHost(
@@ -23,12 +23,12 @@ fun NavigationDogs() {
         startDestination = NavDestinationItem.Dogs
     ) {
         composable<NavDestinationItem.Dogs> {
-            //onChangeVisibilityBottomMenu?.invoke(true)
+            callbackBottomMenuVisibility(true)
             DogsScreen(navController)
         }
 
         composable<NavDestinationItem.DogDetailScreen>(typeMap = mapOf(typeOf<Dog>() to NavType.fromCustom<Dog>())) {
-            //onChangeVisibilityBottomMenu?.invoke(true)
+            callbackBottomMenuVisibility(false)
             val viewModel = hiltViewModel<DogDetailViewModel>()
             DogDetailScreen(navController, viewModel)
         }

@@ -1,20 +1,13 @@
 package com.mustafacan.ui_dogs.feature.dogdetail
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import com.mustafacan.data.local.LocalDataSource
 import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
-import com.mustafacan.ui_common.model.enums.SearchType
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
-import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_dogs.R
-import com.mustafacan.ui_dogs.feature.dogs.DogsScreenReducer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +32,18 @@ class DogDetailViewModel @Inject constructor(
         R.string.tab_temperament to R.drawable.temperament,
         R.string.tab_colors to R.drawable.colors
     )
+
+    fun getTemperament(dog: Dog): List<String> {
+
+        if ((dog.temperament?: "").contains(",")) {
+            var list = dog.temperament?.replace(" ", "")?.split(",")
+            list?.let {
+                return it
+            }
+        }
+
+        return listOf(dog.temperament?: "")
+    }
 
     fun load(pagerState: PagerState, scope: CoroutineScope) {
         sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.Load(dog = dog!!, pagerState = pagerState, tabList = tabList, scope = scope))

@@ -12,7 +12,8 @@ import com.mustafacan.ui_dogs.feature.navigation.NavigationDogs
 
 @Composable
 fun NavigationMain(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    callbackBottomMenuVisibility: (visibility: Boolean) -> Unit
 ) {
 
     NavHost(
@@ -21,7 +22,9 @@ fun NavigationMain(
     ) {
 
         composable<NavDestinationItem.Dogs> {
-            NavigationDogs()
+            NavigationDogs(callbackBottomMenuVisibility = {
+                callbackBottomMenuVisibility(it)
+            })
         }
 
         composable<NavDestinationItem.Cats> {
