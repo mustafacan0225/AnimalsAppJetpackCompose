@@ -59,6 +59,7 @@ import androidx.navigation.NavController
 
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.components.image.CircleImage
+import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.components.tab.ScrollableTabRowWithCustomIndicator
 import com.mustafacan.ui_common.components.tab.ScrollableTabRowWithDefaultIndicator
 import com.mustafacan.ui_common.components.toolbar.Toolbar
@@ -90,7 +91,12 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
         Toolbar(onBackPressed = { navController.popBackStack() }, actionList = actionListForToolbar)
         DogImage(updateIsFavorite = {
             viewModel.updateIsFavorite()
-        }, dog = state.value.dog?: viewModel.dog, isSelectedFavIcon = state.value.isSelectedFavIcon)
+            if (!state.value.dog!!.isFavorite!!) {
+                viewModel.showLikeAnimation()
+            } else {
+                viewModel.hideLikeAnimation()
+            }
+        }, dog = state.value.dog?: viewModel.dog, isSelectedFavIcon = state.value.isSelectedFavIcon, animationVisibility = state.value.likeAnimationVisibility)
         CreateTabBar(state, onClickTab = {
             viewModel.onClickTab(it)
         })
@@ -112,7 +118,7 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
 }
 
 @Composable
-fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean) {
+fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean, animationVisibility: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,7 +128,7 @@ fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean)
         ConstraintLayout(modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()) {
-            val (image, favoriteIcon) = createRefs()
+            val (image, favoriteIcon, animationIcon) = createRefs()
 
             CircleImage(
                 url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
@@ -143,11 +149,23 @@ fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean)
                         centerHorizontallyTo(parent)
                         top.linkTo(image.bottom)
                         bottom.linkTo(image.bottom)
-                    }.clickable {
+                    }
+                    .clickable {
                         updateIsFavorite()
                     }
 
             )
+
+            if (dog.isFavorite?: false) {
+                LikeAnimation(modifier = Modifier
+                    .size(50.dp)
+                    .constrainAs(animationIcon) {
+                        centerHorizontallyTo(parent)
+                        top.linkTo(image.bottom)
+                        bottom.linkTo(image.bottom)
+                    })
+            }
+
         }
 
 

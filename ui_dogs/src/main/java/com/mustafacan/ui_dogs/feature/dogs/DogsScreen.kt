@@ -57,6 +57,7 @@ import com.mustafacan.ui_common.components.toolbar.ToolbarAction
 import com.mustafacan.ui_common.navigation.root.NavDestinationItem
 import com.mustafacan.ui_common.util.rememberFlowWithLifecycle
 import com.mustafacan.ui_common.R
+import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_dogs.feature.settings.SettingsScreenWithBottomSheet
 import com.mustafacan.ui_dogs.feature.settings.SettingsScreenWithPopup
 
@@ -235,7 +236,9 @@ fun DogListForLazyColumn(
                     ) {
                         CircleImage(
                             url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
-                            modifier = Modifier.size(80.dp).clip(CircleShape)
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
                         )
                     }
 
@@ -269,14 +272,24 @@ fun DogListForLazyColumn(
                         centerVerticallyTo(parent)
                         end.linkTo(parent.end)
                     }) {
-                        Icon(
+                        if (dog.isFavorite?: false) {
+                            LikeAnimation(modifier = Modifier.size(50.dp))
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "favorite",
+                                tint = Color.Black
+
+                            )
+                        }
+                        /*Icon(
                             imageVector = if (dog.isFavorite
                                     ?: false
                             ) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "favorite",
                             tint = if (dog.isFavorite ?: false) Color.Red else Color.Black
 
-                        )
+                        )*/
                     }
 
                 }
@@ -338,7 +351,9 @@ fun DogListForLazyVerticalGrid(
                     ) {
                         CircleImage(
                             url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
-                            modifier = Modifier.size(80.dp).clip(CircleShape)
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
                         )
                     }
                     Text(
@@ -356,13 +371,23 @@ fun DogListForLazyVerticalGrid(
                         else
                             addFavorite(dog)
                     }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        Icon(
+                        if (dog.isFavorite?: false) {
+                            LikeAnimation(modifier = Modifier.size(50.dp))
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.FavoriteBorder,
+                                contentDescription = "favorite",
+                                tint = Color.Black
+
+                            )
+                        }
+                        /*Icon(
                             imageVector = if (dog.isFavorite
                                     ?: false
                             ) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = "favorite",
                             tint = if (dog.isFavorite ?: false) Color.Red else Color.Black
-                        )
+                        )*/
                     }
                 }
             }

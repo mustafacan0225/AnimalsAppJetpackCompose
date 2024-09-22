@@ -89,4 +89,14 @@ class DogDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun showLikeAnimation() {
+        viewModelScope.launch {
+            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.ShowLikeAnimation)
+        }
+    }
+
+    fun hideLikeAnimation() {
+        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.HideLikeAnimation)
+    }
 }

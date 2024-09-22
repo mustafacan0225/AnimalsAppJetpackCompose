@@ -41,3 +41,19 @@ fun LottieAnimationEmpty(modifier: Modifier) {
         modifier = modifier
     )
 }
+
+@Composable
+fun LikeAnimation(modifier: Modifier) {
+
+    val rawComposition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.like))
+    val progress by animateLottieCompositionAsState(
+        composition = rawComposition,
+        iterations = LottieConstants.IterateForever
+    )
+
+    LottieAnimation(
+        composition = rawComposition,
+        progress = { progress },
+        modifier = modifier
+    )
+}
