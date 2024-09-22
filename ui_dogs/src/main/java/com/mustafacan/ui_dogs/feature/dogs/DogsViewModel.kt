@@ -87,10 +87,6 @@ class DogsViewModel @Inject constructor(
         }
     }
 
-    fun getFavoriteDog() {
-
-    }
-
     fun getDogs() {
         viewModelScope.launch {
             //delay for test
@@ -170,7 +166,7 @@ class DogsViewModel @Inject constructor(
         viewModelScope.launch {
             favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
                 Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
-                sendEvent(DogsScreenReducer.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList.size))
+                sendEvent(DogsScreenReducer.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }
     }

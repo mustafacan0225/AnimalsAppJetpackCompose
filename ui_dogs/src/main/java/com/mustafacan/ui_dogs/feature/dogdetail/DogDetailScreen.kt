@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -22,8 +23,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -49,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 
@@ -83,7 +88,9 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
     ) {
 
         Toolbar(onBackPressed = { navController.popBackStack() }, actionList = actionListForToolbar)
-        DogImage()
+        DogImage(updateIsFavorite = {
+            viewModel.updateIsFavorite()
+        }, dog = state.value.dog?: viewModel.dog, isSelectedFavIcon = state.value.isSelectedFavIcon)
         CreateTabBar(state, onClickTab = {
             viewModel.onClickTab(it)
         })
@@ -105,19 +112,46 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
 }
 
 @Composable
-fun DogImage() {
+fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = colorResource(id = R.color.statusbar_color)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CircleImage(
-            url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-        )
+        ConstraintLayout(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()) {
+            val (image, favoriteIcon) = createRefs()
+
+            CircleImage(
+                url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .constrainAs(image) {
+                        centerHorizontallyTo(parent)
+                    }
+            )
+
+            Icon(imageVector = if (isSelectedFavIcon) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = "favorite",
+                tint = if (isSelectedFavIcon) Color.Red else Color.White,
+                modifier = Modifier
+                    .size(50.dp)
+                    .constrainAs(favoriteIcon) {
+                        centerHorizontallyTo(parent)
+                        top.linkTo(image.bottom)
+                        bottom.linkTo(image.bottom)
+                    }.clickable {
+                        updateIsFavorite()
+                    }
+
+            )
+        }
+
+
+
 
 
     }
@@ -178,19 +212,19 @@ fun DogDetailContent(
         HorizontalPager(state = it, modifier = Modifier.fillMaxSize()) { index ->
             when (index) {
                 0 -> {
-                    GeneralContent(uiState.value.dog!!.description?: "")
+                    GeneralContent((uiState.value.dog?: viewModel.dog)!!.description?: "")
                 }
 
                 1 -> {
-                    InfoContent(uiState.value.dog!!)
+                    InfoContent((uiState.value.dog?: viewModel.dog)!!)
                 }
 
                 2 -> {
-                    TemperamentContent(viewModel.getTemperament(uiState.value.dog!!))
+                    TemperamentContent(viewModel.getTemperament(uiState.value.dog?: viewModel.dog!!))
                 }
 
                 3 -> {
-                    ColorsContent(uiState.value.dog!!.colors)
+                    ColorsContent((uiState.value.dog?: viewModel.dog)!!.colors)
                 }
 
             }

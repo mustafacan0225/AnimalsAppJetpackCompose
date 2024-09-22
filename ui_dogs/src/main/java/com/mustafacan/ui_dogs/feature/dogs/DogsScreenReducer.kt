@@ -23,7 +23,7 @@ class DogsScreenReducer() :
         object CloseSettings : DogsScreenEvent()
         data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) :
             DogsScreenEvent()
-        data class FavoriteAnimalCountChanged(val count: Int): DogsScreenEvent()
+        data class FavoriteAnimalCountChanged(val favoriteList: List<Dog>): DogsScreenEvent()
 
         data class DataReceivedWithSearch(
             val list: List<Dog>? = null,
@@ -150,24 +150,22 @@ class DogsScreenReducer() :
             }
 
             is DogsScreenEvent.UpdateDogIsFollowed -> {
-                val list = previousState.dogsBackup
-                list?.forEach {
-                    if (it.id == event.dog.id) {
-                        it.isFavorite = event.dog.isFavorite
-                    }
-                }
 
-                val currentList = previousState.dogs
-                currentList?.forEach {
-                    if (it.id == event.dog.id) {
-                        it.isFavorite = event.dog.isFavorite
-                    }
-                }
-                previousState.copy(dogsBackup = list, dogs = currentList) to null
+                previousState.dogs?.find { it.id == event.dog.id }?.isFavorite = event.dog.isFavorite
+                previousState.dogsBackup?.find { it.id == event.dog.id }?.isFavorite = event.dog.isFavorite
+                previousState.copy(dogsBackup = previousState.dogsBackup, dogs = previousState.dogs) to null
             }
 
             is DogsScreenEvent.FavoriteAnimalCountChanged -> {
-                previousState.copy(favoriteAnimalCount = event.count) to null
+                previousState.dogs?.map { it.isFavorite = false }
+                previousState.dogsBackup?.map { it.isFavorite = false }
+
+                event.favoriteList?.forEach { favoriteAnimal ->
+                    previousState.dogs?.find { it.id == favoriteAnimal.id }?.isFavorite = true
+                    previousState.dogsBackup?.find { it.id == favoriteAnimal.id }?.isFavorite = true
+                }
+
+                previousState.copy(dogs = previousState.dogs, dogsBackup = previousState.dogsBackup, favoriteAnimalCount = event.favoriteList.size) to null
             }
 
             is DogsScreenEvent.DogDetailWithId -> TODO()

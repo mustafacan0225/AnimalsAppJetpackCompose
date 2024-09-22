@@ -18,9 +18,8 @@ class DogDetailScreenReducer() :
         data class OnClickTabItem(val index: Int): DogDetailScreenEvent()
         object OpenSettings : DogDetailScreenEvent()
         object CloseSettings : DogDetailScreenEvent()
-        data class SettingsUpdated(
-            val viewTypeForTab: ViewTypeForTab
-        ) : DogDetailScreenEvent()
+        data class SettingsUpdated(val viewTypeForTab: ViewTypeForTab) : DogDetailScreenEvent()
+        object UpdateDogIsFavorite : DogDetailScreenEvent()
     }
 
     @Immutable
@@ -32,6 +31,7 @@ class DogDetailScreenReducer() :
     @Immutable
     data class DogDetailScreenState(
         val dog: Dog? = null,
+        val isSelectedFavIcon: Boolean = false,
         val pagerState: PagerState? = null,
         val tabList: List<Pair<Int, Int>>? = null,
         val coroutineScope: CoroutineScope? = null,
@@ -58,7 +58,8 @@ class DogDetailScreenReducer() :
                     dog = event.dog,
                     pagerState = event.pagerState,
                     tabList = event.tabList,
-                    coroutineScope = event.scope
+                    coroutineScope = event.scope,
+                    isSelectedFavIcon = event.dog.isFavorite?: false
                 ) to null
             }
 
@@ -83,6 +84,11 @@ class DogDetailScreenReducer() :
 
             is DogDetailScreenEvent.SettingsUpdated -> {
                 previousState.copy(currentViewTypeForTab = event.viewTypeForTab, showSettings = false) to null
+            }
+
+            is DogDetailScreenEvent.UpdateDogIsFavorite -> {
+                previousState.dog?.isFavorite = !previousState.dog?.isFavorite!!
+                previousState.copy(dog = previousState.dog, isSelectedFavIcon = previousState.dog.isFavorite?: false) to null
             }
 
 

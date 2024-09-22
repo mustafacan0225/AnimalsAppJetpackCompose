@@ -1,23 +1,30 @@
 package com.mustafacan.ui_dogs.feature.dogdetail
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
+import com.mustafacan.domain.usecase.dogs.roomdb.AddFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_dogs.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DogDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     val localDataSource: LocalDataSourceDogs,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val addFavoriteDogUseCase: AddFavoriteDogUseCase,
+    private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase
 ) : BaseViewModel<DogDetailScreenReducer.DogDetailScreenState, DogDetailScreenReducer.DogDetailScreenEvent,
         DogDetailScreenReducer.DogDetailScreenEffect>(
     initialState = DogDetailScreenReducer.DogDetailScreenState.initial(localDataSource),
@@ -64,5 +71,22 @@ class DogDetailViewModel @Inject constructor(
     fun settingsUpdated(viewTypeForTab: ViewTypeForTab) {
         localDataSource.saveTabTypeForDogDetail(viewTypeForTab.name)
         sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.SettingsUpdated(viewTypeForTab))
+    }
+
+    fun updateIsFavorite() {
+        viewModelScope.launch {
+            if (state.value.dog?.isFavorite?: false) {
+                if (deleteFavoriteDogUseCase.runUseCase(dog!!)) {
+                    Log.d("room-test", "deleted favorite dog " + dog.name)
+                    sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.UpdateDogIsFavorite)
+                }
+            } else {
+                if (addFavoriteDogUseCase.runUseCase(dog!!.copy(isFavorite = true))) {
+                    Log.d("room-test", "added favorite dog " + dog.name)
+                    sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.UpdateDogIsFavorite)
+                }
+
+            }
+        }
     }
 }
