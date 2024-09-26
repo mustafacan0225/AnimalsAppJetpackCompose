@@ -2,4 +2,8 @@
 <resources>
     <color name="statusbar_color">#005890</color>
     <color name="indicator_color">#4B95C5</color>
+    <color name="track_checked_color">#4B95C5</color>
+    <color name="track_unchecked_color">#ffffff</color>
+    <color name="thumb_unchecked_color">#e7e4e4</color>
+    <color name="border_unchecked_color">#ffffff</color>
 </resources>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ui_reminder</string>
+    <string name="reminder">Reminder</string>
 </resources>
