@@ -70,12 +70,21 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.navigation.compose)
+
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    //workmanager
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
+    annotationProcessor(libs.androidx.hilt.compiler)
+    implementation(libs.work.runtime)
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)
     implementation(libs.constraintlayout)
+
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicator)
 }

@@ -85,9 +85,19 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.navigation.compose)
+
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.startup.runtime)
+
+    //workmanager
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
+    annotationProcessor(libs.androidx.hilt.compiler)
+
+
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)
 

@@ -90,6 +90,7 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
 
         Toolbar(onBackPressed = { navController.popBackStack() }, actionList = actionListForToolbar)
         DogImage(updateIsFavorite = {
+            viewModel.testWorker()
             viewModel.updateIsFavorite()
             if (!state.value.dog!!.isFavorite!!) {
                 viewModel.showLikeAnimation()

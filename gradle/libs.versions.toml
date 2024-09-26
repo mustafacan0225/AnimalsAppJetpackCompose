@@ -12,6 +12,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 hilt = "2.48"
 hiltNavigationCompose = "1.1.0"
+hiltCompiler = "1.0.0"
 ksp = "2.0.0-1.0.23"
 retrofit = "2.11.0"
 logging-interceptor = "4.12.0"
@@ -29,6 +30,8 @@ roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
 lottie-compose = "6.1.0"
 accompanist-pager = "0.34.0"
+startup-runtime = "1.2.0"
+work-runtime = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +52,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltCompiler" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltCompiler" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor"}
@@ -67,7 +72,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-compose" }
 accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist-pager" }
 accompanist-pager-indicator = {group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist-pager"}
-
+startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup-runtime" }
+work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

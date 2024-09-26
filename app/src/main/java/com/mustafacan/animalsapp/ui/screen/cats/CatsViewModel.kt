@@ -31,7 +31,7 @@ class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
 
     fun getCats() {
         viewModelScope.launch {
-            getCatsUseCase.runUseCase { result ->
+           /* getCatsUseCase.runUseCase { result ->
                 when(result) {
                     is ApiResponse.Success<List<Cat>> -> {
                         catList = result.data
@@ -45,7 +45,7 @@ class CatsViewModel @Inject constructor(val localDataSource: LocalDataSource,
 
                 }
 
-            }
+            }*/
         }
     }
 

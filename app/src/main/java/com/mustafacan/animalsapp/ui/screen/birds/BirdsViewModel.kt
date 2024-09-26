@@ -19,7 +19,7 @@ class BirdsViewModel @Inject constructor(private val getBirdsUseCase: GetBirdsUs
 
     fun getBirds() {
         viewModelScope.launch {
-            getBirdsUseCase.runUseCase { result ->
+            /*getBirdsUseCase.runUseCase { result ->
                 when(result) {
                     is ApiResponse.Success<List<Bird>> -> {
                         Log.d("response", "bird count: " + result.data.size.toString())
@@ -31,7 +31,7 @@ class BirdsViewModel @Inject constructor(private val getBirdsUseCase: GetBirdsUs
 
                 }
 
-            }
+            }*/
         }
     }
 }

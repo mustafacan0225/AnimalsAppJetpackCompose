@@ -1,10 +1,14 @@
 package com.mustafacan.ui_dogs.feature.dogdetail
 
 import android.content.Context
+import android.icu.util.Calendar
 import android.util.Log
 import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.usecase.dogs.roomdb.AddFavoriteDogUseCase
@@ -12,10 +16,12 @@ import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_dogs.R
+import com.mustafacan.ui_dogs.feature.worker.AlarmWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -98,5 +104,11 @@ class DogDetailViewModel @Inject constructor(
 
     fun hideLikeAnimation() {
         sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.HideLikeAnimation)
+    }
+
+    fun testWorker() {
+        Log.d("alarmworker", "called testWorker")
+
+        AlarmWorker.initWorker(context, dog!!)
     }
 }
