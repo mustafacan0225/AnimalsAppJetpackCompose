@@ -1,10 +1,6 @@
 package com.mustafacan.animalsapp.ui.navigation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +9,7 @@ import com.mustafacan.animalsapp.ui.screen.birds.BirdsScreen
 import com.mustafacan.animalsapp.ui.screen.cats.CatsScreen
 import com.mustafacan.ui_common.navigation.root.NavDestinationItem
 import com.mustafacan.ui_dogs.feature.navigation.NavigationDogs
+import com.mustafacan.ui_reminder.feature.navigation.NavigationReminder
 
 @Composable
 fun NavigationMain(
@@ -40,9 +37,7 @@ fun NavigationMain(
         }
 
         composable<NavDestinationItem.Reminder> {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Text(text = "REMINDER PAGE")
-            }
+            NavigationReminder()
         }
 
     }

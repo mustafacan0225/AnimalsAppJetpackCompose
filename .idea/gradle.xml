@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/ui_common" />
             <option value="$PROJECT_DIR$/ui_dogs" />
+            <option value="$PROJECT_DIR$/ui_reminder" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

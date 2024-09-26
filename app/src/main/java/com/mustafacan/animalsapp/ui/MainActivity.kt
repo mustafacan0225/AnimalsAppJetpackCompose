@@ -50,10 +50,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    /**
-     * Requests notification permission if it's not granted.
-     * Shows a toast message indicating the permission status.
-     */
     private fun requestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = Manifest.permission.POST_NOTIFICATIONS
@@ -62,12 +58,12 @@ class MainActivity : ComponentActivity() {
                     this, permission
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     // Action to take when permission is already granted
-                    Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
                 }
 
                 shouldShowRequestPermissionRationale(permission) -> {
                     // Action to take when permission was denied permanently
-                    Toast.makeText(this, "Permission denied permanently", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, "Permission denied permanently", Toast.LENGTH_LONG).show()
                 }
 
                 else -> {
