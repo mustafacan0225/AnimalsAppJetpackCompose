@@ -29,7 +29,8 @@ fun BottomMenu(
     val items = listOf(
         NavDestinationItem.Dogs,
         NavDestinationItem.Birds,
-        NavDestinationItem.Cats)
+        NavDestinationItem.Cats,
+        NavDestinationItem.Reminder)
 
     BottomAppBar(
         containerColor = colorResource(id = R.color.statusbar_color),

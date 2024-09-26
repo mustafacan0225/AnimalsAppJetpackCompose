@@ -3,6 +3,7 @@
     <string name="bottom_menu_title_dogs">Dogs</string>
     <string name="bottom_menu_title_cats">Cats</string>
     <string name="bottom_menu_title_birds">Birds</string>
+    <string name="bottom_menu_reminder">Reminder</string>
     <string name="search_placeholder_remote">search from remote</string>
     <string name="search_placeholder_local">search from locale</string>
     <string name="search_type_locale">Locale Search(From Current List)</string>

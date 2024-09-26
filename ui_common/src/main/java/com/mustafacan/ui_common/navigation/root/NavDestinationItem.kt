@@ -26,6 +26,9 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
     @Serializable
     object Birds : NavDestinationItem(R.string.bottom_menu_title_birds, R.drawable.bird)
 
+    @Serializable
+    object Reminder : NavDestinationItem(R.string.bottom_menu_reminder, R.drawable.menu_notification)
+
 
 }
 
