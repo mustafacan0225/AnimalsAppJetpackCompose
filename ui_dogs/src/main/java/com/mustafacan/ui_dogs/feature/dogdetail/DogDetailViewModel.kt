@@ -16,7 +16,6 @@ import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_dogs.R
-import com.mustafacan.ui_dogs.feature.worker.AlarmWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -106,9 +105,4 @@ class DogDetailViewModel @Inject constructor(
         sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.HideLikeAnimation)
     }
 
-    fun testWorker() {
-        Log.d("alarmworker", "called testWorker")
-
-        AlarmWorker.initWorker(context, dog!!)
-    }
 }

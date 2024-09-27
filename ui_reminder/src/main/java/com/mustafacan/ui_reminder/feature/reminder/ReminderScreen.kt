@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,7 +63,7 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Reminder notifications for dogs")
+        Text(text = stringResource(id = R.string.reminder_switch_text_dogs))
         Switch(
             checked = uiState.value.dogsReminderState,
             onCheckedChange = { dogSwitchStateUpdated(it) },
@@ -71,7 +73,16 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
                 uncheckedThumbColor = Color.LightGray,
                 uncheckedTrackColor = colorResource(id = R.color.track_unchecked_color),
                 uncheckedBorderColor = Color.LightGray,
-            )
+            ),
+            thumbContent = {
+                if (uiState.value.dogsReminderState) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                    )
+                }
+            }
         )
     }
 
@@ -82,7 +93,7 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Reminder notifications for cats")
+        Text(text = stringResource(id = R.string.reminder_switch_text_cats))
         Switch(
             checked = uiState.value.catsReminderState,
             onCheckedChange = { catSwitchStateUpdated(it) },
@@ -92,7 +103,16 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
                 uncheckedThumbColor = Color.LightGray,
                 uncheckedTrackColor = colorResource(id = R.color.track_unchecked_color),
                 uncheckedBorderColor = Color.LightGray,
-            )
+            ),
+            thumbContent = {
+                if (uiState.value.catsReminderState) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                    )
+                }
+            }
         )
     }
 
@@ -103,7 +123,8 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Reminder notifications for birds")
+        Text(text = stringResource(id = R.string.reminder_switch_text_birds))
+
         Switch(
             checked = uiState.value.birdsReminderState,
             onCheckedChange = { birdSwitchStateUpdated(it) },
@@ -113,19 +134,31 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
                 uncheckedThumbColor = Color.LightGray,
                 uncheckedTrackColor = colorResource(id = R.color.track_unchecked_color),
                 uncheckedBorderColor = Color.LightGray,
-            )
+            ),
+            thumbContent = {
+                if (uiState.value.birdsReminderState) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                    )
+                }
+            }
         )
     }
 
     Text(modifier = Modifier
         .fillMaxWidth()
-        .padding(10.dp), fontSize = 12.sp, text = "You can activate periodic reminder notifications. Even if the application is closed, a request will be sent to the rest API in the background and the data received from the remote server will be displayed as a notification.", textAlign = TextAlign.Start)
+        .padding(10.dp), fontSize = 12.sp, text = stringResource(id = R.string.reminder_description), textAlign = TextAlign.Start)
 
 
-    Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
+    Spacer(modifier = Modifier
+        .fillMaxWidth()
+        .height(1.dp)
+        .background(Color.LightGray))
 
     Text(modifier = Modifier
         .fillMaxWidth()
-        .padding(10.dp), fontSize = 14.sp, fontWeight = FontWeight.Black, text = "WorkManager is used for this feature.", textAlign = TextAlign.Center)
+        .padding(10.dp), fontSize = 14.sp, fontWeight = FontWeight.Black, text = stringResource(id = R.string.reminder_workmanager), textAlign = TextAlign.Center)
 
 }
