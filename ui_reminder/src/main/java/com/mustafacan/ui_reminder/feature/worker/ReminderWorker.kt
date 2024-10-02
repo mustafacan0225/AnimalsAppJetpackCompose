@@ -22,12 +22,11 @@ import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.birds.GetBirdsUseCase
 import com.mustafacan.domain.usecase.cats.GetCatsUseCase
-import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
 import com.mustafacan.ui_reminder.R
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random

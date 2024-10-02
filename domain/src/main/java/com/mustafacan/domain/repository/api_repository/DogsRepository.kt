@@ -1,4 +1,4 @@
-package com.mustafacan.domain.repository
+package com.mustafacan.domain.repository.api_repository
 
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse

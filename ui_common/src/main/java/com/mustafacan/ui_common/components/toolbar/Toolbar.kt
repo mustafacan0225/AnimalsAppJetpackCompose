@@ -27,16 +27,9 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Toolbar(
-    title: String = "",
-    onBackPressed: (() -> Unit)? = null,
-    actionList: List<ToolbarAction>? = null) {
+fun Toolbar(title: String = "", onBackPressed: (() -> Unit)? = null, actionList: List<ToolbarAction>? = null) {
 
-    TopAppBar(
-        title = {
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ){
+    TopAppBar(title = { Row (verticalAlignment = Alignment.CenterVertically){
                 if (onBackPressed == null && actionList == null)
                     Text(text = title, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
                 else

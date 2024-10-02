@@ -3,15 +3,20 @@ package com.mustafacan.ui_dogs.feature.dogs
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.data.local.LocalDataSource
-import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
+import com.mustafacan.domain.model.error.CustomException
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.dogs.roomdb.AddFavoriteDogUseCase
-import com.mustafacan.domain.usecase.dogs.GetDogsUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb.GetFavoriteDogsUseCase
-import com.mustafacan.domain.usecase.dogs.SearchForDogsUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetListTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSearchTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSettingsTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveListTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSearchTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSettingsTypeUseCase
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
@@ -30,36 +35,30 @@ import javax.inject.Inject
 @HiltViewModel
 class DogsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val localDataSource: LocalDataSource,
-    private val localDataSourceDogs: LocalDataSourceDogs,
     private val getDogsUseCase: GetDogsUseCase,
     private val searchForDogsUseCase: SearchForDogsUseCase,
     private val addFavoriteDogUseCase: AddFavoriteDogUseCase,
     private val getFavoriteDogsUseCase: GetFavoriteDogsUseCase,
-    private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase
+    private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase,
+    private val getSearchTypeUseCase: GetSearchTypeUseCase,
+    private val getListTypeUseCase: GetListTypeUseCase,
+    private val getSettingsTypeUseCase: GetSettingsTypeUseCase,
+    private val saveListTypeUseCase: SaveListTypeUseCase,
+    private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
+    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase
 ) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
-        DogsScreenReducer.DogsScreenEffect>(initialState = DogsScreenReducer.DogsScreenState.initial(localDataSource, localDataSourceDogs),
-    reducer = DogsScreenReducer()) {
+        DogsScreenReducer.DogsScreenEffect>(
+    initialState = DogsScreenReducer.DogsScreenState.initial(),
+    reducer = DogsScreenReducer()
+) {
+
     init {
-        Log.d("initVM", "initVM DogsViewModel")
 
         callDogs()
 
         viewModelScope.launch {
-            localDataSource.getTestFlow().stateIn(this).collectLatest { newValue ->
-                Log.d("listenpref:", "new value - " + newValue.toString())
-                state.value.testValue.collect() {
-                    Log.d("listenpref2:", "state value - " + it.toString())
-                }
-            }
-        }
-
-        viewModelScope.launch {
             val favoriteAnimalsFlow = getFavoriteDogsUseCase.runUseCase()
             favoriteAnimalsChanged(favoriteAnimalsFlow)
-            /*getFavoriteDogsUseCase.runUseCase { favoriteAnimalsFlow ->
-                favoriteAnimalsChanged(favoriteAnimalsFlow)
-            }*/
         }
 
     }
@@ -67,6 +66,39 @@ class DogsViewModel @Inject constructor(
     fun callDogs() {
         sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
         getDogs()
+    }
+
+    fun getDogs() {
+        viewModelScope.launch {
+
+            delay(3000)
+            when (val response = getDogsUseCase.runUseCase()) {
+
+                is ApiResponse.Success<List<Dog>> -> {
+                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))
+                }
+
+                is ApiResponse.Error -> {
+                    sendEvent(
+                        DogsScreenReducer.DogsScreenEvent.DataReceived(
+                            null, context.getString(
+                                R.string.error_message
+                            )
+                        )
+                    )
+                }
+            }
+
+        }
+    }
+
+    fun loadSettings() {
+        viewModelScope.launch {
+            val searchType = getSearchTypeUseCase.runUseCase()
+            val listType = getListTypeUseCase.runUseCase()
+            val settingsType = getSettingsTypeUseCase.runUseCase()
+            sendEvent(DogsScreenReducer.DogsScreenEvent.LoadSettings(searchType, settingsType, listType))
+        }
     }
 
     fun addFavoriteDog(dog: Dog) {
@@ -87,23 +119,6 @@ class DogsViewModel @Inject constructor(
         }
     }
 
-    fun getDogs() {
-        viewModelScope.launch {
-            //delay for test
-            delay(3000)
-            when(val response = getDogsUseCase.runUseCase()) {
-                is ApiResponse.Success<List<Dog>> -> {
-                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))
-                }
-
-                is ApiResponse.Error<List<Dog>> -> {
-                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(null, context.getString(
-                        R.string.error_message)))
-                }
-            }
-
-        }
-    }
 
     fun localSearch(query: String) {
         var result: List<Dog> = listOf()
@@ -127,14 +142,24 @@ class DogsViewModel @Inject constructor(
             viewModelScope.launch {
                 //delay for test
                 delay(3000)
-                when(val response = searchForDogsUseCase.runUseCase(query)) {
+                when (val response = searchForDogsUseCase.runUseCase(query)) {
                     is ApiResponse.Success<List<Dog>> -> {
-                        sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(response.data, null))
+                        sendEvent(
+                            DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(
+                                response.data,
+                                null
+                            )
+                        )
                     }
 
-                    is ApiResponse.Error<List<Dog>> -> {
-                        sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(null, context.getString(
-                            R.string.error_message)))
+                    is ApiResponse.Error -> {
+                        sendEvent(
+                            DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(
+                                null, context.getString(
+                                    R.string.error_message
+                                )
+                            )
+                        )
                     }
                 }
 
@@ -155,11 +180,17 @@ class DogsViewModel @Inject constructor(
         sendEvent(DogsScreenReducer.DogsScreenEvent.CloseSettings)
     }
 
-    fun settingsUpdated(viewTypeForList: ViewTypeForList, viewTypeForSettings: ViewTypeForSettings, searchType: SearchType) {
-        localDataSourceDogs.saveListTypeForDogList(viewTypeForList.name)
-        localDataSourceDogs.saveSettingsTypeForDogList(viewTypeForSettings.name)
-        localDataSourceDogs.saveSearchTypeForDogList(searchType.name)
-        sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
+    fun settingsUpdated(
+        viewTypeForList: ViewTypeForList,
+        viewTypeForSettings: ViewTypeForSettings,
+        searchType: SearchType
+    ) {
+        viewModelScope.launch {
+            saveListTypeUseCase.runUseCase(viewTypeForList.name)
+            saveSettingsTypeUseCase.runUseCase(viewTypeForSettings.name)
+            saveSearchTypeUseCase.runUseCase(searchType.name)
+            sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
+        }
     }
 
     fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Dog>>) {

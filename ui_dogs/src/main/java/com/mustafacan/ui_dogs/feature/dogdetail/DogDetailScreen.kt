@@ -89,30 +89,34 @@ fun DogDetailScreen(navController: NavController, viewModel: DogDetailViewModel)
     ) {
 
         Toolbar(onBackPressed = { navController.popBackStack() }, actionList = actionListForToolbar)
-        DogImage(updateIsFavorite = {
-            viewModel.updateIsFavorite()
-            if (!state.value.dog!!.isFavorite!!) {
-                viewModel.showLikeAnimation()
-            } else {
-                viewModel.hideLikeAnimation()
-            }
-        }, dog = state.value.dog?: viewModel.dog, isSelectedFavIcon = state.value.isSelectedFavIcon, animationVisibility = state.value.likeAnimationVisibility)
-        CreateTabBar(state, onClickTab = {
-            viewModel.onClickTab(it)
-        })
-        DogDetailContent(uiState = state, viewModel)
 
+        if (state.value.initialLoaded) {
+            DogImage(updateIsFavorite = {
+                viewModel.updateIsFavorite()
+                if (!state.value.dog!!.isFavorite!!) {
+                    viewModel.showLikeAnimation()
+                } else {
+                    viewModel.hideLikeAnimation()
+                }
+            }, dog = state.value.dog?: viewModel.dog, isSelectedFavIcon = state.value.isSelectedFavIcon, animationVisibility = state.value.likeAnimationVisibility)
+            CreateTabBar(state, onClickTab = {
+                viewModel.onClickTab(it)
+            })
+            DogDetailContent(uiState = state, viewModel)
 
-        if (state.value.showSettings) {
-            Dialog(onDismissRequest = { viewModel.closeSettings() }
-            ) {
-                SettingsDialog(state.value.currentViewTypeForTab, saveSettings = {
-                    viewModel.settingsUpdated(it)
-                }, onDismiss = {
-                    viewModel.closeSettings()
-                })
+            if (state.value.showSettings) {
+                Dialog(onDismissRequest = { viewModel.closeSettings() }
+                ) {
+                    SettingsDialog(state.value.currentViewTypeForTab!!, saveSettings = {
+                        viewModel.settingsUpdated(it)
+                    }, onDismiss = {
+                        viewModel.closeSettings()
+                    })
+                }
             }
         }
+
+
 
     }
 }
@@ -197,7 +201,7 @@ fun CreateTabBar(
                 onClickTab = {
                     onClickTab(it)
                 },
-                state.value.currentViewTypeForTab
+                state.value.currentViewTypeForTab!!
             )
         }
 
@@ -211,7 +215,7 @@ fun CreateTabBar(
                 onClickTab = {
                     onClickTab(it)
                 },
-                state.value.currentViewTypeForTab
+                state.value.currentViewTypeForTab!!
             )
         }
 

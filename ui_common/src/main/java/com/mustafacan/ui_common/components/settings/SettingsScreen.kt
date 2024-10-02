@@ -1,4 +1,4 @@
-package com.mustafacan.ui_dogs.feature.settings
+package com.mustafacan.ui_common.components.settings
 
 import android.util.Log
 import androidx.compose.foundation.clickable

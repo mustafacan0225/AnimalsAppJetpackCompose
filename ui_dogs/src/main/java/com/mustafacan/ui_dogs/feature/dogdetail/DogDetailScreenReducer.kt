@@ -1,20 +1,25 @@
 package com.mustafacan.ui_dogs.feature.dogdetail
 
+import android.util.Log
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Immutable
-import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetTabTypeUseCase
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.Reducer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class DogDetailScreenReducer() :
     Reducer<DogDetailScreenReducer.DogDetailScreenState, DogDetailScreenReducer.DogDetailScreenEvent, DogDetailScreenReducer.DogDetailScreenEffect> {
 
     @Immutable
     sealed class DogDetailScreenEvent : Reducer.ViewEvent {
-        data class Load(val dog: Dog, val pagerState: PagerState, val tabList: List<Pair<Int, Int>>, val scope: CoroutineScope) : DogDetailScreenEvent()
+        data class Load(val dog: Dog, val pagerState: PagerState, val tabType: String?, val tabList: List<Pair<Int, Int>>, val scope: CoroutineScope) : DogDetailScreenEvent()
         data class OnClickTabItem(val index: Int): DogDetailScreenEvent()
         object OpenSettings : DogDetailScreenEvent()
         object CloseSettings : DogDetailScreenEvent()
@@ -32,19 +37,19 @@ class DogDetailScreenReducer() :
 
     @Immutable
     data class DogDetailScreenState(
+        val initialLoaded: Boolean = false,
         val dog: Dog? = null,
         val isSelectedFavIcon: Boolean = false,
         val pagerState: PagerState? = null,
         val tabList: List<Pair<Int, Int>>? = null,
         val coroutineScope: CoroutineScope? = null,
-        val showSettings: Boolean,
-        val currentViewTypeForTab: ViewTypeForTab,
+        val showSettings: Boolean = false,
+        val currentViewTypeForTab: ViewTypeForTab? = null,
         val likeAnimationVisibility: Boolean = false
     ) : Reducer.ViewState {
         companion object {
-            fun initial(localDataSourceDogs: LocalDataSourceDogs): DogDetailScreenState {
-                return DogDetailScreenState(showSettings = false,
-                    currentViewTypeForTab = enumValueOf(localDataSourceDogs.getTabTypeForDogDetail() ?: ViewTypeForTab.TAB_TYPE_CUSTOM_INDICATOR_WITH_LEADING_ICON.name) as ViewTypeForTab )
+            fun initial(): DogDetailScreenState {
+                return DogDetailScreenState()
             }
         }
     }
@@ -62,7 +67,9 @@ class DogDetailScreenReducer() :
                     pagerState = event.pagerState,
                     tabList = event.tabList,
                     coroutineScope = event.scope,
-                    isSelectedFavIcon = event.dog.isFavorite?: false
+                    isSelectedFavIcon = event.dog.isFavorite?: false,
+                    initialLoaded = true,
+                    currentViewTypeForTab = enumValueOf(event.tabType ?: ViewTypeForTab.TAB_TYPE_CUSTOM_INDICATOR_WITH_LEADING_ICON.name) as ViewTypeForTab
                 ) to null
             }
 

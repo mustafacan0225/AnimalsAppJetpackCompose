@@ -1,18 +1,15 @@
 package com.mustafacan.ui_dogs.feature.dogdetail
 
 import android.content.Context
-import android.icu.util.Calendar
 import android.util.Log
 import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.work.Data
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
-import com.mustafacan.domain.usecase.dogs.roomdb.AddFavoriteDogUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetTabTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveTabTypeUseCase
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_dogs.R
@@ -20,19 +17,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class DogDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    val localDataSource: LocalDataSourceDogs,
     private val savedStateHandle: SavedStateHandle,
     private val addFavoriteDogUseCase: AddFavoriteDogUseCase,
-    private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase
+    private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase,
+    private val getTabTypeUseCase: GetTabTypeUseCase,
+    private val saveTabTypeUseCase: SaveTabTypeUseCase
 ) : BaseViewModel<DogDetailScreenReducer.DogDetailScreenState, DogDetailScreenReducer.DogDetailScreenEvent,
         DogDetailScreenReducer.DogDetailScreenEffect>(
-    initialState = DogDetailScreenReducer.DogDetailScreenState.initial(localDataSource),
+    initialState = DogDetailScreenReducer.DogDetailScreenState.initial(),
     reducer = DogDetailScreenReducer()
 ) {
 
@@ -45,6 +42,14 @@ class DogDetailViewModel @Inject constructor(
         R.string.tab_colors to R.drawable.colors
     )
 
+    fun load(pagerState: PagerState, scope: CoroutineScope) {
+        viewModelScope.launch {
+            val tabType = getTabTypeUseCase.runUseCase()
+            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.Load(dog = dog!!, pagerState = pagerState, tabType = tabType, tabList = tabList, scope = scope))
+
+        }
+    }
+
     fun getTemperament(dog: Dog): List<String> {
 
         if ((dog.temperament?: "").contains(",")) {
@@ -55,10 +60,6 @@ class DogDetailViewModel @Inject constructor(
         }
 
         return listOf(dog.temperament?: "")
-    }
-
-    fun load(pagerState: PagerState, scope: CoroutineScope) {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.Load(dog = dog!!, pagerState = pagerState, tabList = tabList, scope = scope))
     }
 
     fun onClickTab(index: Int) {
@@ -74,8 +75,10 @@ class DogDetailViewModel @Inject constructor(
     }
 
     fun settingsUpdated(viewTypeForTab: ViewTypeForTab) {
-        localDataSource.saveTabTypeForDogDetail(viewTypeForTab.name)
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.SettingsUpdated(viewTypeForTab))
+        viewModelScope.launch {
+            saveTabTypeUseCase.runUseCase(viewTypeForTab.name)
+            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.SettingsUpdated(viewTypeForTab))
+        }
     }
 
     fun updateIsFavorite() {

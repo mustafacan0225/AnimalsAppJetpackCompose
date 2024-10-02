@@ -1,89 +1,44 @@
 package com.mustafacan.ui_dogs.feature.dogs
 
 import androidx.compose.runtime.Immutable
-import com.mustafacan.data.local.LocalDataSource
-import com.mustafacan.data.local.datasource.sharedpref.dogs.LocalDataSourceDogs
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
 import com.mustafacan.ui_common.viewmodel.Reducer
-import kotlinx.coroutines.flow.Flow
 
-class DogsScreenReducer() :
-    Reducer<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent, DogsScreenReducer.DogsScreenEffect> {
+class DogsScreenReducer() : Reducer<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent, DogsScreenReducer.DogsScreenEffect> {
 
     @Immutable
     sealed class DogsScreenEvent : Reducer.ViewEvent {
         object Loading : DogsScreenEvent()
-        data class DogDetailWithId(val dogId: String) : DogsScreenEvent()
         data class DogDetail(val dog: Dog) : DogsScreenEvent()
         data class UpdateDogIsFollowed(val dog: Dog) : DogsScreenEvent()
         object OpenSettings : DogsScreenEvent()
         object CloseSettings : DogsScreenEvent()
-        data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) :
-            DogsScreenEvent()
-        data class FavoriteAnimalCountChanged(val favoriteList: List<Dog>): DogsScreenEvent()
-
-        data class DataReceivedWithSearch(
-            val list: List<Dog>? = null,
-            val errorMessage: String? = null
-        ) : DogsScreenEvent()
-
+        data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
+        data class FavoriteAnimalCountChanged(val favoriteList: List<Dog>) : DogsScreenEvent()
+        data class DataReceivedWithSearch(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
         data class DataChanged(val list: List<Dog>? = null) : DogsScreenEvent()
-
-        data class SettingsUpdated(
-            val viewTypeDogs: ViewTypeForList,
-            val viewTypeForSettings: ViewTypeForSettings,
-            val searchType: SearchType
-        ) : DogsScreenEvent()
+        data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : DogsScreenEvent()
+        data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : DogsScreenEvent()
     }
 
     @Immutable
     sealed class DogsScreenEffect : Reducer.ViewEffect {
         data class NavigateToDogDetail(val dog: Dog) : DogsScreenEffect()
-        //object NavigateToSettings : DogsScreenEffect()
     }
 
     @Immutable
     data class DogsScreenState(
-        val loading: Boolean,
-        val errorMessage: String?,
-        val dogs: List<Dog>?,
-        val dogsBackup: List<Dog>?,
-        val viewTypeForList: ViewTypeForList,
-        val viewTypeForSettings: ViewTypeForSettings,
-        val searchType: SearchType,
-        val showSettings: Boolean,
-        val testValue: Flow<Int>,
-        val favoriteAnimalCount: Int
+        val loading: Boolean, val errorMessage: String?, val dogs: List<Dog>?,
+        val dogsBackup: List<Dog>?, val viewTypeForList: ViewTypeForList = ViewTypeForList.LAZY_COLUMN,
+        val viewTypeForSettings: ViewTypeForSettings = ViewTypeForSettings.POPUP,
+        val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int
     ) : Reducer.ViewState {
         companion object {
-            fun initial(
-                localDataSource: LocalDataSource,
-                localDataSourceDogs: LocalDataSourceDogs
-            ): DogsScreenState {
-                return DogsScreenState(
-                    loading = true,
-                    errorMessage = null,
-                    dogs = null,
-                    dogsBackup = null,
-                    searchType = enumValueOf(
-                        localDataSourceDogs.getSearchTypeForDogList()
-                            ?: SearchType.LOCAL_SEARCH.name
-                    ) as SearchType,
-                    viewTypeForList = enumValueOf(
-                        localDataSourceDogs.getListTypeForDogList()
-                            ?: ViewTypeForList.LAZY_COLUMN.name
-                    ) as ViewTypeForList,
-                    viewTypeForSettings = enumValueOf(
-                        localDataSourceDogs.getSettingsTypeForDogList()
-                            ?: ViewTypeForSettings.POPUP.name
-                    ) as ViewTypeForSettings,
-                    showSettings = false,
-                    testValue = localDataSource.getTestFlow(),
-                    favoriteAnimalCount = 0
-                )
+            fun initial(): DogsScreenState {
+                return DogsScreenState(loading = true, errorMessage = null, dogs = null, dogsBackup = null, showSettings = false, favoriteAnimalCount = 0)
             }
         }
     }
@@ -150,7 +105,6 @@ class DogsScreenReducer() :
             }
 
             is DogsScreenEvent.UpdateDogIsFollowed -> {
-
                 previousState.dogs?.find { it.id == event.dog.id }?.isFavorite = event.dog.isFavorite
                 previousState.dogsBackup?.find { it.id == event.dog.id }?.isFavorite = event.dog.isFavorite
                 previousState.copy(dogsBackup = previousState.dogsBackup, dogs = previousState.dogs) to null
@@ -168,7 +122,13 @@ class DogsScreenReducer() :
                 previousState.copy(dogs = previousState.dogs, dogsBackup = previousState.dogsBackup, favoriteAnimalCount = event.favoriteList.size) to null
             }
 
-            is DogsScreenEvent.DogDetailWithId -> TODO()
+            is DogsScreenEvent.LoadSettings -> {
+                previousState.copy(
+                    searchType = enumValueOf(event.searchType ?: SearchType.LOCAL_SEARCH.name) as SearchType,
+                    viewTypeForList = enumValueOf(event.listType ?: ViewTypeForList.LAZY_COLUMN.name) as ViewTypeForList,
+                    viewTypeForSettings = enumValueOf(event.settingsType ?: ViewTypeForSettings.POPUP.name) as ViewTypeForSettings
+                ) to null
+            }
 
         }
     }

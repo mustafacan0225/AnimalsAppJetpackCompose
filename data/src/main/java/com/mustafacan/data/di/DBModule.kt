@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDatabase
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsRepositoryImpl
-import com.mustafacan.domain.repository.FavoriteAnimalsRepository
+import com.mustafacan.domain.repository.roomdb_repository.FavoriteAnimalsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -4,7 +4,7 @@ import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.remote.datasource.DogsRemoteDataSource
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.repository.DogsRepository
+import com.mustafacan.domain.repository.api_repository.DogsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

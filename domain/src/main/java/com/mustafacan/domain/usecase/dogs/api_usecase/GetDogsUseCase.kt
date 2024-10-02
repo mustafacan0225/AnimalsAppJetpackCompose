@@ -1,8 +1,8 @@
-package com.mustafacan.domain.usecase.dogs
+package com.mustafacan.domain.usecase.dogs.api_usecase
 
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.repository.DogsRepository
+import com.mustafacan.domain.repository.api_repository.DogsRepository
 import javax.inject.Inject
 
 class GetDogsUseCase @Inject constructor(private val repository: DogsRepository) {
