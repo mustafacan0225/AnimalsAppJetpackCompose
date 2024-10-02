@@ -1,4 +1,4 @@
-package com.mustafacan.domain.usecase.birds
+package com.mustafacan.domain.usecase.birds.api_usecase
 
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.response.ApiResponse

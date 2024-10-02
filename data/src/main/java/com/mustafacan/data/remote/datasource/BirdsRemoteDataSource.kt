@@ -8,4 +8,5 @@ class BirdsRemoteDataSource @Inject constructor(private val api: BirdsServices) 
     ResponseWrapper() {
 
     suspend fun getBirds() = getResult { api.getBirds() }
+    suspend fun search(query: String) = getResult { api.search(query) }
 }

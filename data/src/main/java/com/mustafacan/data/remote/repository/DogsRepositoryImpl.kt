@@ -39,7 +39,7 @@ class DogsRepositoryImpl @Inject constructor(
                     return@coroutineScope dogListResponse
                 }
 
-                is ApiResponse.Error<List<Dog>> -> {
+                is ApiResponse.Error -> {
                     return@coroutineScope dogListResponse
                 }
             }

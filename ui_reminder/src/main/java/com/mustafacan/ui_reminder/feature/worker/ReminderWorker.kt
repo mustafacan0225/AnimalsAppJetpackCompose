@@ -20,7 +20,7 @@ import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.birds.GetBirdsUseCase
+import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsUseCase
 import com.mustafacan.domain.usecase.cats.GetCatsUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
 import com.mustafacan.ui_reminder.R
