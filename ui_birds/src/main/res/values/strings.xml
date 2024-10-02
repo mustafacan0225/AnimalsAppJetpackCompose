@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ui_birds</string>
+    <string name="error_message">An error occurred</string>
+    <string name="detail_page_desc">Description:</string>
+    <string name="detail_page_species">Species:</string>
+    <string name="detail_page_family">Family:</string>
+    <string name="detail_page_habitat">Habitat:</string>
+    <string name="detail_page_place_of_found">Place of found:</string>
+    <string name="detail_page_diet">Diet:</string>
+    <string name="detail_page_wingspan">Wingspan cm:</string>
+    <string name="weight">Weight kg:</string>
+</resources>

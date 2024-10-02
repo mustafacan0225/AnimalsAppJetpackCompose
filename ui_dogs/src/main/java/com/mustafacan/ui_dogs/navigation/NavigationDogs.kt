@@ -1,4 +1,4 @@
-package com.mustafacan.ui_dogs.feature.navigation
+package com.mustafacan.ui_dogs.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel

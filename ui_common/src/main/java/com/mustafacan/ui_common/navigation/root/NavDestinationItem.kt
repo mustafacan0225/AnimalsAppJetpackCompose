@@ -3,6 +3,7 @@ package com.mustafacan.ui_common.navigation.root
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavType
+import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_common.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -25,6 +26,11 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
 
     @Serializable
     object Birds : NavDestinationItem(R.string.bottom_menu_title_birds, R.drawable.bird)
+
+    @Serializable
+    data class BirdDetailScreen(
+        val bird: Bird
+    )
 
     @Serializable
     object Reminder : NavDestinationItem(R.string.bottom_menu_reminder, R.drawable.menu_notification)
