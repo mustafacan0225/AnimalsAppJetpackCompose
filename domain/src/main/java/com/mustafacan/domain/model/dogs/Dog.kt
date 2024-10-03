@@ -20,8 +20,8 @@ import java.lang.reflect.Type
 data class Dog(
     @PrimaryKey(autoGenerate = false)
     var id: Int? = null,
-
     var name: String? = null,
+    @SerializedName("breed_group")
     var breedGroup: String? = null,
     var size: String? = null,
     var lifespan: String? = null,
