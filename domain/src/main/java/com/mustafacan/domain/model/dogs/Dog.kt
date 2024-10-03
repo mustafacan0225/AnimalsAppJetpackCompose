@@ -18,39 +18,22 @@ import java.lang.reflect.Type
 @Serializable
 @Parcelize
 data class Dog(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("id")
-    @SerializedName("id") var id: Int? = null,
+    @PrimaryKey(autoGenerate = false)
+    var id: Int? = null,
 
-    @ColumnInfo("name")
-    @SerializedName("name") var name: String? = null,
+    var name: String? = null,
+    var breedGroup: String? = null,
+    var size: String? = null,
+    var lifespan: String? = null,
+    var origin: String? = null,
+    var temperament: String? = null,
+    var colors: ArrayList<String> = arrayListOf(),
+    var description: String? = null,
 
-    @ColumnInfo("breed_group")
-    @SerializedName("breed_group") var breedGroup: String? = null,
-
-    @ColumnInfo("size")
-    @SerializedName("size") var size: String? = null,
-
-    @ColumnInfo("lifespan")
-    @SerializedName("lifespan") var lifespan: String? = null,
-
-    @ColumnInfo("origin")
-    @SerializedName("origin") var origin: String? = null,
-
-    @ColumnInfo("temperament")
-    @SerializedName("temperament") var temperament: String? = null,
-
-    @ColumnInfo("colors")
-    @SerializedName("colors") var colors: ArrayList<String> = arrayListOf(),
-
-    @ColumnInfo("description")
-    @SerializedName("description") var description: String? = null,
-
-    @ColumnInfo("image")
     @Serializable(with = UrlEncodedStringSerializer::class)
-    @SerializedName("image") var image: String? = null,
+    var image: String? = null,
 
-    @ColumnInfo("isFavorite") var isFavorite: Boolean? = false,
+    var isFavorite: Boolean? = false,
 ) : Parcelable
 
 object AnimalColorsConverters {

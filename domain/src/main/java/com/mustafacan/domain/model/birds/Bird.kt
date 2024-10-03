@@ -13,21 +13,25 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class Bird(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("id")
-    @SerializedName("id") var id: Int? = null,
+    @PrimaryKey(autoGenerate = false)
+    var id: Int? = null,
+    var name: String? = null,
+    var species: String? = null,
+    var family: String? = null,
+    var habitat: String? = null,
 
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("species") var species: String? = null,
-    @SerializedName("family") var family: String? = null,
-    @SerializedName("habitat") var habitat: String? = null,
-    @SerializedName("place_of_found") var placeOfFound: String? = null,
-    @SerializedName("diet") var diet: String? = null,
-    @SerializedName("description") var description: String? = null,
-    @SerializedName("wingspan_cm") var wingspanCm: Int? = null,
-    @SerializedName("weight_kg") var weightKg: Double? = null,
+    @SerializedName("place_of_found")
+    var placeOfFound: String? = null,
 
-    @ColumnInfo("image")
+    var diet: String? = null,
+    var description: String? = null,
+
+    @SerializedName("wingspan_cm")
+    var wingspanCm: Int? = null,
+
+    @SerializedName("weight_kg")
+    var weightKg: Double? = null,
+
     @Serializable(with = UrlEncodedStringSerializer::class)
-    @SerializedName("image") var image: String? = null,
-    @ColumnInfo("isFavorite") var isFavorite: Boolean? = false): Parcelable
+    var image: String? = null,
+    var isFavorite: Boolean? = false): Parcelable

@@ -1,16 +1,25 @@
 package com.mustafacan.domain.model.cats
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.mustafacan.domain.model.UrlEncodedStringSerializer
 import kotlinx.android.parcel.Parcelize
+import kotlinx.serialization.Serializable
 
+@Entity(tableName = "favorite_cats")
+@Serializable
 @Parcelize
 data class Cat(
-    @SerializedName("id") var id: Int? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("origin") var origin: String? = null,
-    @SerializedName("temperament") var temperament: String? = null,
-    @SerializedName("colors") var colors: ArrayList<String> = arrayListOf(),
-    @SerializedName("description") var description: String? = null,
-    @SerializedName("image") var image: String? = null
+    @PrimaryKey(autoGenerate = false)
+    var id: Int? = null,
+    var name: String? = null,
+    var origin: String? = null,
+    var temperament: String? = null,
+    var colors: ArrayList<String> = arrayListOf(),
+    var description: String? = null,
+    @Serializable(with = UrlEncodedStringSerializer::class)
+    var image: String? = null,
+    var isFavorite: Boolean? = false,
 ) : Parcelable
