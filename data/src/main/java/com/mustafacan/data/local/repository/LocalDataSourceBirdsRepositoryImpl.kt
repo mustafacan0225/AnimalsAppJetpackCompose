@@ -29,12 +29,4 @@ class LocalDataSourceBirdsRepositoryImpl@Inject constructor(private val localDat
         return localDataSource.getSearchTypeForBirdList()
     }
 
-    override suspend fun saveTabTypeForBirdDetail(type: String) {
-        localDataSource.saveTabTypeForBirdDetail(type)
-    }
-
-    override suspend fun getTabTypeForBirdDetail(): String? {
-        return localDataSource.getTabTypeForBirdDetail()
-    }
-
 }

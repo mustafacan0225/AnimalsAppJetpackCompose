@@ -1,6 +1,7 @@
 package com.mustafacan.domain.repository.roomdb_repository
 
 import com.mustafacan.domain.model.birds.Bird
+import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.dogs.Dog
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,9 @@ interface FavoriteAnimalsRepository {
     suspend fun deleteBird(bird: Bird)
     suspend fun getBirdListFlow(): Flow<List<Bird>>
     suspend fun getBirdList(): List<Bird>
+
+    suspend fun insertCat(cat: Cat)
+    suspend fun deleteCat(cat: Cat)
+    suspend fun getCatListFlow(): Flow<List<Cat>>
+    suspend fun getCatList(): List<Cat>
 }

@@ -35,14 +35,4 @@ class LocalDataSourceBirds @Inject constructor(private val sharedPreferencesMana
         return sharedPreferencesManager.getValueString(KEY_SEARCH_TYPE_BIRD)
     }
 
-    fun saveTabTypeForBirdDetail(type: String) {
-        sharedPreferencesManager.setValue(KEY_VIEW_TYPE_TAB_BIRD, type)
-    }
-
-    fun getTabTypeForBirdDetail(): String? {
-        return sharedPreferencesManager.getValueString(KEY_VIEW_TYPE_TAB_BIRD)
-    }
-
-
-
 }

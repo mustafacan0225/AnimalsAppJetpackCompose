@@ -2,18 +2,14 @@ package com.mustafacan.ui_birds.feature.detail
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.AddFavoriteBirdUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.DeleteFavoriteBirdUseCase
-import com.mustafacan.domain.usecase.birds.sharedpref_usecase.GetTabTypeUseCase
-import com.mustafacan.domain.usecase.birds.sharedpref_usecase.SaveTabTypeUseCase
 import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,9 +18,7 @@ class BirdDetailViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val addFavoriteBirdUseCase: AddFavoriteBirdUseCase,
-    private val deleteFavoriteBirdUseCase: DeleteFavoriteBirdUseCase,
-    private val getTabTypeUseCase: GetTabTypeUseCase,
-    private val saveTabTypeUseCase: SaveTabTypeUseCase
+    private val deleteFavoriteBirdUseCase: DeleteFavoriteBirdUseCase
 ) : BaseViewModel<BirdDetailScreenReducer.BirdDetailScreenState, BirdDetailScreenReducer.BirdDetailScreenEvent,
         BirdDetailScreenReducer.BirdDetailScreenEffect>(
     initialState = BirdDetailScreenReducer.BirdDetailScreenState.initial(),

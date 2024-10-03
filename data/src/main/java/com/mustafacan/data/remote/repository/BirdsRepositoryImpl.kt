@@ -3,7 +3,6 @@ package com.mustafacan.data.remote.repository
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.remote.datasource.BirdsRemoteDataSource
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.BirdsRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,29 +18,7 @@ class BirdsRepositoryImpl @Inject constructor(private val remoteDataSource: Bird
             val birdListDeferred = async { remoteDataSource.getBirds() }
             val birdListResponse = birdListDeferred.await()
 
-            when (birdListResponse) {
-                is ApiResponse.Success<List<Bird>> -> {
-
-                    //from room database
-                    val favoriteAnimals = withContext(Dispatchers.IO) {
-                        dao.getBirds()
-                    }
-
-                    favoriteAnimals.forEach { favoriteAnimal ->
-                        birdListResponse.data.forEach {
-                            if (it.id == favoriteAnimal.id) {
-                                it.isFavorite = favoriteAnimal.isFavorite
-                            }
-                        }
-                    }
-
-                    return@coroutineScope birdListResponse
-                }
-
-                is ApiResponse.Error -> {
-                    return@coroutineScope birdListResponse
-                }
-            }
+            return@coroutineScope getDataWithFavoriteInfo(birdListResponse)
         }
     }
 
@@ -51,28 +28,32 @@ class BirdsRepositoryImpl @Inject constructor(private val remoteDataSource: Bird
             val birdListDeferred = async { remoteDataSource.search(query) }
             val birdListResponse = birdListDeferred.await()
 
-            when (birdListResponse) {
-                is ApiResponse.Success<List<Bird>> -> {
+            return@coroutineScope getDataWithFavoriteInfo(birdListResponse)
+        }
+    }
 
-                    //from room database
-                    val favoriteAnimals = withContext(Dispatchers.IO) {
-                        dao.getBirds()
-                    }
+    suspend fun getDataWithFavoriteInfo(response: ApiResponse<List<Bird>>): ApiResponse<List<Bird>> {
+        when (response) {
+            is ApiResponse.Success<List<Bird>> -> {
 
-                    favoriteAnimals.forEach { favoriteAnimal ->
-                        birdListResponse.data.forEach {
-                            if (it.id == favoriteAnimal.id) {
-                                it.isFavorite = favoriteAnimal.isFavorite
-                            }
+                //from room database
+                val favoriteAnimals = withContext(Dispatchers.IO) {
+                    dao.getBirds()
+                }
+
+                favoriteAnimals.forEach { favoriteAnimal ->
+                    response.data.forEach {
+                        if (it.id == favoriteAnimal.id) {
+                            it.isFavorite = favoriteAnimal.isFavorite
                         }
                     }
-
-                    return@coroutineScope birdListResponse
                 }
 
-                is ApiResponse.Error -> {
-                    return@coroutineScope birdListResponse
-                }
+                return response
+            }
+
+            is ApiResponse.Error -> {
+                return response
             }
         }
     }

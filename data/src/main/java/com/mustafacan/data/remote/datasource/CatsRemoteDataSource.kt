@@ -8,4 +8,5 @@ class CatsRemoteDataSource @Inject constructor(private val api: CatsServices) :
     ResponseWrapper() {
 
     suspend fun getCats() = getResult { api.getCats() }
+    suspend fun search(query: String) = getResult { api.search(query) }
 }

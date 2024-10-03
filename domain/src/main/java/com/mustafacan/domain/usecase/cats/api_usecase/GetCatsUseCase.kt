@@ -1,4 +1,4 @@
-package com.mustafacan.domain.usecase.cats
+package com.mustafacan.domain.usecase.cats.api_usecase
 
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse

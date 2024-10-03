@@ -1,6 +1,7 @@
 package com.mustafacan.data.local.datasource.roomdatabase
 
 import com.mustafacan.domain.model.birds.Bird
+import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.repository.roomdb_repository.FavoriteAnimalsRepository
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,22 @@ class FavoriteAnimalsRepositoryImpl @Inject constructor(private val dao: Favorit
 
     override suspend fun getBirdList(): List<Bird> {
         return dao.getBirds()
+    }
+
+    override suspend fun insertCat(cat: Cat) {
+        dao.insertCat(cat)
+    }
+
+    override suspend fun deleteCat(cat: Cat) {
+        dao.deleteCat(cat)
+    }
+
+    override suspend fun getCatListFlow(): Flow<List<Cat>> {
+        return dao.getCatsFlow()
+    }
+
+    override suspend fun getCatList(): List<Cat> {
+        return dao.getCats()
     }
 
 

@@ -7,6 +7,4 @@ interface LocalDataSourceBirdsRepository {
     suspend fun getSettingsTypeBirdList(): String?
     suspend fun saveSearchTypeBirdList(type: String)
     suspend fun getSearchTypeBirdList(): String?
-    suspend fun saveTabTypeForBirdDetail(type: String)
-    suspend fun getTabTypeForBirdDetail(): String?
 }

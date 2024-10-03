@@ -20,29 +20,7 @@ class DogsRepositoryImpl @Inject constructor(
             val dogListDeferred = async { remoteDataSource.getDogs() }
             val dogListResponse = dogListDeferred.await()
 
-            when (dogListResponse) {
-                is ApiResponse.Success<List<Dog>> -> {
-
-                    //from room database
-                    val favoriteAnimals = withContext(Dispatchers.IO) {
-                        dao.getDogs()
-                    }
-
-                    favoriteAnimals.forEach { favoriteAnimal ->
-                        dogListResponse.data.forEach {
-                            if (it.id == favoriteAnimal.id) {
-                                it.isFavorite = favoriteAnimal.isFavorite
-                            }
-                        }
-                    }
-
-                    return@coroutineScope dogListResponse
-                }
-
-                is ApiResponse.Error -> {
-                    return@coroutineScope dogListResponse
-                }
-            }
+            return@coroutineScope getDataWithFavoriteInfo(dogListResponse)
         }
     }
 
@@ -52,31 +30,35 @@ class DogsRepositoryImpl @Inject constructor(
             val dogListDeferred = async { remoteDataSource.search(query) }
             val dogListResponse = dogListDeferred.await()
 
-            when (dogListResponse) {
-                is ApiResponse.Success<List<Dog>> -> {
-
-                    //from room database
-                    val favoriteAnimals = withContext(Dispatchers.IO) {
-                        dao.getDogs()
-                    }
-
-                    favoriteAnimals.forEach { favoriteAnimal ->
-                        dogListResponse.data.forEach {
-                            if (it.id == favoriteAnimal.id) {
-                                it.isFavorite = favoriteAnimal.isFavorite
-                            }
-                        }
-                    }
-
-                    return@coroutineScope dogListResponse
-                }
-
-                is ApiResponse.Error<List<Dog>> -> {
-                    return@coroutineScope dogListResponse
-                }
-            }
+            return@coroutineScope getDataWithFavoriteInfo(dogListResponse)
         }
 
+    }
+
+    suspend fun getDataWithFavoriteInfo(response: ApiResponse<List<Dog>>): ApiResponse<List<Dog>> {
+        when (response) {
+            is ApiResponse.Success<List<Dog>> -> {
+
+                //from room database
+                val favoriteAnimals = withContext(Dispatchers.IO) {
+                    dao.getDogs()
+                }
+
+                favoriteAnimals.forEach { favoriteAnimal ->
+                    response.data.forEach {
+                        if (it.id == favoriteAnimal.id) {
+                            it.isFavorite = favoriteAnimal.isFavorite
+                        }
+                    }
+                }
+
+                return response
+            }
+
+            is ApiResponse.Error -> {
+                return response
+            }
+        }
     }
 
 }
