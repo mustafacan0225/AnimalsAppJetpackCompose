@@ -113,7 +113,7 @@ fun BirdListForLazyColumn(
                         )
                     ) {
                         CircleImage(
-                            url = "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
+                            url = bird.image?:"https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
@@ -220,7 +220,7 @@ fun BirdListForLazyVerticalGrid(
                         shape = CircleShape
                     ) {
                         CircleImage(
-                            url = "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
+                            url = bird.image?: "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)

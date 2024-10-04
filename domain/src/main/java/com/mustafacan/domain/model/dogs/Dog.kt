@@ -34,7 +34,20 @@ data class Dog(
     var image: String? = null,
 
     var isFavorite: Boolean? = false,
-) : Parcelable
+) : Parcelable {
+
+    fun getTemperamentList(): List<String> {
+
+        if ((this.temperament?: "").contains(",")) {
+            var list = this.temperament?.replace(" ", "")?.split(",")
+            list?.let {
+                return it
+            }
+        }
+
+        return listOf(this.temperament?: "")
+    }
+}
 
 object AnimalColorsConverters {
     @TypeConverter

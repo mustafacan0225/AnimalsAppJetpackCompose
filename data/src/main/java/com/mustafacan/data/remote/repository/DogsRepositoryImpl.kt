@@ -1,6 +1,7 @@
 package com.mustafacan.data.remote.repository
 
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
+import com.mustafacan.data.remote.Images
 import com.mustafacan.data.remote.datasource.DogsRemoteDataSource
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
@@ -19,45 +20,48 @@ class DogsRepositoryImpl @Inject constructor(
         return coroutineScope {
             val dogListDeferred = async { remoteDataSource.getDogs() }
             val dogListResponse = dogListDeferred.await()
-
-            return@coroutineScope getDataWithFavoriteInfo(dogListResponse)
+            setImages(dogListResponse)
+            setFavoriteInfo(dogListResponse)
+            return@coroutineScope dogListResponse
         }
     }
 
     override suspend fun search(query: String): ApiResponse<List<Dog>> {
-
         return coroutineScope {
             val dogListDeferred = async { remoteDataSource.search(query) }
             val dogListResponse = dogListDeferred.await()
-
-            return@coroutineScope getDataWithFavoriteInfo(dogListResponse)
+            setImages(dogListResponse)
+            setFavoriteInfo(dogListResponse)
+            return@coroutineScope dogListResponse
         }
 
     }
 
-    suspend fun getDataWithFavoriteInfo(response: ApiResponse<List<Dog>>): ApiResponse<List<Dog>> {
+    fun setImages(response: ApiResponse<List<Dog>>) {
         when (response) {
             is ApiResponse.Success<List<Dog>> -> {
+                response.data.forEach {
+                    it.image = Images.getImageUrlForDog(it.name?: "")
+                }
+            }
 
-                //from room database
+            is ApiResponse.Error -> {}
+        }
+    }
+
+    suspend fun setFavoriteInfo(response: ApiResponse<List<Dog>>) {
+        when (response) {
+            is ApiResponse.Success<List<Dog>> -> {
                 val favoriteAnimals = withContext(Dispatchers.IO) {
                     dao.getDogs()
                 }
 
                 favoriteAnimals.forEach { favoriteAnimal ->
-                    response.data.forEach {
-                        if (it.id == favoriteAnimal.id) {
-                            it.isFavorite = favoriteAnimal.isFavorite
-                        }
-                    }
+                    response.data.find { it.id == favoriteAnimal.id }?.isFavorite = true
                 }
-
-                return response
             }
 
-            is ApiResponse.Error -> {
-                return response
-            }
+            is ApiResponse.Error -> {}
         }
     }
 

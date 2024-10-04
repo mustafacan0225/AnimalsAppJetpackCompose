@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavType
 import com.mustafacan.domain.model.birds.Bird
+import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.ui_common.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -23,6 +24,9 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
 
     @Serializable
     object Cats : NavDestinationItem(R.string.bottom_menu_title_cats, R.drawable.kitten)
+
+    @Serializable
+    data class CatDetailScreen(val cat: Cat)
 
     @Serializable
     object Birds : NavDestinationItem(R.string.bottom_menu_title_birds, R.drawable.bird)

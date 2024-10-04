@@ -16,7 +16,19 @@ fun CircleImage(url: String, modifier: Modifier) {
         error = ColorPainter(Color.LightGray),
         contentDescription = "",
         alignment = Alignment.Center,
-        contentScale = ContentScale.FillBounds
+        contentScale = ContentScale.Crop
+    )
+
+}
+
+@Composable
+fun ShowImage(url: String) {
+
+    AsyncImage(
+        model = url,
+        contentDescription = "",
+        alignment = Alignment.Center,
+        contentScale = ContentScale.Crop
     )
 
 }

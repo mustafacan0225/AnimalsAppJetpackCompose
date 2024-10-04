@@ -1,6 +1,7 @@
 package com.mustafacan.data.remote.repository
 
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
+import com.mustafacan.data.remote.Images
 import com.mustafacan.data.remote.datasource.CatsRemoteDataSource
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
@@ -17,44 +18,47 @@ class CatsRepositoryImpl @Inject constructor(private val remoteDataSource: CatsR
         return coroutineScope {
             val catListDeferred = async { remoteDataSource.getCats() }
             val catListResponse = catListDeferred.await()
-
-            return@coroutineScope getDataWithFavoriteInfo(catListResponse)
+            setImages(catListResponse)
+            setFavoriteInfo(catListResponse)
+            return@coroutineScope catListResponse
         }
     }
 
     override suspend fun search(query: String): ApiResponse<List<Cat>> {
-
         return coroutineScope {
             val catListDeferred = async { remoteDataSource.search(query) }
             val catListResponse = catListDeferred.await()
-
-            return@coroutineScope getDataWithFavoriteInfo(catListResponse)
+            setImages(catListResponse)
+            setFavoriteInfo(catListResponse)
+            return@coroutineScope catListResponse
         }
     }
 
-    suspend fun getDataWithFavoriteInfo(response: ApiResponse<List<Cat>>): ApiResponse<List<Cat>> {
+    fun setImages(response: ApiResponse<List<Cat>>) {
         when (response) {
             is ApiResponse.Success<List<Cat>> -> {
+                response.data.forEach {
+                    it.image = Images.getImageUrlForCat(it.name?: "")
+                }
+            }
 
-                //from room database
+            is ApiResponse.Error -> {}
+        }
+    }
+
+    suspend fun setFavoriteInfo(response: ApiResponse<List<Cat>>) {
+        when (response) {
+            is ApiResponse.Success<List<Cat>> -> {
                 val favoriteAnimals = withContext(Dispatchers.IO) {
                     dao.getCats()
                 }
 
                 favoriteAnimals.forEach { favoriteAnimal ->
-                    response.data.forEach {
-                        if (it.id == favoriteAnimal.id) {
-                            it.isFavorite = favoriteAnimal.isFavorite
-                        }
-                    }
+                    response.data.find { it.id == favoriteAnimal.id }?.isFavorite = true
                 }
-
-                return response
             }
 
-            is ApiResponse.Error -> {
-                return response
-            }
+            is ApiResponse.Error -> {}
         }
     }
 }

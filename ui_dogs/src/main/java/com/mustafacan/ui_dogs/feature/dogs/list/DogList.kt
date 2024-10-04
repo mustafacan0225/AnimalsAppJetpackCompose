@@ -1,5 +1,7 @@
 package com.mustafacan.ui_dogs.feature.dogs.list
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -41,6 +43,7 @@ import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_dogs.feature.dogs.DogsScreenReducer
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DogList(
     uiState: State<DogsScreenReducer.DogsScreenState>,
@@ -113,7 +116,7 @@ fun DogListForLazyColumn(
                         )
                     ) {
                         CircleImage(
-                            url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
+                            url = dog.image?: "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
@@ -228,7 +231,7 @@ fun DogListForLazyVerticalGrid(
                         shape = CircleShape
                     ) {
                         CircleImage(
-                            url = "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
+                            url = dog.image?: "https://cdn.pixabay.com/photo/2016/02/19/15/46/labrador-retriever-1210559_1280.jpg",
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)

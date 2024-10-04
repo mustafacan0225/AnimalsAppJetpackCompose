@@ -41,6 +41,7 @@ import androidx.navigation.NavController
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_birds.R
 import com.mustafacan.ui_common.components.image.CircleImage
+import com.mustafacan.ui_common.components.image.ImageViewer
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.components.toolbar.Toolbar
 
@@ -62,18 +63,13 @@ fun BirdDetailScreen(navController: NavController, viewModel: BirdDetailViewMode
         if (state.value.initialLoaded) {
             BirdImage(updateIsFavorite = {
                 viewModel.updateIsFavorite()
-                if (!state.value.bird!!.isFavorite!!) {
-                    viewModel.showLikeAnimation()
-                } else {
-                    viewModel.hideLikeAnimation()
-                }
-            }, bird = state.value.bird?: viewModel.bird, isSelectedFavIcon = state.value.isSelectedFavIcon, animationVisibility = state.value.likeAnimationVisibility)
+            }, bird = state.value.bird?: viewModel.bird, isSelectedFavIcon = state.value.isSelectedFavIcon)
 
             BirdDetailContent(bird = state.value.bird)
 
         }
 
-
+        ImageViewer(imageUrl = (state.value.bird?.image?: viewModel.bird?.image)!!)
 
     }
 }
@@ -85,56 +81,56 @@ fun BirdDetailContent(bird: Bird?) {
             .padding(20.dp)
             .verticalScroll(rememberScrollState())) {
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_desc))
                 }
                 append(" " + b.description?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_species))
                 }
                 append(" " + b.species?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_family))
                 }
                 append(" " + b.family?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_habitat))
                 }
                 append(" " + b.habitat?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_place_of_found))
                 }
                 append(" " + b.placeOfFound?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_diet))
                 }
                 append(" " + b.diet?: "")
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.detail_page_wingspan))
                 }
                 append(" " + b.wingspanCm.toString())
             })
             Spacer(modifier = Modifier.height(10.dp))
             Text(buildAnnotatedString {
-                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = colorResource(id = R.color.indicator_color))) {
                     append(stringResource(id = R.string.weight))
                 }
                 append(" " + b.weightKg.toString())
@@ -146,7 +142,7 @@ fun BirdDetailContent(bird: Bird?) {
 }
 
 @Composable
-fun BirdImage(updateIsFavorite: () -> Unit, bird: Bird, isSelectedFavIcon: Boolean, animationVisibility: Boolean) {
+fun BirdImage(updateIsFavorite: () -> Unit, bird: Bird, isSelectedFavIcon: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -159,7 +155,7 @@ fun BirdImage(updateIsFavorite: () -> Unit, bird: Bird, isSelectedFavIcon: Boole
             val (image, favoriteIcon, animationIcon, birdName) = createRefs()
 
             CircleImage(
-                url = "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
+                url = bird.image?: "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
                 modifier = Modifier
                     .size(100.dp)
                     .clip(CircleShape)
@@ -184,7 +180,7 @@ fun BirdImage(updateIsFavorite: () -> Unit, bird: Bird, isSelectedFavIcon: Boole
 
             )
 
-            if (bird.isFavorite?: false) {
+            if (isSelectedFavIcon) {
                 LikeAnimation(modifier = Modifier
                     .size(50.dp)
                     .constrainAs(animationIcon) {

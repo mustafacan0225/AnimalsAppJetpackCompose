@@ -50,18 +50,6 @@ class DogDetailViewModel @Inject constructor(
         }
     }
 
-    fun getTemperament(dog: Dog): List<String> {
-
-        if ((dog.temperament?: "").contains(",")) {
-            var list = dog.temperament?.replace(" ", "")?.split(",")
-            list?.let {
-                return it
-            }
-        }
-
-        return listOf(dog.temperament?: "")
-    }
-
     fun onClickTab(index: Int) {
         sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.OnClickTabItem(index))
     }
@@ -96,16 +84,6 @@ class DogDetailViewModel @Inject constructor(
 
             }
         }
-    }
-
-    fun showLikeAnimation() {
-        viewModelScope.launch {
-            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.ShowLikeAnimation)
-        }
-    }
-
-    fun hideLikeAnimation() {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.HideLikeAnimation)
     }
 
 }

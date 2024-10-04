@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ui_cats</string>
+    <string name="error_message">An error occurred</string>
+    <string name="tab_general">General</string>
+    <string name="tab_info">Info</string>
+    <string name="tab_temperament">Temperament</string>
+    <string name="tab_colors">Colors</string>
+    <string name="name">Name</string>
+    <string name="breed_group">Breed Group</string>
+    <string name="origin">Origin</string>
+    <string name="description">Description</string>
+    <string name="lifespan">Lifespan</string>
+    <string name="size">Size</string>
+    <string name="temperament_desc">This page contains temperament information</string>
+    <string name="colors_desc">This page contains colors information</string>
+</resources>

@@ -51,14 +51,5 @@ class BirdDetailViewModel @Inject constructor(
         }
     }
 
-    fun showLikeAnimation() {
-        viewModelScope.launch {
-            sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.ShowLikeAnimation)
-        }
-    }
-
-    fun hideLikeAnimation() {
-        sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.HideLikeAnimation)
-    }
 
 }

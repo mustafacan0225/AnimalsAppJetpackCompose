@@ -11,8 +11,6 @@ class BirdDetailScreenReducer() :
     sealed class BirdDetailScreenEvent : Reducer.ViewEvent {
         data class Load(val bird: Bird) : BirdDetailScreenEvent()
         object UpdateBirdIsFavorite : BirdDetailScreenEvent()
-        object ShowLikeAnimation : BirdDetailScreenEvent()
-        object HideLikeAnimation : BirdDetailScreenEvent()
     }
 
     @Immutable
@@ -26,7 +24,6 @@ class BirdDetailScreenReducer() :
         val bird: Bird? = null,
         val isSelectedFavIcon: Boolean = false,
         val showSettings: Boolean = false,
-        val likeAnimationVisibility: Boolean = false
     ) : Reducer.ViewState {
         companion object {
             fun initial(): BirdDetailScreenState {
@@ -54,15 +51,6 @@ class BirdDetailScreenReducer() :
                 previousState.bird?.isFavorite = !previousState.bird?.isFavorite!!
                 previousState.copy(bird = previousState.bird, isSelectedFavIcon = previousState.bird.isFavorite?: false) to null
             }
-
-            is BirdDetailScreenEvent.ShowLikeAnimation -> {
-                previousState.copy(likeAnimationVisibility = true) to null
-            }
-
-            is BirdDetailScreenEvent.HideLikeAnimation -> {
-                previousState.copy(likeAnimationVisibility = false) to null
-            }
-
 
         }
     }

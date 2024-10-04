@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.animalsapp.ui.screen.cats.CatsScreen
 import com.mustafacan.ui_birds.navigation.NavigationBirds
+import com.mustafacan.ui_cats.navigation.NavigationCats
 import com.mustafacan.ui_common.navigation.root.NavDestinationItem
 import com.mustafacan.ui_dogs.navigation.NavigationDogs
 import com.mustafacan.ui_reminder.feature.navigation.NavigationReminder
@@ -29,11 +30,13 @@ fun NavigationMain(
         }
 
         composable<NavDestinationItem.Cats> {
-            CatsScreen()
+            NavigationCats (callbackBottomMenuVisibility = {
+                callbackBottomMenuVisibility(it)
+            })
         }
 
         composable<NavDestinationItem.Birds> {
-            //BirdsScreen()
+
             NavigationBirds(callbackBottomMenuVisibility = {
                 callbackBottomMenuVisibility(it)
             })
