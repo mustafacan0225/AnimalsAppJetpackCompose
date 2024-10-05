@@ -14,4 +14,5 @@
     <string name="temperament_desc">This page contains temperament information</string>
     <string name="colors_desc">This page contains colors information</string>
     <string name="detail_page_desc">Description:</string>
+    <string name="detail">Detail</string>
 </resources>

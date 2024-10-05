@@ -136,7 +136,7 @@ class ReminderWorker @AssistedInject constructor(
                 notificationBody += "${it.data.size} birds"
             }*/
             showNotification(
-                inputData.getInt(NOTIFICATION_TITLE_RES_ID_PARAM, R.string.reminder),
+                R.string.reminder_title,
                 inputData.getInt(NOTIFICATION_ICON_RES_ID_PARAM, R.drawable.temperament),
                 notificationBody
             )

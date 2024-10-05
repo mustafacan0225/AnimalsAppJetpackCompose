@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mustafacan.ui_common.components.toolbar.Toolbar
 import com.mustafacan.ui_reminder.R
 import androidx.compose.runtime.State
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun ReminderScren() {
@@ -77,7 +78,7 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
             thumbContent = {
                 if (uiState.value.dogsReminderState) {
                     Icon(
-                        imageVector = Icons.Default.Check,
+                        painter = painterResource(id = R.drawable.temperament),
                         contentDescription = null,
                         modifier = Modifier.size(SwitchDefaults.IconSize),
                     )
@@ -107,7 +108,7 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
             thumbContent = {
                 if (uiState.value.catsReminderState) {
                     Icon(
-                        imageVector = Icons.Default.Check,
+                        painter = painterResource(id = R.drawable.kitten),
                         contentDescription = null,
                         modifier = Modifier.size(SwitchDefaults.IconSize),
                     )
@@ -138,7 +139,7 @@ fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
             thumbContent = {
                 if (uiState.value.birdsReminderState) {
                     Icon(
-                        imageVector = Icons.Default.Check,
+                        painter = painterResource(id = R.drawable.bird),
                         contentDescription = null,
                         modifier = Modifier.size(SwitchDefaults.IconSize),
                     )

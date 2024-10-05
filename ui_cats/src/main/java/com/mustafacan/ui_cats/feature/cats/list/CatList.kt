@@ -1,8 +1,10 @@
 package com.mustafacan.ui_cats.feature.cats.list
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,11 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
+import androidx.constraintlayout.compose.atMost
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.ui_cats.R
 import com.mustafacan.ui_common.components.image.CircleImage
@@ -64,7 +69,7 @@ fun CatList(
             clickedItem = { cat -> clickedItem(cat) },
             addFavorite = { cat -> addFavorite(cat.copy(isFavorite = true)) },
             deleteFavorite = { cat -> deleteFavorite(cat) },
-            showBigImage = { cat -> showBigImage(cat)  })
+            showBigImage = { cat -> showBigImage(cat) })
     }
 }
 
@@ -79,7 +84,8 @@ fun CatListForLazyColumn(
     LazyColumn(
         Modifier
             .fillMaxSize()
-            .padding(10.dp)) {
+            .padding(10.dp)
+    ) {
         items(catList) { cat ->
 
             Card(
@@ -90,7 +96,9 @@ fun CatListForLazyColumn(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 border = BorderStroke(
                     1.dp,
-                    if (cat.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
+                    if (cat.isFavorite
+                            ?: false
+                    ) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -119,7 +127,8 @@ fun CatListForLazyColumn(
                         )
                     ) {
                         CircleImage(
-                            url = cat.image?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
+                            url = cat.image
+                                ?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
@@ -201,83 +210,108 @@ fun CatListForLazyVerticalGrid(
         columns = GridCells.Fixed(2)
     ) {
         items(catList) { cat ->
-            Card(
-                Modifier
-                    .padding(10.dp)
-                    .clickable { clickedItem(cat) },
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
-                ),
-                border = BorderStroke(
-                    1.dp,
-                    if (cat.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
-                ),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = cat.name ?: "",
-                        fontWeight = FontWeight.Black,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-                    )
+            ConstraintLayout(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp)) {
+                val (card, favIcon) = createRefs()
 
-                    Card(
-                        modifier = Modifier
-                            .width(80.dp)
-                            .height(80.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
-                        ),
-                        shape = CircleShape
-                    ) {
-                        CircleImage(
-                            url = cat.image?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
+                Card(
+                    Modifier
+                        .constrainAs(card) {
+                            width = Dimension.fillToConstraints
+                            height = Dimension.wrapContent
+                        }
+                        .clickable { clickedItem(cat) },
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White,
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        if (cat.isFavorite
+                                ?: false
+                        ) colorResource(id = R.color.indicator_color) else Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = cat.name ?: "",
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
                             modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                                .clickable { showBigImage(cat) }
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                         )
-                    }
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 5.dp),
-                        text = cat.origin ?: "",
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                    )
-
-                    IconButton(onClick = {
-                        if (cat.isFavorite ?: false)
-                            deleteFavorite(cat)
-                        else
-                            addFavorite(cat)
-                    }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        if (cat.isFavorite ?: false) {
-                            LikeAnimation(modifier = Modifier.size(50.dp))
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.FavoriteBorder,
-                                contentDescription = "favorite",
-                                tint = Color.Black
-
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Card(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .height(80.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                            ),
+                            shape = CircleShape
+                        ) {
+                            CircleImage(
+                                url = cat.image
+                                    ?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(CircleShape)
+                                    .clickable { showBigImage(cat) }
                             )
                         }
-                        /*Icon(
-                            imageVector = if (cat.isFavorite
-                                    ?: false
-                            ) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 5.dp),
+                            text = cat.origin ?: "",
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            modifier = Modifier
+                                .background(
+                                    colorResource(id = R.color.indicator_color),
+                                    RoundedCornerShape(50.dp)
+                                )
+                                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
+                                .clickable { clickedItem(cat) },
+                            text = stringResource(id = R.string.detail),
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(30.dp))
+                    }
+                }
+
+                IconButton(onClick = {
+                    if (cat.isFavorite ?: false)
+                        deleteFavorite(cat)
+                    else
+                        addFavorite(cat)
+                }, modifier = Modifier.constrainAs(favIcon) {
+                    width = Dimension.fillToConstraints.atMost(80.dp).atLeast(80.dp)
+                    height = Dimension.fillToConstraints.atMost(80.dp).atLeast(80.dp)
+                    centerHorizontallyTo(parent)
+                    top.linkTo(card.bottom)
+                    bottom.linkTo(card.bottom)
+
+                }) {
+                    if (cat.isFavorite ?: false) {
+                        LikeAnimation(modifier = Modifier.size(80.dp))
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
                             contentDescription = "favorite",
-                            tint = if (cat.isFavorite ?: false) Color.Red else Color.Black
-                        )*/
+                            tint = Color.Black,
+                            modifier = Modifier.size(40.dp)
+                        )
                     }
                 }
             }
+
         }
     }
 

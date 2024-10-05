@@ -1,8 +1,10 @@
 package com.mustafacan.ui_birds.feature.birds.list
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,11 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
+import androidx.constraintlayout.compose.atMost
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_birds.R
 import com.mustafacan.ui_birds.feature.birds.BirdsScreenReducer
@@ -193,77 +198,107 @@ fun BirdListForLazyVerticalGrid(
         columns = GridCells.Fixed(2)
     ) {
         items(birdList) { bird ->
-            Card(
-                Modifier
-                    .padding(10.dp)
-                    .clickable { clickedItem(bird) },
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
-                ),
-                border = BorderStroke(
-                    1.dp,
-                    if (bird.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
-                ),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = bird.name ?: "",
-                        fontWeight = FontWeight.Black,
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-                    )
+            ConstraintLayout(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp)) {
+                val (card, favIcon) = createRefs()
 
-                    Card(
-                        modifier = Modifier
-                            .width(80.dp)
-                            .height(80.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White,
-                        ),
-                        shape = CircleShape
-                    ) {
-                        CircleImage(
-                            url = bird.image?: "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
+                Card(
+                    Modifier.constrainAs(card) {
+                        width = Dimension.fillToConstraints
+                        height = Dimension.wrapContent
+                    }.clickable { clickedItem(bird) },
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White,
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        if (bird.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = bird.name ?: "",
+                            fontWeight = FontWeight.Black,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
                             modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                                .clickable { showBigImage(bird) }
+                                .fillMaxWidth()
+                                .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                         )
-                    }
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 5.dp),
-                        text = bird.family ?: "",
-                        textAlign = TextAlign.Center,
-                        maxLines = 1,
-                    )
-
-                    IconButton(onClick = {
-                        if (bird.isFavorite ?: false)
-                            deleteFavorite(bird)
-                        else
-                            addFavorite(bird)
-                    }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        if (bird.isFavorite ?: false) {
-                            LikeAnimation(modifier = Modifier.size(50.dp))
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.FavoriteBorder,
-                                contentDescription = "favorite",
-                                tint = Color.Black
-
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Card(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .height(80.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                            ),
+                            shape = CircleShape
+                        ) {
+                            CircleImage(
+                                url = bird.image?: "https://cdn.pixabay.com/photo/2020/02/21/23/09/oriental-pied-hornbill-4868981_1280.jpg",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(CircleShape)
+                                    .clickable { showBigImage(bird) }
                             )
                         }
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 5.dp),
+                            text = bird.family ?: "",
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            modifier = Modifier
+                                .background(
+                                    colorResource(id = R.color.indicator_color),
+                                    RoundedCornerShape(50.dp)
+                                )
+                                .padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 5.dp)
+                                .clickable { clickedItem(bird) },
+                            text = stringResource(id = R.string.detail),
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(30.dp))
 
                     }
                 }
+
+                IconButton(onClick = {
+                    if (bird.isFavorite ?: false)
+                        deleteFavorite(bird)
+                    else
+                        addFavorite(bird)
+                }, modifier = Modifier.constrainAs(favIcon) {
+                    width = Dimension.fillToConstraints.atMost(80.dp).atLeast(80.dp)
+                    height = Dimension.fillToConstraints.atMost(80.dp).atLeast(80.dp)
+                    centerHorizontallyTo(parent)
+                    top.linkTo(card.bottom)
+                    bottom.linkTo(card.bottom)
+
+                }) {
+                    if (bird.isFavorite ?: false) {
+                        LikeAnimation(modifier = Modifier.size(80.dp))
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            contentDescription = "favorite",
+                            tint = Color.Black,
+                            modifier = Modifier.size(40.dp)
+
+                        )
+                    }
+
+                }
             }
+
         }
     }
 

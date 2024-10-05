@@ -9,4 +9,5 @@
     <string name="detail_page_diet">Diet:</string>
     <string name="detail_page_wingspan">Wingspan cm:</string>
     <string name="weight">Weight kg:</string>
+    <string name="detail">Detail</string>
 </resources>
