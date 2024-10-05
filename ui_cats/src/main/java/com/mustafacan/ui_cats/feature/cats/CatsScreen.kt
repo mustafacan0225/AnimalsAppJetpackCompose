@@ -17,6 +17,7 @@ import com.mustafacan.ui_cats.feature.cats.list.CatList
 import com.mustafacan.ui_common.R
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForApiRequest
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForSearch
+import com.mustafacan.ui_common.components.image.ImageViewer
 import com.mustafacan.ui_common.components.loading.LoadingErrorScreen
 import com.mustafacan.ui_common.components.loading.LoadingScreen
 import com.mustafacan.ui_common.components.searchbar.LocalSearch
@@ -37,7 +38,8 @@ fun CatsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar = listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
+    val actionListForToolbar =
+        listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
 
@@ -51,7 +53,10 @@ fun CatsScreen(navController: NavController) {
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(0.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(0.dp)) {
         //toolbar
         Toolbar(title = "Animals App - Cats", actionList = actionListForToolbar)
 
@@ -76,25 +81,72 @@ fun CatListContent(viewModel: CatsViewModel, uiState: State<CatsScreenReducer.Ca
     if (uiState.value.loading) {
         LoadingScreen()
     } else if (uiState.value.errorMessage != null) {
-        LoadingErrorScreen(text = uiState.value.errorMessage!!, retryOnClick = { viewModel.callCats() })
+        LoadingErrorScreen(
+            text = uiState.value.errorMessage!!,
+            retryOnClick = { viewModel.callCats() })
     } else if (uiState.value.cats != null && !uiState.value.cats!!.isEmpty()) {
-        CatList(uiState = uiState, clickedItem = { cat -> viewModel.navigateToCatDetail(cat) }, addFavorite = { cat -> viewModel.addFavoriteCat(cat) }, deleteFavorite = { cat -> viewModel.deleteFavoriteCat(cat) })
+        CatList(
+            uiState = uiState,
+            clickedItem = { cat -> viewModel.navigateToCatDetail(cat) },
+            addFavorite = { cat -> viewModel.addFavoriteCat(cat) },
+            deleteFavorite = { cat -> viewModel.deleteFavoriteCat(cat) },
+            showBigImage = { cat -> viewModel.showBigImage(cat) })
     } else if (uiState.value.catsBackup.isNullOrEmpty()) {
-        EmptyResultForApiRequest(text = stringResource(id = R.string.empty), retryOnClick = { viewModel.callCats() })
+        EmptyResultForApiRequest(
+            text = stringResource(id = R.string.empty),
+            retryOnClick = { viewModel.callCats() })
     } else if (!uiState.value.catsBackup.isNullOrEmpty() && uiState.value.cats.isNullOrEmpty()) {
         EmptyResultForSearch()
     }
 
     if (uiState.value.showSettings) {
         if (uiState.value.viewTypeForSettings == ViewTypeForSettings.POPUP) {
-            SettingsScreenWithPopup(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeCats, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeCats, viewTypeSettings, searchType) },
+            SettingsScreenWithPopup(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeCats, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeCats,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         } else if (uiState.value.viewTypeForSettings == ViewTypeForSettings.BOTTOM_SHEET) {
-            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeCats, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeCats, viewTypeSettings, searchType) },
+            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeCats, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeCats,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         }
+
+    }
+
+    if (uiState.value.showBigImage) {
+        ImageViewer(
+            imageUrl = uiState.value.selectedCatForBigImage?.image!!,
+            uiState.value.selectedCatForBigImage?.name!!,
+            uiState.value.selectedCatForBigImage?.temperament ?: "",
+            uiState.value.selectedCatForBigImage?.isFavorite ?: false,
+            onDismiss = {
+                viewModel.closeBigImage()
+            },
+            updateFavorite = {
+                if (!uiState.value.selectedCatForBigImage!!.isFavorite!!)
+                    viewModel.addFavoriteCat(
+                        uiState.value.selectedCatForBigImage!!.copy(
+                            isFavorite = true
+                        )
+                    )
+                else
+                    viewModel.deleteFavoriteCat(uiState.value.selectedCatForBigImage!!)
+            })
 
     }
 }

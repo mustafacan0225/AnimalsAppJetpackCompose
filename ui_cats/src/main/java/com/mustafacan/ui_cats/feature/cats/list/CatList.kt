@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mustafacan.domain.model.cats.Cat
+import com.mustafacan.ui_cats.R
 import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
@@ -46,20 +48,23 @@ fun CatList(
     uiState: State<CatsScreenReducer.CatsScreenState>,
     clickedItem: (cat: Cat) -> Unit,
     addFavorite: (cat: Cat) -> Unit,
-    deleteFavorite: (cat: Cat) -> Unit
+    deleteFavorite: (cat: Cat) -> Unit,
+    showBigImage: (cat: Cat) -> Unit
 ) {
     if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_VERTICAL_GRID) {
         CatListForLazyVerticalGrid(
             catList = uiState.value.cats!!,
             clickedItem = { cat -> clickedItem(cat) },
             addFavorite = { cat -> addFavorite(cat.copy(isFavorite = true)) },
-            deleteFavorite = { cat -> deleteFavorite(cat) })
+            deleteFavorite = { cat -> deleteFavorite(cat) },
+            showBigImage = { cat -> showBigImage(cat) })
     } else if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_COLUMN) {
         CatListForLazyColumn(
             catList = uiState.value.cats!!,
             clickedItem = { cat -> clickedItem(cat) },
             addFavorite = { cat -> addFavorite(cat.copy(isFavorite = true)) },
-            deleteFavorite = { cat -> deleteFavorite(cat) })
+            deleteFavorite = { cat -> deleteFavorite(cat) },
+            showBigImage = { cat -> showBigImage(cat)  })
     }
 }
 
@@ -68,7 +73,8 @@ fun CatListForLazyColumn(
     catList: List<Cat>,
     clickedItem: (cat: Cat) -> Unit,
     addFavorite: (cat: Cat) -> Unit,
-    deleteFavorite: (cat: Cat) -> Unit
+    deleteFavorite: (cat: Cat) -> Unit,
+    showBigImage: (cat: Cat) -> Unit
 ) {
     LazyColumn(
         Modifier
@@ -84,7 +90,7 @@ fun CatListForLazyColumn(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 border = BorderStroke(
                     1.dp,
-                    if (cat.isFavorite ?: false) Color.Red else Color.White
+                    if (cat.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -117,6 +123,7 @@ fun CatListForLazyColumn(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(cat) }
                         )
                     }
 
@@ -183,7 +190,8 @@ fun CatListForLazyVerticalGrid(
     catList: List<Cat>,
     clickedItem: (cat: Cat) -> Unit,
     addFavorite: (cat: Cat) -> Unit,
-    deleteFavorite: (cat: Cat) -> Unit
+    deleteFavorite: (cat: Cat) -> Unit,
+    showBigImage: (cat: Cat) -> Unit
 ) {
     LazyVerticalGrid(
         modifier =
@@ -202,7 +210,7 @@ fun CatListForLazyVerticalGrid(
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (cat.isFavorite ?: false) Color.Red else Color.White
+                    if (cat.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -232,6 +240,7 @@ fun CatListForLazyVerticalGrid(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(cat) }
                         )
                     }
                     Text(

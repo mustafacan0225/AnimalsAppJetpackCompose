@@ -19,6 +19,8 @@ class CatDetailScreenReducer() :
         object CloseSettings : CatDetailScreenEvent()
         data class SettingsUpdated(val viewTypeForTab: ViewTypeForTab) : CatDetailScreenEvent()
         object UpdateCatIsFavorite : CatDetailScreenEvent()
+        object ShowBigImage : CatDetailScreenEvent()
+        object CloseBigImage : CatDetailScreenEvent()
     }
 
     @Immutable
@@ -37,6 +39,7 @@ class CatDetailScreenReducer() :
         val coroutineScope: CoroutineScope? = null,
         val showSettings: Boolean = false,
         val currentViewTypeForTab: ViewTypeForTab? = null,
+        val showBigImage: Boolean = false
     ) : Reducer.ViewState {
         companion object {
             fun initial(): CatDetailScreenState {
@@ -90,6 +93,14 @@ class CatDetailScreenReducer() :
             is CatDetailScreenEvent.UpdateCatIsFavorite -> {
                 previousState.cat?.isFavorite = !previousState.cat?.isFavorite!!
                 previousState.copy(cat = previousState.cat, isSelectedFavIcon = previousState.cat.isFavorite?: false) to null
+            }
+
+            is CatDetailScreenEvent.ShowBigImage -> {
+                previousState.copy(showBigImage = true) to null
+            }
+
+            is CatDetailScreenEvent.CloseBigImage -> {
+                previousState.copy(showBigImage = false) to null
             }
 
         }

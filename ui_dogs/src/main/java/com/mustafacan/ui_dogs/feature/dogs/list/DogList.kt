@@ -1,7 +1,6 @@
 package com.mustafacan.ui_dogs.feature.dogs.list
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +41,7 @@ import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
+import com.mustafacan.ui_dogs.R
 import com.mustafacan.ui_dogs.feature.dogs.DogsScreenReducer
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -49,20 +50,23 @@ fun DogList(
     uiState: State<DogsScreenReducer.DogsScreenState>,
     clickedItem: (dog: Dog) -> Unit,
     addFavorite: (dog: Dog) -> Unit,
-    deleteFavorite: (dog: Dog) -> Unit
+    deleteFavorite: (dog: Dog) -> Unit,
+    showBigImage: (dog: Dog) -> Unit
 ) {
     if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_VERTICAL_GRID) {
         DogListForLazyVerticalGrid(
             dogList = uiState.value.dogs!!,
             clickedItem = { dog -> clickedItem(dog) },
             addFavorite = { dog -> addFavorite(dog.copy(isFavorite = true)) },
-            deleteFavorite = { dog -> deleteFavorite(dog) })
+            deleteFavorite = { dog -> deleteFavorite(dog) },
+            showBigImage = { dog -> showBigImage(dog) })
     } else if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_COLUMN) {
         DogListForLazyColumn(
             dogList = uiState.value.dogs!!,
             clickedItem = { dog -> clickedItem(dog) },
             addFavorite = { dog -> addFavorite(dog.copy(isFavorite = true)) },
-            deleteFavorite = { dog -> deleteFavorite(dog) })
+            deleteFavorite = { dog -> deleteFavorite(dog) },
+            showBigImage = { dog -> showBigImage(dog) })
     }
 }
 
@@ -71,7 +75,8 @@ fun DogListForLazyColumn(
     dogList: List<Dog>,
     clickedItem: (dog: Dog) -> Unit,
     addFavorite: (dog: Dog) -> Unit,
-    deleteFavorite: (dog: Dog) -> Unit
+    deleteFavorite: (dog: Dog) -> Unit,
+    showBigImage: (dog: Dog) -> Unit,
 ) {
     LazyColumn(
         Modifier
@@ -87,7 +92,7 @@ fun DogListForLazyColumn(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 border = BorderStroke(
                     1.dp,
-                    if (dog.isFavorite ?: false) Color.Red else Color.White
+                    if (dog.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -120,6 +125,7 @@ fun DogListForLazyColumn(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(dog) }
                         )
                     }
 
@@ -186,7 +192,8 @@ fun DogListForLazyVerticalGrid(
     dogList: List<Dog>,
     clickedItem: (dog: Dog) -> Unit,
     addFavorite: (dog: Dog) -> Unit,
-    deleteFavorite: (dog: Dog) -> Unit
+    deleteFavorite: (dog: Dog) -> Unit,
+    showBigImage: (dog: Dog) -> Unit
 ) {
     LazyVerticalGrid(
         modifier =
@@ -205,7 +212,7 @@ fun DogListForLazyVerticalGrid(
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (dog.isFavorite ?: false) Color.Red else Color.White
+                    if (dog.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -235,6 +242,7 @@ fun DogListForLazyVerticalGrid(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(dog) }
                         )
                     }
                     Text(

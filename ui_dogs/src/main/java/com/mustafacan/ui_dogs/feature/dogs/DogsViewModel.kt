@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.dogs.Dog
-import com.mustafacan.domain.model.error.CustomException
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
@@ -200,5 +199,13 @@ class DogsViewModel @Inject constructor(
                 sendEvent(DogsScreenReducer.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }
+    }
+
+    fun showBigImage(dog: Dog) {
+        sendEvent(DogsScreenReducer.DogsScreenEvent.ShowBigImage(dog))
+    }
+
+    fun closeBigImage() {
+        sendEvent(DogsScreenReducer.DogsScreenEvent.CloseBigImage)
     }
 }

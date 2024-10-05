@@ -22,6 +22,8 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
         data class DataChanged(val list: List<Bird>? = null) : BirdsScreenEvent()
         data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : BirdsScreenEvent()
         data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : BirdsScreenEvent()
+        data class ShowBigImage(val bird: Bird) : BirdsScreenEvent()
+        object CloseBigImage : BirdsScreenEvent()
     }
 
     @Immutable
@@ -34,7 +36,9 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
         val loading: Boolean, val errorMessage: String?, val birds: List<Bird>?,
         val birdsBackup: List<Bird>?, val viewTypeForList: ViewTypeForList = ViewTypeForList.LAZY_COLUMN,
         val viewTypeForSettings: ViewTypeForSettings = ViewTypeForSettings.POPUP,
-        val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int
+        val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
+        val showBigImage: Boolean = false,
+        val selectedBirdForBigImage: Bird? = null,
     ) : Reducer.ViewState {
         companion object {
             fun initial(): BirdsScreenState {
@@ -128,6 +132,14 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
                     viewTypeForList = enumValueOf(event.listType ?: ViewTypeForList.LAZY_COLUMN.name) as ViewTypeForList,
                     viewTypeForSettings = enumValueOf(event.settingsType ?: ViewTypeForSettings.POPUP.name) as ViewTypeForSettings
                 ) to null
+            }
+
+            is BirdsScreenEvent.ShowBigImage -> {
+                previousState.copy(showBigImage = true, selectedBirdForBigImage = event.bird) to null
+            }
+
+            is BirdsScreenEvent.CloseBigImage -> {
+                previousState.copy(showBigImage = false) to null
             }
 
         }

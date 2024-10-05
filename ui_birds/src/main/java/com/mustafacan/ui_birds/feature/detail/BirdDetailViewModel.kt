@@ -51,5 +51,13 @@ class BirdDetailViewModel @Inject constructor(
         }
     }
 
+    fun showBigImage() {
+        sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.ShowBigImage)
+    }
+
+    fun closeBigImage() {
+        sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.CloseBigImage)
+    }
+
 
 }

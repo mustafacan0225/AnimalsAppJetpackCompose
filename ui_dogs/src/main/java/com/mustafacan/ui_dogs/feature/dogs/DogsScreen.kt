@@ -25,6 +25,7 @@ import com.mustafacan.ui_common.components.toolbar.ToolbarAction
 import com.mustafacan.ui_common.navigation.root.NavDestinationItem
 import com.mustafacan.ui_common.util.rememberFlowWithLifecycle
 import com.mustafacan.ui_common.R
+import com.mustafacan.ui_common.components.image.ImageViewer
 import com.mustafacan.ui_common.components.settings.SettingsScreenWithBottomSheet
 import com.mustafacan.ui_common.components.settings.SettingsScreenWithPopup
 import com.mustafacan.ui_dogs.feature.dogs.list.DogList
@@ -36,7 +37,8 @@ fun DogsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar = listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
+    val actionListForToolbar =
+        listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
 
@@ -50,7 +52,11 @@ fun DogsScreen(navController: NavController) {
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(0.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(0.dp)
+    ) {
         //toolbar
         Toolbar(title = "Animals App - Dogs", actionList = actionListForToolbar)
 
@@ -75,23 +81,66 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
     if (uiState.value.loading) {
         LoadingScreen()
     } else if (uiState.value.errorMessage != null) {
-        LoadingErrorScreen(text = uiState.value.errorMessage!!, retryOnClick = { viewModel.callDogs() })
+        LoadingErrorScreen(
+            text = uiState.value.errorMessage!!,
+            retryOnClick = { viewModel.callDogs() })
     } else if (uiState.value.dogs != null && !uiState.value.dogs!!.isEmpty()) {
-        DogList(uiState = uiState, clickedItem = { dog -> viewModel.navigateToDogDetail(dog) }, addFavorite = { dog -> viewModel.addFavoriteDog(dog) }, deleteFavorite = { dog -> viewModel.deleteFavoriteDog(dog) })
+        DogList(
+            uiState = uiState,
+            clickedItem = { dog -> viewModel.navigateToDogDetail(dog) },
+            addFavorite = { dog -> viewModel.addFavoriteDog(dog) },
+            deleteFavorite = { dog -> viewModel.deleteFavoriteDog(dog) },
+            showBigImage = { dog -> viewModel.showBigImage(dog) })
     } else if (uiState.value.dogsBackup.isNullOrEmpty()) {
-        EmptyResultForApiRequest(text = stringResource(id = R.string.empty), retryOnClick = { viewModel.callDogs() })
+        EmptyResultForApiRequest(
+            text = stringResource(id = R.string.empty),
+            retryOnClick = { viewModel.callDogs() })
     } else if (!uiState.value.dogsBackup.isNullOrEmpty() && uiState.value.dogs.isNullOrEmpty()) {
         EmptyResultForSearch()
     }
 
+    if (uiState.value.showBigImage) {
+        ImageViewer(
+            imageUrl = uiState.value.selectedDogForBigImage?.image!!,
+            uiState.value.selectedDogForBigImage?.name!!,
+            uiState.value.selectedDogForBigImage?.temperament!!,
+            uiState.value.selectedDogForBigImage?.isFavorite ?: false,
+            onDismiss = {
+                viewModel.closeBigImage()
+            },
+            updateFavorite = {
+                if (!uiState.value.selectedDogForBigImage!!.isFavorite!!)
+                    viewModel.addFavoriteDog(uiState.value.selectedDogForBigImage!!.copy(isFavorite = true))
+                else
+                    viewModel.deleteFavoriteDog(uiState.value.selectedDogForBigImage!!)
+            })
+
+    }
+
     if (uiState.value.showSettings) {
         if (uiState.value.viewTypeForSettings == ViewTypeForSettings.POPUP) {
-            SettingsScreenWithPopup(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeDogs, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings, searchType) },
+            SettingsScreenWithPopup(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         } else if (uiState.value.viewTypeForSettings == ViewTypeForSettings.BOTTOM_SHEET) {
-            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeDogs, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings, searchType) },
+            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         }
 

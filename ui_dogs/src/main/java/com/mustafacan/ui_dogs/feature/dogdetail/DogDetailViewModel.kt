@@ -86,4 +86,12 @@ class DogDetailViewModel @Inject constructor(
         }
     }
 
+    fun showBigImage() {
+        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.ShowBigImage)
+    }
+
+    fun closeBigImage() {
+        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.CloseBigImage)
+    }
+
 }

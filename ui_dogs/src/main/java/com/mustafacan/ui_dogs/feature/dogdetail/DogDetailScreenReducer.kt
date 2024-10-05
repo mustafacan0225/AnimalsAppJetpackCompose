@@ -19,6 +19,8 @@ class DogDetailScreenReducer() :
         object CloseSettings : DogDetailScreenEvent()
         data class SettingsUpdated(val viewTypeForTab: ViewTypeForTab) : DogDetailScreenEvent()
         object UpdateDogIsFavorite : DogDetailScreenEvent()
+        object ShowBigImage : DogDetailScreenEvent()
+        object CloseBigImage : DogDetailScreenEvent()
     }
 
     @Immutable
@@ -37,6 +39,7 @@ class DogDetailScreenReducer() :
         val coroutineScope: CoroutineScope? = null,
         val showSettings: Boolean = false,
         val currentViewTypeForTab: ViewTypeForTab? = null,
+        val showBigImage: Boolean = false,
     ) : Reducer.ViewState {
         companion object {
             fun initial(): DogDetailScreenState {
@@ -90,6 +93,14 @@ class DogDetailScreenReducer() :
             is DogDetailScreenEvent.UpdateDogIsFavorite -> {
                 previousState.dog?.isFavorite = !previousState.dog?.isFavorite!!
                 previousState.copy(dog = previousState.dog, isSelectedFavIcon = previousState.dog.isFavorite?: false) to null
+            }
+
+            is DogDetailScreenEvent.ShowBigImage -> {
+                previousState.copy(showBigImage = true) to null
+            }
+
+            is DogDetailScreenEvent.CloseBigImage -> {
+                previousState.copy(showBigImage = false) to null
             }
 
         }

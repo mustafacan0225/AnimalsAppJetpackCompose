@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mustafacan.domain.model.birds.Bird
+import com.mustafacan.ui_birds.R
 import com.mustafacan.ui_birds.feature.birds.BirdsScreenReducer
 import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
@@ -46,20 +48,23 @@ fun BirdList(
     uiState: State<BirdsScreenReducer.BirdsScreenState>,
     clickedItem: (bird: Bird) -> Unit,
     addFavorite: (bird: Bird) -> Unit,
-    deleteFavorite: (bird: Bird) -> Unit
+    deleteFavorite: (bird: Bird) -> Unit,
+    showBigImage: (bird: Bird) -> Unit
 ) {
     if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_VERTICAL_GRID) {
         BirdListForLazyVerticalGrid(
             birdList = uiState.value.birds!!,
             clickedItem = { bird -> clickedItem(bird) },
             addFavorite = { bird -> addFavorite(bird.copy(isFavorite = true)) },
-            deleteFavorite = { bird -> deleteFavorite(bird) })
+            deleteFavorite = { bird -> deleteFavorite(bird) },
+            showBigImage = { bird -> showBigImage(bird) })
     } else if (uiState.value.viewTypeForList == ViewTypeForList.LAZY_COLUMN) {
         BirdListForLazyColumn(
             birdList = uiState.value.birds!!,
             clickedItem = { bird -> clickedItem(bird) },
             addFavorite = { bird -> addFavorite(bird.copy(isFavorite = true)) },
-            deleteFavorite = { bird -> deleteFavorite(bird) })
+            deleteFavorite = { bird -> deleteFavorite(bird) },
+            showBigImage = { bird -> showBigImage(bird) })
     }
 }
 
@@ -68,7 +73,8 @@ fun BirdListForLazyColumn(
     birdList: List<Bird>,
     clickedItem: (bird: Bird) -> Unit,
     addFavorite: (bird: Bird) -> Unit,
-    deleteFavorite: (bird: Bird) -> Unit
+    deleteFavorite: (bird: Bird) -> Unit,
+    showBigImage: (bird: Bird) -> Unit
 ) {
     LazyColumn(
         Modifier
@@ -84,7 +90,7 @@ fun BirdListForLazyColumn(
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 border = BorderStroke(
                     1.dp,
-                    if (bird.isFavorite ?: false) Color.Red else Color.White
+                    if (bird.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -117,6 +123,7 @@ fun BirdListForLazyColumn(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(bird) }
                         )
                     }
 
@@ -175,7 +182,8 @@ fun BirdListForLazyVerticalGrid(
     birdList: List<Bird>,
     clickedItem: (bird: Bird) -> Unit,
     addFavorite: (bird: Bird) -> Unit,
-    deleteFavorite: (bird: Bird) -> Unit
+    deleteFavorite: (bird: Bird) -> Unit,
+    showBigImage: (bird: Bird) -> Unit
 ) {
     LazyVerticalGrid(
         modifier =
@@ -194,7 +202,7 @@ fun BirdListForLazyVerticalGrid(
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (bird.isFavorite ?: false) Color.Red else Color.White
+                    if (bird.isFavorite ?: false) colorResource(id = R.color.indicator_color) else Color.White
                 ),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -224,6 +232,7 @@ fun BirdListForLazyVerticalGrid(
                             modifier = Modifier
                                 .size(80.dp)
                                 .clip(CircleShape)
+                                .clickable { showBigImage(bird) }
                         )
                     }
                     Text(

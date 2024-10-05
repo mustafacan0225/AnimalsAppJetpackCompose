@@ -4,16 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -27,11 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,7 +41,7 @@ import com.mustafacan.ui_common.components.toolbar.ToolbarAction
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
 
 @Composable
-fun CatDetailScreen(navController: NavController, viewModel: CatDetailViewModel){
+fun CatDetailScreen(navController: NavController, viewModel: CatDetailViewModel) {
     println("cat id: " + viewModel.cat?.name)
     val state = viewModel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -72,15 +63,20 @@ fun CatDetailScreen(navController: NavController, viewModel: CatDetailViewModel)
         Toolbar(onBackPressed = { navController.popBackStack() }, actionList = actionListForToolbar)
 
         if (state.value.initialLoaded) {
-            CatImage(updateIsFavorite = {
-                viewModel.updateIsFavorite()
-            }, cat = state.value.cat?: viewModel.cat, isSelectedFavIcon = state.value.isSelectedFavIcon)
+            CatImage(
+                updateIsFavorite = {
+                    viewModel.updateIsFavorite()
+                },
+                cat = state.value.cat ?: viewModel.cat,
+                isSelectedFavIcon = state.value.isSelectedFavIcon,
+                showBigImage = { viewModel.showBigImage() }
+            )
             CreateTabBar(state, onClickTab = {
                 viewModel.onClickTab(it)
             })
 
             state.value.pagerState?.let {
-                PagerCatDetail(pagerState = it, cat = state.value.cat?: viewModel.cat)
+                PagerCatDetail(pagerState = it, cat = state.value.cat ?: viewModel.cat)
             }
 
             if (state.value.showSettings) {
@@ -94,35 +90,53 @@ fun CatDetailScreen(navController: NavController, viewModel: CatDetailViewModel)
                 }
             }
 
-            ImageViewer(imageUrl = (state.value.cat?.image?: viewModel.cat?.image)!!)
-        }
+            if (state.value.showBigImage) {
+                ImageViewer(
+                    imageUrl = (state.value.cat?.image ?: viewModel.cat?.image) ?: "",
+                    (state.value.cat?.name ?: viewModel.cat?.name) ?: "",
+                    (state.value.cat?.temperament ?: viewModel.cat?.temperament) ?: "",
+                    isSelectedFavIcon = state.value.cat?.isFavorite?: false,
+                    onDismiss = { viewModel.closeBigImage() },
+                    updateFavorite = { viewModel.updateIsFavorite() }
+                )
 
+            }
+        }
 
 
     }
 }
 
 @Composable
-fun CatImage(updateIsFavorite: () -> Unit, cat: Cat, isSelectedFavIcon: Boolean) {
+fun CatImage(
+    updateIsFavorite: () -> Unit,
+    cat: Cat,
+    isSelectedFavIcon: Boolean,
+    showBigImage: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = colorResource(id = R.color.statusbar_color)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ConstraintLayout(modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
             val (image, favoriteIcon, animationIcon) = createRefs()
 
             CircleImage(
-                url = cat.image?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
+                url = cat.image
+                    ?: "https://cdn.pixabay.com/photo/2023/09/06/17/03/maine-coon-8237571_1280.jpg",
                 modifier = Modifier
                     .size(100.dp)
                     .clip(CircleShape)
                     .constrainAs(image) {
                         centerHorizontallyTo(parent)
                     }
+                    .clickable { showBigImage() }
             )
 
             Icon(imageVector = if (isSelectedFavIcon) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
@@ -152,9 +166,6 @@ fun CatImage(updateIsFavorite: () -> Unit, cat: Cat, isSelectedFavIcon: Boolean)
             }
 
         }
-
-
-
 
 
     }

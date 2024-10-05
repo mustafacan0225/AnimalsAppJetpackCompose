@@ -11,6 +11,8 @@ class BirdDetailScreenReducer() :
     sealed class BirdDetailScreenEvent : Reducer.ViewEvent {
         data class Load(val bird: Bird) : BirdDetailScreenEvent()
         object UpdateBirdIsFavorite : BirdDetailScreenEvent()
+        object ShowBigImage : BirdDetailScreenEvent()
+        object CloseBigImage : BirdDetailScreenEvent()
     }
 
     @Immutable
@@ -24,6 +26,7 @@ class BirdDetailScreenReducer() :
         val bird: Bird? = null,
         val isSelectedFavIcon: Boolean = false,
         val showSettings: Boolean = false,
+        val showBigImage: Boolean = false
     ) : Reducer.ViewState {
         companion object {
             fun initial(): BirdDetailScreenState {
@@ -50,6 +53,14 @@ class BirdDetailScreenReducer() :
             is BirdDetailScreenEvent.UpdateBirdIsFavorite -> {
                 previousState.bird?.isFavorite = !previousState.bird?.isFavorite!!
                 previousState.copy(bird = previousState.bird, isSelectedFavIcon = previousState.bird.isFavorite?: false) to null
+            }
+
+            is BirdDetailScreenEvent.ShowBigImage -> {
+                previousState.copy(showBigImage = true) to null
+            }
+
+            is BirdDetailScreenEvent.CloseBigImage -> {
+                previousState.copy(showBigImage = false) to null
             }
 
         }

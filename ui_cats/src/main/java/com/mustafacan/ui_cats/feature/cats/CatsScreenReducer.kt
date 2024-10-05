@@ -22,6 +22,8 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
         data class DataChanged(val list: List<Cat>? = null) : CatsScreenEvent()
         data class SettingsUpdated(val viewTypeCats: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : CatsScreenEvent()
         data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : CatsScreenEvent()
+        data class ShowBigImage(val cat: Cat) : CatsScreenEvent()
+        object CloseBigImage : CatsScreenEvent()
     }
 
     @Immutable
@@ -34,7 +36,9 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
         val loading: Boolean, val errorMessage: String?, val cats: List<Cat>?,
         val catsBackup: List<Cat>?, val viewTypeForList: ViewTypeForList = ViewTypeForList.LAZY_COLUMN,
         val viewTypeForSettings: ViewTypeForSettings = ViewTypeForSettings.POPUP,
-        val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int
+        val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
+        val showBigImage: Boolean = false,
+        val selectedCatForBigImage: Cat? = null,
     ) : Reducer.ViewState {
         companion object {
             fun initial(): CatsScreenState {
@@ -128,6 +132,14 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
                     viewTypeForList = enumValueOf(event.listType ?: ViewTypeForList.LAZY_COLUMN.name) as ViewTypeForList,
                     viewTypeForSettings = enumValueOf(event.settingsType ?: ViewTypeForSettings.POPUP.name) as ViewTypeForSettings
                 ) to null
+            }
+
+            is CatsScreenEvent.ShowBigImage -> {
+                previousState.copy(showBigImage = true, selectedCatForBigImage = event.cat) to null
+            }
+
+            is CatsScreenEvent.CloseBigImage -> {
+                previousState.copy(showBigImage = false) to null
             }
 
         }

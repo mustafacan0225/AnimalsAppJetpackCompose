@@ -200,4 +200,12 @@ class CatsViewModel @Inject constructor(
             }
         }
     }
+
+    fun showBigImage(cat: Cat) {
+        sendEvent(CatsScreenReducer.CatsScreenEvent.ShowBigImage(cat))
+    }
+
+    fun closeBigImage() {
+        sendEvent(CatsScreenReducer.CatsScreenEvent.CloseBigImage)
+    }
 }

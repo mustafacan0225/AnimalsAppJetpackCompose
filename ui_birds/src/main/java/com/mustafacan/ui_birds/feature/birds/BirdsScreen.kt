@@ -17,6 +17,7 @@ import com.mustafacan.ui_birds.feature.birds.list.BirdList
 import com.mustafacan.ui_common.R
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForApiRequest
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForSearch
+import com.mustafacan.ui_common.components.image.ImageViewer
 import com.mustafacan.ui_common.components.loading.LoadingErrorScreen
 import com.mustafacan.ui_common.components.loading.LoadingScreen
 import com.mustafacan.ui_common.components.searchbar.LocalSearch
@@ -37,7 +38,8 @@ fun BirdsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar = listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
+    val actionListForToolbar =
+        listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
 
@@ -51,7 +53,10 @@ fun BirdsScreen(navController: NavController) {
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(0.dp)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(0.dp)) {
         //toolbar
         Toolbar(title = "Animals App - Birds", actionList = actionListForToolbar)
 
@@ -70,30 +75,80 @@ fun BirdsScreen(navController: NavController) {
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun BirdListContent(viewModel: BirdsViewModel, uiState: State<BirdsScreenReducer.BirdsScreenState>) {
+fun BirdListContent(
+    viewModel: BirdsViewModel,
+    uiState: State<BirdsScreenReducer.BirdsScreenState>
+) {
 
     if (uiState.value.loading) {
         LoadingScreen()
     } else if (uiState.value.errorMessage != null) {
-        LoadingErrorScreen(text = uiState.value.errorMessage!!, retryOnClick = { viewModel.callBirds() })
+        LoadingErrorScreen(
+            text = uiState.value.errorMessage!!,
+            retryOnClick = { viewModel.callBirds() })
     } else if (uiState.value.birds != null && !uiState.value.birds!!.isEmpty()) {
-        BirdList(uiState = uiState, clickedItem = { bird -> viewModel.navigateToBirdDetail(bird) }, addFavorite = { bird -> viewModel.addFavoriteBird(bird) }, deleteFavorite = { bird -> viewModel.deleteFavoriteBird(bird) })
+        BirdList(
+            uiState = uiState,
+            clickedItem = { bird -> viewModel.navigateToBirdDetail(bird) },
+            addFavorite = { bird -> viewModel.addFavoriteBird(bird) },
+            deleteFavorite = { bird -> viewModel.deleteFavoriteBird(bird) },
+            showBigImage = { bird -> viewModel.showBigImage(bird) })
     } else if (uiState.value.birdsBackup.isNullOrEmpty()) {
-        EmptyResultForApiRequest(text = stringResource(id = R.string.empty), retryOnClick = { viewModel.callBirds() })
+        EmptyResultForApiRequest(
+            text = stringResource(id = R.string.empty),
+            retryOnClick = { viewModel.callBirds() })
     } else if (!uiState.value.birdsBackup.isNullOrEmpty() && uiState.value.birds.isNullOrEmpty()) {
         EmptyResultForSearch()
     }
 
     if (uiState.value.showSettings) {
         if (uiState.value.viewTypeForSettings == ViewTypeForSettings.POPUP) {
-            SettingsScreenWithPopup(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeDogs, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings, searchType) },
+            SettingsScreenWithPopup(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         } else if (uiState.value.viewTypeForSettings == ViewTypeForSettings.BOTTOM_SHEET) {
-            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList, uiState.value.viewTypeForSettings, uiState.value.searchType,
-                saveSettings = { viewTypeDogs, viewTypeSettings, searchType -> viewModel.settingsUpdated(viewTypeDogs, viewTypeSettings, searchType) },
+            SettingsScreenWithBottomSheet(uiState.value.viewTypeForList,
+                uiState.value.viewTypeForSettings,
+                uiState.value.searchType,
+                saveSettings = { viewTypeDogs, viewTypeSettings, searchType ->
+                    viewModel.settingsUpdated(
+                        viewTypeDogs,
+                        viewTypeSettings,
+                        searchType
+                    )
+                },
                 onDismiss = { viewModel.closeSettings() })
         }
+
+    }
+
+    if (uiState.value.showBigImage) {
+        ImageViewer(
+            imageUrl = uiState.value.selectedBirdForBigImage?.image!!,
+            uiState.value.selectedBirdForBigImage?.name!!,
+            uiState.value.selectedBirdForBigImage?.habitat + ", " + uiState.value.selectedBirdForBigImage?.placeOfFound,
+            uiState.value.selectedBirdForBigImage?.isFavorite ?: false,
+            onDismiss = {
+                viewModel.closeBigImage()
+            },
+            updateFavorite = {
+                if (!uiState.value.selectedBirdForBigImage!!.isFavorite!!)
+                    viewModel.addFavoriteBird(
+                        uiState.value.selectedBirdForBigImage!!.copy(
+                            isFavorite = true
+                        )
+                    )
+                else
+                    viewModel.deleteFavoriteBird(uiState.value.selectedBirdForBigImage!!)
+            })
 
     }
 }
