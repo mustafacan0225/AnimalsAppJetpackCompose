@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsUseCase
 import com.mustafacan.domain.usecase.birds.api_usecase.SearchForBirdsUseCase
