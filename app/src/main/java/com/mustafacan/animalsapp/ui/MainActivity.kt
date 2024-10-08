@@ -20,16 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import com.mustafacan.animalsapp.ui.screen.main.MainScreen
 import com.mustafacan.animalsapp.ui.theme.AnimalsAppTheme
+import com.mustafacan.ui_common.util.hasNotificationPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestNotificationPermission()
+        if (!this.hasNotificationPermission())
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         setContent {
             AnimalsAppTheme {
                 Surface(modifier = Modifier.fillMaxSize(),
@@ -43,38 +44,11 @@ class MainActivity : ComponentActivity() {
     private var requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (!isGranted) {
-                Log.d("POST_NOTIFICATION_PERMISSION", "USER DENIED PERMISSION")
+                Log.d("permission", "USER DENIED PERMISSION")
             } else {
-                Log.d("POST_NOTIFICATION_PERMISSION", "USER GRANTED PERMISSION")
+                Log.d("permission", "USER GRANTED PERMISSION")
             }
         }
-
-    private fun requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = Manifest.permission.POST_NOTIFICATIONS
-            when {
-                ContextCompat.checkSelfPermission(
-                    this, permission
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    // Action to take when permission is already granted
-                    //Toast.makeText(this, "Permission granted", Toast.LENGTH_LONG).show()
-                }
-
-                shouldShowRequestPermissionRationale(permission) -> {
-                    // Action to take when permission was denied permanently
-                    //Toast.makeText(this, "Permission denied permanently", Toast.LENGTH_LONG).show()
-                }
-
-                else -> {
-                    // Request permission
-                    requestPermissionLauncher.launch(permission)
-                }
-            }
-        } else {
-            // Device does not support required permission
-            Toast.makeText(this, "No required permission", Toast.LENGTH_LONG).show()
-        }
-    }
 }
 
 @Composable
