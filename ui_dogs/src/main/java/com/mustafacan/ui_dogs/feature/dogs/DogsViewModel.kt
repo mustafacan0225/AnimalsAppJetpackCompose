@@ -7,6 +7,7 @@ import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsWithMockDataUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
@@ -44,7 +45,8 @@ class DogsViewModel @Inject constructor(
     private val getSettingsTypeUseCase: GetSettingsTypeUseCase,
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
-    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase
+    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
+    private val getDogsWithMockDataUseCase: GetDogsWithMockDataUseCase,
 ) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
         DogsScreenReducer.DogsScreenEffect>(
     initialState = DogsScreenReducer.DogsScreenState.initial(),
@@ -72,6 +74,30 @@ class DogsViewModel @Inject constructor(
 
             delay(3000)
             when (val response = getDogsUseCase.runUseCase()) {
+
+                is ApiResponse.Success<List<Dog>> -> {
+                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))
+                }
+
+                is ApiResponse.Error -> {
+                    sendEvent(
+                        DogsScreenReducer.DogsScreenEvent.DataReceived(
+                            null, context.getString(
+                                R.string.error_message
+                            )
+                        )
+                    )
+                }
+            }
+
+        }
+    }
+
+    fun getDogsWithMockData() {
+        sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
+        viewModelScope.launch {
+            delay(3000)
+            when (val response = getDogsWithMockDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Dog>> -> {
                     sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))

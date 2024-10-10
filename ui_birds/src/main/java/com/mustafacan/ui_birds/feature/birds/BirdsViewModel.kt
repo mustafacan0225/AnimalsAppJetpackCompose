@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsUseCase
+import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsWithMockDataUseCase
 import com.mustafacan.domain.usecase.birds.api_usecase.SearchForBirdsUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.AddFavoriteBirdUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.DeleteFavoriteBirdUseCase
@@ -44,7 +45,8 @@ class BirdsViewModel @Inject constructor(
     private val getSettingsTypeUseCase: GetSettingsTypeUseCase,
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
-    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase
+    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
+    private val getBirdsWithMockDataUseCase: GetBirdsWithMockDataUseCase
 ) : BaseViewModel<BirdsScreenReducer.BirdsScreenState, BirdsScreenReducer.BirdsScreenEvent,
         BirdsScreenReducer.BirdsScreenEffect>(
     initialState = BirdsScreenReducer.BirdsScreenState.initial(),
@@ -72,6 +74,31 @@ class BirdsViewModel @Inject constructor(
 
             delay(3000)
             when (val response = getBirdsUseCase.runUseCase()) {
+
+                is ApiResponse.Success<List<Bird>> -> {
+                    sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataReceived(response.data, null))
+                }
+
+                is ApiResponse.Error -> {
+                    sendEvent(
+                        BirdsScreenReducer.BirdsScreenEvent.DataReceived(
+                            null, context.getString(
+                                R.string.error_message
+                            )
+                        )
+                    )
+                }
+            }
+
+        }
+    }
+
+    fun getBirdsWithMockData() {
+        sendEvent(BirdsScreenReducer.BirdsScreenEvent.Loading)
+        viewModelScope.launch {
+
+            delay(3000)
+            when (val response = getBirdsWithMockDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Bird>> -> {
                     sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataReceived(response.data, null))

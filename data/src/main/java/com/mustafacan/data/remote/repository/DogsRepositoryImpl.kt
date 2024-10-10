@@ -3,6 +3,7 @@ package com.mustafacan.data.remote.repository
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.remote.Images
 import com.mustafacan.data.remote.datasource.DogsRemoteDataSource
+import com.mustafacan.data.util.BackupData
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.DogsRepository
@@ -35,6 +36,16 @@ class DogsRepositoryImpl @Inject constructor(
             return@coroutineScope dogListResponse
         }
 
+    }
+
+    override suspend fun getDogsWithMockData(): ApiResponse<List<Dog>> {
+        return coroutineScope {
+            val dogList = BackupData.getList<Dog>(BackupData.dogListJson)
+            val dogListResponse = ApiResponse.Success(data = dogList)
+            setImages(dogListResponse)
+            setFavoriteInfo(dogListResponse)
+            return@coroutineScope dogListResponse
+        }
     }
 
     fun setImages(response: ApiResponse<List<Dog>>) {

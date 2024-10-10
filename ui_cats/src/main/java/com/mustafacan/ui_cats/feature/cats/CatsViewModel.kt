@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsUseCase
+import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsWithMockDataUseCase
 import com.mustafacan.domain.usecase.cats.api_usecase.SearchForCatsUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.DeleteFavoriteCatUseCase
@@ -44,7 +45,8 @@ class CatsViewModel @Inject constructor(
     private val getSettingsTypeUseCase: GetSettingsTypeUseCase,
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
-    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase
+    private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
+    private val getCatsWithMockDataUseCase: GetCatsWithMockDataUseCase
 ) : BaseViewModel<CatsScreenReducer.CatsScreenState, CatsScreenReducer.CatsScreenEvent,
         CatsScreenReducer.CatsScreenEffect>(
     initialState = CatsScreenReducer.CatsScreenState.initial(),
@@ -72,6 +74,30 @@ class CatsViewModel @Inject constructor(
 
             delay(3000)
             when (val response = getCatsUseCase.runUseCase()) {
+
+                is ApiResponse.Success<List<Cat>> -> {
+                    sendEvent(CatsScreenReducer.CatsScreenEvent.DataReceived(response.data, null))
+                }
+
+                is ApiResponse.Error -> {
+                    sendEvent(
+                        CatsScreenReducer.CatsScreenEvent.DataReceived(
+                            null, context.getString(
+                                R.string.error_message
+                            )
+                        )
+                    )
+                }
+            }
+
+        }
+    }
+
+    fun getCatsWithMockData() {
+        sendEvent(CatsScreenReducer.CatsScreenEvent.Loading)
+        viewModelScope.launch {
+            delay(3000)
+            when (val response = getCatsWithMockDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Cat>> -> {
                     sendEvent(CatsScreenReducer.CatsScreenEvent.DataReceived(response.data, null))

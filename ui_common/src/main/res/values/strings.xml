@@ -27,4 +27,9 @@
     <string name="view_mode_tab_default_with_leading_icon">Default Indicator With Leading Icon</string>
 
     <string name="view_mode_tab_description">select view type for tab</string>
+
+    <string name="do_you_want_to_load_local_data">An API access or internet connection error occurred. Do you want to load local data?</string>
+    <string name="retry_local_data">Retry From Local</string>
+    <string name="retry_api_data">Retry From API</string>
+
 </resources>

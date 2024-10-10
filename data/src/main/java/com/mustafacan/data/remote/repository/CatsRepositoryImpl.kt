@@ -3,6 +3,7 @@ package com.mustafacan.data.remote.repository
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.remote.Images
 import com.mustafacan.data.remote.datasource.CatsRemoteDataSource
+import com.mustafacan.data.util.BackupData
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.CatsRepository
@@ -28,6 +29,16 @@ class CatsRepositoryImpl @Inject constructor(private val remoteDataSource: CatsR
         return coroutineScope {
             val catListDeferred = async { remoteDataSource.search(query) }
             val catListResponse = catListDeferred.await()
+            setImages(catListResponse)
+            setFavoriteInfo(catListResponse)
+            return@coroutineScope catListResponse
+        }
+    }
+
+    override suspend fun getCatsWithMockData(): ApiResponse<List<Cat>> {
+        return coroutineScope {
+            val catList = BackupData.getList<Cat>(BackupData.catListJson)
+            val catListResponse = ApiResponse.Success(data = catList)
             setImages(catListResponse)
             setFavoriteInfo(catListResponse)
             return@coroutineScope catListResponse

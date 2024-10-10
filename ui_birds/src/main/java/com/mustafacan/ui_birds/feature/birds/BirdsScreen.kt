@@ -85,7 +85,8 @@ fun BirdListContent(
     } else if (uiState.value.errorMessage != null) {
         LoadingErrorScreen(
             text = uiState.value.errorMessage!!,
-            retryOnClick = { viewModel.callBirds() })
+            retryOnClick = { viewModel.callBirds() },
+            loadLocalDataClick = { viewModel.getBirdsWithMockData() })
     } else if (uiState.value.birds != null && !uiState.value.birds!!.isEmpty()) {
         BirdList(
             uiState = uiState,

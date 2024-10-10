@@ -7,4 +7,6 @@ import com.mustafacan.domain.model.response.ApiResponse
 interface BirdsRepository {
     suspend fun getBirds(): ApiResponse<List<Bird>>
     suspend fun search(query: String): ApiResponse<List<Bird>>
+    suspend fun getBirdsWithMockData(): ApiResponse<List<Bird>>
+
 }
