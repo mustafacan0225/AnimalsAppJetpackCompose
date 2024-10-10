@@ -33,6 +33,8 @@ accompanist-pager = "0.34.0"
 startup-runtime = "1.2.0"
 work-runtime = "2.9.1"
 compose-animation = "1.7.0-alpha07"
+test-coroutines = "1.8.0"
+mockito = "5.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +78,8 @@ accompanist-pager = { group = "com.google.accompanist", name = "accompanist-page
 accompanist-pager-indicator = {group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist-pager"}
 startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup-runtime" }
 work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime"}
+test-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "test-coroutines" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

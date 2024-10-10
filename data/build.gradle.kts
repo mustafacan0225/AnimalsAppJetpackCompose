@@ -82,6 +82,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
+
+    testImplementation(libs.test.coroutines)
+    testImplementation(libs.mockito)
 }
 
 // Allow references to generated code
