@@ -98,9 +98,14 @@ A Clean Architecture App to show use of multi-module-architecture in a Jetpack C
     Constraint Layout For Compose - androidx.constraintlayout:constraintlayout-compose<br>
     View Pager For Compose - com.google.accompanist:accompanist-pager<br>
     Shimmer Effect<br>
+    --------------------------------<br>
+    FOR TESTING<br>
+    JUnit Unit Tests<br>
+    Mockito Mocking<br>
   </td> </tr>
    
  
  </table>
+
 
 
