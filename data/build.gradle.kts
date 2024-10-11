@@ -85,6 +85,7 @@ dependencies {
 
     testImplementation(libs.test.coroutines)
     testImplementation(libs.mockito)
+    testImplementation(libs.kotlin.test.junit)
 }
 
 // Allow references to generated code

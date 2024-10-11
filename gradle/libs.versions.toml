@@ -35,6 +35,7 @@ work-runtime = "2.9.1"
 compose-animation = "1.7.0-alpha07"
 test-coroutines = "1.8.0"
 mockito = "5.5.0"
+kotlin-test-junit = "2.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -80,6 +81,7 @@ startup-runtime = { group = "androidx.startup", name = "startup-runtime", versio
 work-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime"}
 test-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "test-coroutines" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin-test-junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
