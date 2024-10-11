@@ -3,7 +3,7 @@ package com.mustafacan.data.remote.repository
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
 import com.mustafacan.data.remote.Images
 import com.mustafacan.data.remote.datasource.BirdsRemoteDataSource
-import com.mustafacan.data.util.BackupData
+import com.mustafacan.data.util.TemporaryData
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.BirdsRepository
@@ -37,7 +37,7 @@ class BirdsRepositoryImpl @Inject constructor(private val remoteDataSource: Bird
 
     override suspend fun getBirdsWithMockData(): ApiResponse<List<Bird>> {
         return coroutineScope {
-            val birdList = BackupData.getList<Bird>(BackupData.birdListJson)
+            val birdList = TemporaryData.getList<Bird>(TemporaryData.birdListJson)
             val birdListResponse = ApiResponse.Success(data = birdList)
             setImages(birdListResponse)
             setFavoriteInfo(birdListResponse)

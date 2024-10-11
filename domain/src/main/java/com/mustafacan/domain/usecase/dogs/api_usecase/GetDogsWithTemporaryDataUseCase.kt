@@ -5,8 +5,8 @@ import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.DogsRepository
 import javax.inject.Inject
 
-class GetDogsWithMockDataUseCase @Inject constructor(private val repository: DogsRepository) {
+class GetDogsWithTemporaryDataUseCase @Inject constructor(private val repository: DogsRepository) {
      suspend fun runUseCase() : ApiResponse<List<Dog>> {
-         return repository.getDogsWithMockData()
+         return repository.getDogsWithTemporaryData()
     }
 }

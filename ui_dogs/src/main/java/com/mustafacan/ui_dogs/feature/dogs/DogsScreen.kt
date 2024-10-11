@@ -84,7 +84,7 @@ fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.Do
         LoadingErrorScreen(
             text = uiState.value.errorMessage!!,
             retryOnClick = { viewModel.callDogs() },
-            loadLocalDataClick = { viewModel.getDogsWithMockData() })
+            loadLocalDataClick = { viewModel.getDogsWithTemporaryData() })
     } else if (uiState.value.dogs != null && !uiState.value.dogs!!.isEmpty()) {
         DogList(
             uiState = uiState,
