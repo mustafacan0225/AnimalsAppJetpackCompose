@@ -7,7 +7,7 @@ import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
-import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsWithTemporaryDataUseCase
+import com.mustafacan.domain.usecase.dogs.temp.GetDogsWithTemporaryDataUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase

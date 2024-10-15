@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsUseCase
-import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsWithMockDataUseCase
 import com.mustafacan.domain.usecase.cats.api_usecase.SearchForCatsUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.DeleteFavoriteCatUseCase
@@ -17,6 +16,7 @@ import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetSettingsTypeUseC
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.SaveListTypeUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.SaveSearchTypeUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.SaveSettingsTypeUseCase
+import com.mustafacan.domain.usecase.cats.temp.GetCatsWithTemporaryDataUseCase
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
@@ -46,7 +46,7 @@ class CatsViewModel @Inject constructor(
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
-    private val getCatsWithMockDataUseCase: GetCatsWithMockDataUseCase
+    private val getCatsWithTemporaryDataUseCase: GetCatsWithTemporaryDataUseCase
 ) : BaseViewModel<CatsScreenReducer.CatsScreenState, CatsScreenReducer.CatsScreenEvent,
         CatsScreenReducer.CatsScreenEffect>(
     initialState = CatsScreenReducer.CatsScreenState.initial(),
@@ -93,11 +93,11 @@ class CatsViewModel @Inject constructor(
         }
     }
 
-    fun getCatsWithMockData() {
+    fun getCatsWithTemporaryData() {
         sendEvent(CatsScreenReducer.CatsScreenEvent.Loading)
         viewModelScope.launch {
             delay(3000)
-            when (val response = getCatsWithMockDataUseCase.runUseCase()) {
+            when (val response = getCatsWithTemporaryDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Cat>> -> {
                     sendEvent(CatsScreenReducer.CatsScreenEvent.DataReceived(response.data, null))

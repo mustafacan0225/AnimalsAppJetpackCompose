@@ -7,6 +7,4 @@ import com.mustafacan.domain.model.response.ApiResponse
 interface CatsRepository {
     suspend fun getCats(): ApiResponse<List<Cat>>
     suspend fun search(query: String): ApiResponse<List<Cat>>
-    suspend fun getCatsWithMockData(): ApiResponse<List<Cat>>
-
 }

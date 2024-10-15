@@ -84,7 +84,7 @@ fun CatListContent(viewModel: CatsViewModel, uiState: State<CatsScreenReducer.Ca
         LoadingErrorScreen(
             text = uiState.value.errorMessage!!,
             retryOnClick = { viewModel.callCats() },
-            loadLocalDataClick = { viewModel.getCatsWithMockData() })
+            loadLocalDataClick = { viewModel.getCatsWithTemporaryData() })
     } else if (uiState.value.cats != null && !uiState.value.cats!!.isEmpty()) {
         CatList(
             uiState = uiState,
