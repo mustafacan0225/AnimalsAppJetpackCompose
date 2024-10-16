@@ -1,6 +1,7 @@
 package com.mustafacan.data.remote.repository
 
 import com.mustafacan.data.local.datasource.roomdatabase.FavoriteAnimalsDao
+import com.mustafacan.data.local.repository.TempRepositoryImpl
 import com.mustafacan.data.remote.datasource.DogsRemoteDataSource
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.error.CustomException
@@ -173,8 +174,8 @@ class DogsRepositoryImplTest {
     @Test
     fun `image_should_change_when_after_response_from_temporary_data`() = runTest{
         `when`(dao.getDogs()).thenReturn(listOf(Dog(id = 1, name = "Golden Retriever", isFavorite = true)))
-        val dogsRepositoryImp = DogsRepositoryImpl(remoteDataSource, dao)
-        val response = dogsRepositoryImp.getDogsWithTemporaryData()
+        val tempRepositoryImp = TempRepositoryImpl(dao)
+        val response = tempRepositoryImp.getTempDogs()
         assertIs<ApiResponse.Success<List<Dog>>>(response)
         assertEquals("https://cdn.pixabay.com/photo/2019/06/22/19/01/golden-retriever-4292254_1280.jpg", response.data.get(0).image)
     }
@@ -182,8 +183,8 @@ class DogsRepositoryImplTest {
     @Test
     fun `isFavorite_should_true_when_after_response_from_temporary_data`() = runTest{
         `when`(dao.getDogs()).thenReturn(listOf(Dog(id = 1, name = "Golden Retriever", isFavorite = true)))
-        val dogsRepositoryImp = DogsRepositoryImpl(remoteDataSource, dao)
-        val response = dogsRepositoryImp.getDogsWithTemporaryData()
+        val tempRepositoryImp = TempRepositoryImpl(dao)
+        val response = tempRepositoryImp.getTempDogs()
         assertIs<ApiResponse.Success<List<Dog>>>(response)
         assertEquals(true, response.data.get(0).isFavorite)
     }
@@ -191,8 +192,8 @@ class DogsRepositoryImplTest {
     @Test
     fun `isFavorite_should_false_when_after_response_from_temporary_data`() = runTest{
         `when`(dao.getDogs()).thenReturn(listOf(Dog(id = 2000, name = "Test name", isFavorite = true)))
-        val dogsRepositoryImp = DogsRepositoryImpl(remoteDataSource, dao)
-        val response = dogsRepositoryImp.getDogsWithTemporaryData()
+        val tempRepositoryImp = TempRepositoryImpl(dao)
+        val response = tempRepositoryImp.getTempDogs()
         assertIs<ApiResponse.Success<List<Dog>>>(response)
         assertEquals(false, response.data.get(0).isFavorite)
     }
