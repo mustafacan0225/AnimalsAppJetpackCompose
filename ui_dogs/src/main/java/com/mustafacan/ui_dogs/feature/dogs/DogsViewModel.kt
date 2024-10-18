@@ -1,7 +1,6 @@
 package com.mustafacan.ui_dogs.feature.dogs
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
@@ -129,7 +128,6 @@ class DogsViewModel @Inject constructor(
     fun addFavoriteDog(dog: Dog) {
         viewModelScope.launch {
             if (addFavoriteDogUseCase.runUseCase(dog)) {
-                Log.d("room-test", "added favorite dog " + dog.name)
                 sendEvent(DogsScreenReducer.DogsScreenEvent.UpdateDogIsFollowed(dog))
             }
         }
@@ -138,7 +136,6 @@ class DogsViewModel @Inject constructor(
     fun deleteFavoriteDog(dog: Dog) {
         viewModelScope.launch {
             if (deleteFavoriteDogUseCase.runUseCase(dog)) {
-                Log.d("room-test", "deleted favorite dog " + dog.name)
                 sendEvent(DogsScreenReducer.DogsScreenEvent.UpdateDogIsFollowed(dog.copy(isFavorite = false)))
             }
         }
@@ -221,7 +218,6 @@ class DogsViewModel @Inject constructor(
     fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Dog>>) {
         viewModelScope.launch {
             favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
-                Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
                 sendEvent(DogsScreenReducer.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }

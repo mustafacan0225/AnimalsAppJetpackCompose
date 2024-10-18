@@ -87,4 +87,8 @@ dependencies {
 
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.pager.indicator)
+
+    testImplementation(libs.test.coroutines)
+    testImplementation(libs.mockito)
+    testImplementation(libs.kotlin.test.junit)
 }
