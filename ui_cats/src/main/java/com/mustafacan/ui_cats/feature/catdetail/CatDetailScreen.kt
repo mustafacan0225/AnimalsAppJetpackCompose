@@ -173,7 +173,7 @@ fun CatImage(
 
 @Composable
 fun CreateTabBar(
-    state: State<CatDetailScreenReducer.CatDetailScreenState>,
+    state: State<CatDetailScreenUiStateManager.CatDetailScreenState>,
     onClickTab: (index: Int) -> Unit
 ) {
     Box(

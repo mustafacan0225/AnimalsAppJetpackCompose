@@ -4,15 +4,15 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class DogDetailScreenReducer() :
-    Reducer<DogDetailScreenReducer.DogDetailScreenState, DogDetailScreenReducer.DogDetailScreenEvent, DogDetailScreenReducer.DogDetailScreenEffect> {
+class DogDetailScreenUiStateManager() :
+    UiStateManager<DogDetailScreenUiStateManager.DogDetailScreenState, DogDetailScreenUiStateManager.DogDetailScreenEvent, DogDetailScreenUiStateManager.DogDetailScreenEffect> {
 
     @Immutable
-    sealed class DogDetailScreenEvent : Reducer.ViewEvent {
+    sealed class DogDetailScreenEvent : UiStateManager.ViewEvent {
         data class Load(val dog: Dog, val pagerState: PagerState, val tabType: String?, val tabList: List<Pair<Int, Int>>, val scope: CoroutineScope) : DogDetailScreenEvent()
         data class OnClickTabItem(val index: Int): DogDetailScreenEvent()
         object OpenSettings : DogDetailScreenEvent()
@@ -24,7 +24,7 @@ class DogDetailScreenReducer() :
     }
 
     @Immutable
-    sealed class DogDetailScreenEffect : Reducer.ViewEffect {
+    sealed class DogDetailScreenEffect : UiStateManager.ViewEffect {
         data class NavigateToDogDetail(val dog: Dog) : DogDetailScreenEffect()
         //object NavigateToSettings : DogsScreenEffect()
     }
@@ -40,7 +40,7 @@ class DogDetailScreenReducer() :
         val showSettings: Boolean = false,
         val currentViewTypeForTab: ViewTypeForTab? = null,
         val showBigImage: Boolean = false,
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): DogDetailScreenState {
                 return DogDetailScreenState()
@@ -48,7 +48,7 @@ class DogDetailScreenReducer() :
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: DogDetailScreenState,
         event: DogDetailScreenEvent
     ): Pair<DogDetailScreenState, DogDetailScreenEffect?> {

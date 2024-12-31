@@ -46,7 +46,7 @@ fun CatsScreen(navController: NavController) {
     LaunchedEffect(effect) {
         effect.collect { action ->
             when (action) {
-                is CatsScreenReducer.CatsScreenEffect.NavigateToCatDetail -> {
+                is CatsScreenUiStateManager.CatsScreenEffect.NavigateToCatDetail -> {
                     navController.navigate(NavDestinationItem.CatDetailScreen(cat = action.cat))
                 }
             }
@@ -76,7 +76,7 @@ fun CatsScreen(navController: NavController) {
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun CatListContent(viewModel: CatsViewModel, uiState: State<CatsScreenReducer.CatsScreenState>) {
+fun CatListContent(viewModel: CatsViewModel, uiState: State<CatsScreenUiStateManager.CatsScreenState>) {
 
     if (uiState.value.loading) {
         LoadingScreen()

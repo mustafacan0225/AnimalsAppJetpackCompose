@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
@@ -48,12 +47,12 @@ import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_dogs.R
-import com.mustafacan.ui_dogs.feature.dogs.DogsScreenReducer
+import com.mustafacan.ui_dogs.feature.dogs.DogsScreenUiStateManager
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DogList(
-    uiState: State<DogsScreenReducer.DogsScreenState>,
+    uiState: State<DogsScreenUiStateManager.DogsScreenState>,
     clickedItem: (dog: Dog) -> Unit,
     addFavorite: (dog: Dog) -> Unit,
     deleteFavorite: (dog: Dog) -> Unit,

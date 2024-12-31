@@ -10,18 +10,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-/**
- * Base view model following the MVI architecture (MVVM with state management).
- *
- * @param State A class that inherits from [Reducer.ViewState]
- * @param Event A class that inherits from [Reducer.ViewEvent]
- * @param Effect A class that inherits from [Reducer.ViewEffect]
- * @property reducer The reducer that will be used to reduce the state
- * @param initialState The initial state of the view model
- */
-abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEvent, Effect : Reducer.ViewEffect>(
+abstract class BaseViewModel<State : UiStateManager.ViewState, Event : UiStateManager.ViewEvent, Effect : UiStateManager.ViewEffect>(
     initialState: State,
-    private val reducer: Reducer<State, Event, Effect>
+    private val uiStateManager: UiStateManager<State, Event, Effect>
 ) : ViewModel() {
     private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
     val state: StateFlow<State>
@@ -39,14 +30,14 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
     }
 
     fun sendEvent(event: Event) {
-        val (newState, _) = reducer.reduce(_state.value, event)
+        val (newState, _) = uiStateManager.handleEvent(_state.value, event)
 
         val success = _state.tryEmit(newState)
 
     }
 
     fun sendEventForEffect(event: Event) {
-        val (newState, effect) = reducer.reduce(_state.value, event)
+        val (newState, effect) = uiStateManager.handleEvent(_state.value, event)
 
         val success = _state.tryEmit(newState)
 

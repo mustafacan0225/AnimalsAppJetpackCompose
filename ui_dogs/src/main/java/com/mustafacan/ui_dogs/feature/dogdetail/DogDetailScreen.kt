@@ -166,7 +166,7 @@ fun DogImage(updateIsFavorite: () -> Unit, dog: Dog, isSelectedFavIcon: Boolean,
 
 @Composable
 fun CreateTabBar(
-    state: State<DogDetailScreenReducer.DogDetailScreenState>,
+    state: State<DogDetailScreenUiStateManager.DogDetailScreenState>,
     onClickTab: (index: Int) -> Unit
 ) {
     Box(

@@ -4,15 +4,15 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.ui_common.model.enums.ViewTypeForTab
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class CatDetailScreenReducer() :
-    Reducer<CatDetailScreenReducer.CatDetailScreenState, CatDetailScreenReducer.CatDetailScreenEvent, CatDetailScreenReducer.CatDetailScreenEffect> {
+class CatDetailScreenUiStateManager() :
+    UiStateManager<CatDetailScreenUiStateManager.CatDetailScreenState, CatDetailScreenUiStateManager.CatDetailScreenEvent, CatDetailScreenUiStateManager.CatDetailScreenEffect> {
 
     @Immutable
-    sealed class CatDetailScreenEvent : Reducer.ViewEvent {
+    sealed class CatDetailScreenEvent : UiStateManager.ViewEvent {
         data class Load(val cat: Cat, val pagerState: PagerState, val tabType: String?, val tabList: List<Pair<Int, Int>>, val scope: CoroutineScope) : CatDetailScreenEvent()
         data class OnClickTabItem(val index: Int): CatDetailScreenEvent()
         object OpenSettings : CatDetailScreenEvent()
@@ -24,7 +24,7 @@ class CatDetailScreenReducer() :
     }
 
     @Immutable
-    sealed class CatDetailScreenEffect : Reducer.ViewEffect {
+    sealed class CatDetailScreenEffect : UiStateManager.ViewEffect {
         data class NavigateToCatDetail(val cat: Cat) : CatDetailScreenEffect()
         //object NavigateToSettings : CatsScreenEffect()
     }
@@ -40,7 +40,7 @@ class CatDetailScreenReducer() :
         val showSettings: Boolean = false,
         val currentViewTypeForTab: ViewTypeForTab? = null,
         val showBigImage: Boolean = false
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): CatDetailScreenState {
                 return CatDetailScreenState()
@@ -48,7 +48,7 @@ class CatDetailScreenReducer() :
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: CatDetailScreenState,
         event: CatDetailScreenEvent
     ): Pair<CatDetailScreenState, CatDetailScreenEffect?> {

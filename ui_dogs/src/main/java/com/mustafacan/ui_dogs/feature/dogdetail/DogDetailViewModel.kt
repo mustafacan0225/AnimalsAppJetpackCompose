@@ -27,10 +27,10 @@ class DogDetailViewModel @Inject constructor(
     private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase,
     private val getTabTypeUseCase: GetTabTypeUseCase,
     private val saveTabTypeUseCase: SaveTabTypeUseCase
-) : BaseViewModel<DogDetailScreenReducer.DogDetailScreenState, DogDetailScreenReducer.DogDetailScreenEvent,
-        DogDetailScreenReducer.DogDetailScreenEffect>(
-    initialState = DogDetailScreenReducer.DogDetailScreenState.initial(),
-    reducer = DogDetailScreenReducer()
+) : BaseViewModel<DogDetailScreenUiStateManager.DogDetailScreenState, DogDetailScreenUiStateManager.DogDetailScreenEvent,
+        DogDetailScreenUiStateManager.DogDetailScreenEffect>(
+    initialState = DogDetailScreenUiStateManager.DogDetailScreenState.initial(),
+    uiStateManager = DogDetailScreenUiStateManager()
 ) {
 
     val dog: Dog? = savedStateHandle["dog"]
@@ -45,27 +45,27 @@ class DogDetailViewModel @Inject constructor(
     fun load(pagerState: PagerState, scope: CoroutineScope) {
         viewModelScope.launch {
             val tabType = getTabTypeUseCase.runUseCase()
-            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.Load(dog = dog!!, pagerState = pagerState, tabType = tabType, tabList = tabList, scope = scope))
+            sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.Load(dog = dog!!, pagerState = pagerState, tabType = tabType, tabList = tabList, scope = scope))
 
         }
     }
 
     fun onClickTab(index: Int) {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.OnClickTabItem(index))
+        sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.OnClickTabItem(index))
     }
 
     fun navigateToSettings() {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.OpenSettings)
+        sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.OpenSettings)
     }
 
     fun closeSettings() {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.CloseSettings)
+        sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.CloseSettings)
     }
 
     fun settingsUpdated(viewTypeForTab: ViewTypeForTab) {
         viewModelScope.launch {
             saveTabTypeUseCase.runUseCase(viewTypeForTab.name)
-            sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.SettingsUpdated(viewTypeForTab))
+            sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.SettingsUpdated(viewTypeForTab))
         }
     }
 
@@ -74,12 +74,12 @@ class DogDetailViewModel @Inject constructor(
             if (state.value.dog?.isFavorite?: false) {
                 if (deleteFavoriteDogUseCase.runUseCase(dog!!)) {
                     Log.d("room-test", "deleted favorite dog " + dog.name)
-                    sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.UpdateDogIsFavorite)
+                    sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.UpdateDogIsFavorite)
                 }
             } else {
                 if (addFavoriteDogUseCase.runUseCase(dog!!.copy(isFavorite = true))) {
                     Log.d("room-test", "added favorite dog " + dog.name)
-                    sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.UpdateDogIsFavorite)
+                    sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.UpdateDogIsFavorite)
                 }
 
             }
@@ -87,11 +87,11 @@ class DogDetailViewModel @Inject constructor(
     }
 
     fun showBigImage() {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.ShowBigImage)
+        sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.ShowBigImage)
     }
 
     fun closeBigImage() {
-        sendEvent(DogDetailScreenReducer.DogDetailScreenEvent.CloseBigImage)
+        sendEvent(DogDetailScreenUiStateManager.DogDetailScreenEvent.CloseBigImage)
     }
 
 }

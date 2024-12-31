@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -53,7 +51,7 @@ fun ReminderScren() {
 }
 
 @Composable
-fun ReminderContent(uiState : State<ReminderScreenReducer.ReminderScreenState>,
+fun ReminderContent(uiState : State<ReminderScreenUiStateManager.ReminderScreenState>,
                     dogSwitchStateUpdated: (isReminder: Boolean) -> Unit,
                     catSwitchStateUpdated: (isReminder: Boolean) -> Unit,
                     birdSwitchStateUpdated: (isReminder: Boolean) -> Unit) {

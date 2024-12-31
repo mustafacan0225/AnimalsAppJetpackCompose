@@ -26,7 +26,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,11 +47,11 @@ class DogsViewModel @Inject constructor(
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
-    private val getDogsWithTemporaryDataUseCase: GetDogsWithTemporaryDataUseCase,
-) : BaseViewModel<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent,
-        DogsScreenReducer.DogsScreenEffect>(
-    initialState = DogsScreenReducer.DogsScreenState.initial(),
-    reducer = DogsScreenReducer()
+    private val getDogsWithTemporaryDataUseCase: GetDogsWithTemporaryDataUseCase
+) : BaseViewModel<DogsScreenUiStateManager.DogsScreenState, DogsScreenUiStateManager.DogsScreenEvent,
+        DogsScreenUiStateManager.DogsScreenEffect>(
+    initialState = DogsScreenUiStateManager.DogsScreenState.initial(),
+    uiStateManager = DogsScreenUiStateManager()
 ) {
 
     init {
@@ -64,7 +66,7 @@ class DogsViewModel @Inject constructor(
     }
 
     fun callDogs() {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.Loading)
         getDogs()
     }
 
@@ -75,12 +77,12 @@ class DogsViewModel @Inject constructor(
             when (val response = getDogsUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Dog>> -> {
-                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        DogsScreenReducer.DogsScreenEvent.DataReceived(
+                        DogsScreenUiStateManager.DogsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -93,18 +95,18 @@ class DogsViewModel @Inject constructor(
     }
 
     fun getDogsWithTemporaryData() {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.Loading)
         viewModelScope.launch {
             delay(3000)
             when (val response = getDogsWithTemporaryDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Dog>> -> {
-                    sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        DogsScreenReducer.DogsScreenEvent.DataReceived(
+                        DogsScreenUiStateManager.DogsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -121,14 +123,14 @@ class DogsViewModel @Inject constructor(
             val searchType = getSearchTypeUseCase.runUseCase()
             val listType = getListTypeUseCase.runUseCase()
             val settingsType = getSettingsTypeUseCase.runUseCase()
-            sendEvent(DogsScreenReducer.DogsScreenEvent.LoadSettings(searchType, settingsType, listType))
+            sendEvent(DogsScreenUiStateManager.DogsScreenEvent.LoadSettings(searchType, settingsType, listType))
         }
     }
 
     fun addFavoriteDog(dog: Dog) {
         viewModelScope.launch {
             if (addFavoriteDogUseCase.runUseCase(dog)) {
-                sendEvent(DogsScreenReducer.DogsScreenEvent.UpdateDogIsFollowed(dog))
+                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.UpdateDogIsFollowed(dog))
             }
         }
     }
@@ -136,7 +138,7 @@ class DogsViewModel @Inject constructor(
     fun deleteFavoriteDog(dog: Dog) {
         viewModelScope.launch {
             if (deleteFavoriteDogUseCase.runUseCase(dog)) {
-                sendEvent(DogsScreenReducer.DogsScreenEvent.UpdateDogIsFollowed(dog.copy(isFavorite = false)))
+                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.UpdateDogIsFollowed(dog.copy(isFavorite = false)))
             }
         }
     }
@@ -153,21 +155,21 @@ class DogsViewModel @Inject constructor(
             }
         }
 
-        sendEvent(DogsScreenReducer.DogsScreenEvent.DataChanged(result))
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataChanged(result))
     }
 
     fun remoteSearch(query: String) {
         if (query.isEmpty()) {
-            sendEvent(DogsScreenReducer.DogsScreenEvent.DataChanged(state.value.dogsBackup!!))
+            sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataChanged(state.value.dogsBackup!!))
         } else {
-            sendEvent(DogsScreenReducer.DogsScreenEvent.Loading)
+            sendEvent(DogsScreenUiStateManager.DogsScreenEvent.Loading)
             viewModelScope.launch {
                 //delay for test
                 delay(3000)
                 when (val response = searchForDogsUseCase.runUseCase(query)) {
                     is ApiResponse.Success<List<Dog>> -> {
                         sendEvent(
-                            DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(
+                            DogsScreenUiStateManager.DogsScreenEvent.DataReceivedWithSearch(
                                 response.data,
                                 null
                             )
@@ -176,7 +178,7 @@ class DogsViewModel @Inject constructor(
 
                     is ApiResponse.Error -> {
                         sendEvent(
-                            DogsScreenReducer.DogsScreenEvent.DataReceivedWithSearch(
+                            DogsScreenUiStateManager.DogsScreenEvent.DataReceivedWithSearch(
                                 null, context.getString(
                                     R.string.error_message
                                 )
@@ -191,15 +193,15 @@ class DogsViewModel @Inject constructor(
     }
 
     fun navigateToDogDetail(dog: Dog) {
-        sendEventForEffect(DogsScreenReducer.DogsScreenEvent.DogDetail(dog))
+        sendEventForEffect(DogsScreenUiStateManager.DogsScreenEvent.DogDetail(dog))
     }
 
     fun navigateToSettings() {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.OpenSettings)
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.OpenSettings)
     }
 
     fun closeSettings() {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.CloseSettings)
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.CloseSettings)
     }
 
     fun settingsUpdated(
@@ -211,23 +213,29 @@ class DogsViewModel @Inject constructor(
             saveListTypeUseCase.runUseCase(viewTypeForList.name)
             saveSettingsTypeUseCase.runUseCase(viewTypeForSettings.name)
             saveSearchTypeUseCase.runUseCase(searchType.name)
-            sendEvent(DogsScreenReducer.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
+            sendEvent(DogsScreenUiStateManager.DogsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
         }
     }
 
     fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Dog>>) {
         viewModelScope.launch {
             favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
-                sendEvent(DogsScreenReducer.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }
+        val flist: Flow<List<Int>> = listOf(listOf(5,7,8)).asFlow()
+
+        val a = listOf(5,7,8)
+        val b: List<Int> = listOf(1,2,3,4,5)
+        val cc = flowOf(a)
+
     }
 
     fun showBigImage(dog: Dog) {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.ShowBigImage(dog))
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.ShowBigImage(dog))
     }
 
     fun closeBigImage() {
-        sendEvent(DogsScreenReducer.DogsScreenEvent.CloseBigImage)
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.CloseBigImage)
     }
 }

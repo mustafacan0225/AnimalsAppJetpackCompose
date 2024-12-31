@@ -2,13 +2,13 @@ package com.mustafacan.ui_birds.feature.detail
 
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 
-class BirdDetailScreenReducer() :
-    Reducer<BirdDetailScreenReducer.BirdDetailScreenState, BirdDetailScreenReducer.BirdDetailScreenEvent, BirdDetailScreenReducer.BirdDetailScreenEffect> {
+class BirdDetailScreenUiStateManager() :
+    UiStateManager<BirdDetailScreenUiStateManager.BirdDetailScreenState, BirdDetailScreenUiStateManager.BirdDetailScreenEvent, BirdDetailScreenUiStateManager.BirdDetailScreenEffect> {
 
     @Immutable
-    sealed class BirdDetailScreenEvent : Reducer.ViewEvent {
+    sealed class BirdDetailScreenEvent : UiStateManager.ViewEvent {
         data class Load(val bird: Bird) : BirdDetailScreenEvent()
         object UpdateBirdIsFavorite : BirdDetailScreenEvent()
         object ShowBigImage : BirdDetailScreenEvent()
@@ -16,7 +16,7 @@ class BirdDetailScreenReducer() :
     }
 
     @Immutable
-    sealed class BirdDetailScreenEffect : Reducer.ViewEffect {
+    sealed class BirdDetailScreenEffect : UiStateManager.ViewEffect {
 
     }
 
@@ -27,7 +27,7 @@ class BirdDetailScreenReducer() :
         val isSelectedFavIcon: Boolean = false,
         val showSettings: Boolean = false,
         val showBigImage: Boolean = false
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): BirdDetailScreenState {
                 return BirdDetailScreenState()
@@ -35,7 +35,7 @@ class BirdDetailScreenReducer() :
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: BirdDetailScreenState,
         event: BirdDetailScreenEvent
     ): Pair<BirdDetailScreenState, BirdDetailScreenEffect?> {

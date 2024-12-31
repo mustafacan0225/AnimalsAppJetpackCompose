@@ -2,27 +2,27 @@ package com.mustafacan.ui_reminder.feature.reminder
 
 import androidx.compose.runtime.Immutable
 import com.mustafacan.data.local.datasource.sharedpref.reminder.LocalDataSourceReminder
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 
-class ReminderScreenReducer() :
-    Reducer<ReminderScreenReducer.ReminderScreenState, ReminderScreenReducer.ReminderScreenEvent, ReminderScreenReducer.ReminderScreenEffect> {
+class ReminderScreenUiStateManager() :
+    UiStateManager<ReminderScreenUiStateManager.ReminderScreenState, ReminderScreenUiStateManager.ReminderScreenEvent, ReminderScreenUiStateManager.ReminderScreenEffect> {
 
     @Immutable
-    sealed class ReminderScreenEvent : Reducer.ViewEvent {
+    sealed class ReminderScreenEvent : UiStateManager.ViewEvent {
         data class DogsReminderUpdate(val isReminder: Boolean) : ReminderScreenEvent()
         data class CatsReminderUpdate(val isReminder: Boolean) : ReminderScreenEvent()
         data class BirdsReminderUpdate(val isReminder: Boolean) : ReminderScreenEvent()
     }
 
     @Immutable
-    sealed class ReminderScreenEffect : Reducer.ViewEffect { }
+    sealed class ReminderScreenEffect : UiStateManager.ViewEffect { }
 
     @Immutable
     data class ReminderScreenState(
         val dogsReminderState: Boolean,
         val catsReminderState: Boolean,
         val birdsReminderState: Boolean,
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(
                 localDataSourceReminder: LocalDataSourceReminder
@@ -36,7 +36,7 @@ class ReminderScreenReducer() :
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: ReminderScreenState,
         event: ReminderScreenEvent
     ): Pair<ReminderScreenState, ReminderScreenEffect?> {

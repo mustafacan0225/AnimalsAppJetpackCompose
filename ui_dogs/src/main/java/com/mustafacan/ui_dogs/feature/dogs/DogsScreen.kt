@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,7 @@ fun DogsScreen(navController: NavController) {
     LaunchedEffect(effect) {
         effect.collect { action ->
             when (action) {
-                is DogsScreenReducer.DogsScreenEffect.NavigateToDogDetail -> {
+                is DogsScreenUiStateManager.DogsScreenEffect.NavigateToDogDetail -> {
                     navController.navigate(NavDestinationItem.DogDetailScreen(dog = action.dog))
                 }
             }
@@ -76,7 +77,7 @@ fun DogsScreen(navController: NavController) {
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenReducer.DogsScreenState>) {
+fun DogListContent(viewModel: DogsViewModel, uiState: State<DogsScreenUiStateManager.DogsScreenState>) {
 
     if (uiState.value.loading) {
         LoadingScreen()

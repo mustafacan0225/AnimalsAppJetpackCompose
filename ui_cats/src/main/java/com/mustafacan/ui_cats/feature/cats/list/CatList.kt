@@ -46,11 +46,11 @@ import com.mustafacan.ui_cats.R
 import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
-import com.mustafacan.ui_cats.feature.cats.CatsScreenReducer
+import com.mustafacan.ui_cats.feature.cats.CatsScreenUiStateManager
 
 @Composable
 fun CatList(
-    uiState: State<CatsScreenReducer.CatsScreenState>,
+    uiState: State<CatsScreenUiStateManager.CatsScreenState>,
     clickedItem: (cat: Cat) -> Unit,
     addFavorite: (cat: Cat) -> Unit,
     deleteFavorite: (cat: Cat) -> Unit,

@@ -17,12 +17,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ReminderViewModel @Inject constructor(@ApplicationContext private val context: Context,
                                             private val localDataSourceReminder: LocalDataSourceReminder) :
-    BaseViewModel<ReminderScreenReducer.ReminderScreenState,
-            ReminderScreenReducer.ReminderScreenEvent,
-            ReminderScreenReducer.ReminderScreenEffect>(
-        initialState = ReminderScreenReducer.ReminderScreenState.initial(
+    BaseViewModel<ReminderScreenUiStateManager.ReminderScreenState,
+            ReminderScreenUiStateManager.ReminderScreenEvent,
+            ReminderScreenUiStateManager.ReminderScreenEffect>(
+        initialState = ReminderScreenUiStateManager.ReminderScreenState.initial(
             localDataSourceReminder
-        ), reducer = ReminderScreenReducer()
+        ), uiStateManager = ReminderScreenUiStateManager()
     ) {
 
     fun dogsReminderUpdate(isReminder: Boolean) {
@@ -49,7 +49,7 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
 
     fun saveDogsReminder(isReminder: Boolean) {
         localDataSourceReminder.saveReminderDogs(isReminder)
-        sendEvent(ReminderScreenReducer.ReminderScreenEvent.DogsReminderUpdate(isReminder))
+        sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.DogsReminderUpdate(isReminder))
     }
 
     fun catsReminderUpdate(isReminder: Boolean) {
@@ -75,7 +75,7 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
 
     fun saveCatsReminder(isReminder: Boolean) {
         localDataSourceReminder.saveReminderCats(isReminder)
-        sendEvent(ReminderScreenReducer.ReminderScreenEvent.CatsReminderUpdate(isReminder))
+        sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.CatsReminderUpdate(isReminder))
     }
 
     fun birdsReminderUpdate(isReminder: Boolean) {
@@ -101,6 +101,6 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
 
     fun saveBirdsReminder(isReminder: Boolean) {
         localDataSourceReminder.saveReminderBirds(isReminder)
-        sendEvent(ReminderScreenReducer.ReminderScreenEvent.BirdsReminderUpdate(isReminder))
+        sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.BirdsReminderUpdate(isReminder))
     }
 }

@@ -5,12 +5,12 @@ import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 
-class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScreenReducer.CatsScreenEvent, CatsScreenReducer.CatsScreenEffect> {
+class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsScreenState, CatsScreenUiStateManager.CatsScreenEvent, CatsScreenUiStateManager.CatsScreenEffect> {
 
     @Immutable
-    sealed class CatsScreenEvent : Reducer.ViewEvent {
+    sealed class CatsScreenEvent : UiStateManager.ViewEvent {
         object Loading : CatsScreenEvent()
         data class CatDetail(val cat: Cat) : CatsScreenEvent()
         data class UpdateCatIsFollowed(val cat: Cat) : CatsScreenEvent()
@@ -27,7 +27,7 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
     }
 
     @Immutable
-    sealed class CatsScreenEffect : Reducer.ViewEffect {
+    sealed class CatsScreenEffect : UiStateManager.ViewEffect {
         data class NavigateToCatDetail(val cat: Cat) : CatsScreenEffect()
     }
 
@@ -39,7 +39,7 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedCatForBigImage: Cat? = null,
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): CatsScreenState {
                 return CatsScreenState(loading = true, errorMessage = null, cats = null, catsBackup = null, showSettings = false, favoriteAnimalCount = 0)
@@ -47,7 +47,7 @@ class CatsScreenReducer() : Reducer<CatsScreenReducer.CatsScreenState, CatsScree
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: CatsScreenState,
         event: CatsScreenEvent
     ): Pair<CatsScreenState, CatsScreenEffect?> {

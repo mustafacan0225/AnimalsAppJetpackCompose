@@ -47,10 +47,10 @@ class CatsViewModel @Inject constructor(
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
     private val getCatsWithTemporaryDataUseCase: GetCatsWithTemporaryDataUseCase
-) : BaseViewModel<CatsScreenReducer.CatsScreenState, CatsScreenReducer.CatsScreenEvent,
-        CatsScreenReducer.CatsScreenEffect>(
-    initialState = CatsScreenReducer.CatsScreenState.initial(),
-    reducer = CatsScreenReducer()
+) : BaseViewModel<CatsScreenUiStateManager.CatsScreenState, CatsScreenUiStateManager.CatsScreenEvent,
+        CatsScreenUiStateManager.CatsScreenEffect>(
+    initialState = CatsScreenUiStateManager.CatsScreenState.initial(),
+    uiStateManager = CatsScreenUiStateManager()
 ) {
 
     init {
@@ -65,7 +65,7 @@ class CatsViewModel @Inject constructor(
     }
 
     fun callCats() {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.Loading)
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.Loading)
         getCats()
     }
 
@@ -76,12 +76,12 @@ class CatsViewModel @Inject constructor(
             when (val response = getCatsUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Cat>> -> {
-                    sendEvent(CatsScreenReducer.CatsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(CatsScreenUiStateManager.CatsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        CatsScreenReducer.CatsScreenEvent.DataReceived(
+                        CatsScreenUiStateManager.CatsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -94,18 +94,18 @@ class CatsViewModel @Inject constructor(
     }
 
     fun getCatsWithTemporaryData() {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.Loading)
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.Loading)
         viewModelScope.launch {
             delay(3000)
             when (val response = getCatsWithTemporaryDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Cat>> -> {
-                    sendEvent(CatsScreenReducer.CatsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(CatsScreenUiStateManager.CatsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        CatsScreenReducer.CatsScreenEvent.DataReceived(
+                        CatsScreenUiStateManager.CatsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -122,7 +122,7 @@ class CatsViewModel @Inject constructor(
             val searchType = getSearchTypeUseCase.runUseCase()
             val listType = getListTypeUseCase.runUseCase()
             val settingsType = getSettingsTypeUseCase.runUseCase()
-            sendEvent(CatsScreenReducer.CatsScreenEvent.LoadSettings(searchType, settingsType, listType))
+            sendEvent(CatsScreenUiStateManager.CatsScreenEvent.LoadSettings(searchType, settingsType, listType))
         }
     }
 
@@ -130,7 +130,7 @@ class CatsViewModel @Inject constructor(
         viewModelScope.launch {
             if (addFavoriteCatUseCase.runUseCase(cat)) {
                 Log.d("room-test", "added favorite cat " + cat.name)
-                sendEvent(CatsScreenReducer.CatsScreenEvent.UpdateCatIsFollowed(cat))
+                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.UpdateCatIsFollowed(cat))
             }
         }
     }
@@ -139,7 +139,7 @@ class CatsViewModel @Inject constructor(
         viewModelScope.launch {
             if (deleteFavoriteCatUseCase.runUseCase(cat)) {
                 Log.d("room-test", "deleted favorite cat " + cat.name)
-                sendEvent(CatsScreenReducer.CatsScreenEvent.UpdateCatIsFollowed(cat.copy(isFavorite = false)))
+                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.UpdateCatIsFollowed(cat.copy(isFavorite = false)))
             }
         }
     }
@@ -156,21 +156,21 @@ class CatsViewModel @Inject constructor(
             }
         }
 
-        sendEvent(CatsScreenReducer.CatsScreenEvent.DataChanged(result))
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.DataChanged(result))
     }
 
     fun remoteSearch(query: String) {
         if (query.isEmpty()) {
-            sendEvent(CatsScreenReducer.CatsScreenEvent.DataChanged(state.value.catsBackup!!))
+            sendEvent(CatsScreenUiStateManager.CatsScreenEvent.DataChanged(state.value.catsBackup!!))
         } else {
-            sendEvent(CatsScreenReducer.CatsScreenEvent.Loading)
+            sendEvent(CatsScreenUiStateManager.CatsScreenEvent.Loading)
             viewModelScope.launch {
                 //delay for test
                 delay(3000)
                 when (val response = searchForCatsUseCase.runUseCase(query)) {
                     is ApiResponse.Success<List<Cat>> -> {
                         sendEvent(
-                            CatsScreenReducer.CatsScreenEvent.DataReceivedWithSearch(
+                            CatsScreenUiStateManager.CatsScreenEvent.DataReceivedWithSearch(
                                 response.data,
                                 null
                             )
@@ -179,7 +179,7 @@ class CatsViewModel @Inject constructor(
 
                     is ApiResponse.Error -> {
                         sendEvent(
-                            CatsScreenReducer.CatsScreenEvent.DataReceivedWithSearch(
+                            CatsScreenUiStateManager.CatsScreenEvent.DataReceivedWithSearch(
                                 null, context.getString(
                                     R.string.error_message
                                 )
@@ -194,15 +194,15 @@ class CatsViewModel @Inject constructor(
     }
 
     fun navigateToCatDetail(cat: Cat) {
-        sendEventForEffect(CatsScreenReducer.CatsScreenEvent.CatDetail(cat))
+        sendEventForEffect(CatsScreenUiStateManager.CatsScreenEvent.CatDetail(cat))
     }
 
     fun navigateToSettings() {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.OpenSettings)
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.OpenSettings)
     }
 
     fun closeSettings() {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.CloseSettings)
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.CloseSettings)
     }
 
     fun settingsUpdated(
@@ -214,7 +214,7 @@ class CatsViewModel @Inject constructor(
             saveListTypeUseCase.runUseCase(viewTypeForList.name)
             saveSettingsTypeUseCase.runUseCase(viewTypeForSettings.name)
             saveSearchTypeUseCase.runUseCase(searchType.name)
-            sendEvent(CatsScreenReducer.CatsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
+            sendEvent(CatsScreenUiStateManager.CatsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
         }
     }
 
@@ -222,16 +222,16 @@ class CatsViewModel @Inject constructor(
         viewModelScope.launch {
             favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
                 Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
-                sendEvent(CatsScreenReducer.CatsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }
     }
 
     fun showBigImage(cat: Cat) {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.ShowBigImage(cat))
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.ShowBigImage(cat))
     }
 
     fun closeBigImage() {
-        sendEvent(CatsScreenReducer.CatsScreenEvent.CloseBigImage)
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.CloseBigImage)
     }
 }

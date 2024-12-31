@@ -47,10 +47,10 @@ class BirdsViewModel @Inject constructor(
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
     private val getBirdsWithTemporaryDataUseCase: GetBirdsWithTemporaryDataUseCase
-) : BaseViewModel<BirdsScreenReducer.BirdsScreenState, BirdsScreenReducer.BirdsScreenEvent,
-        BirdsScreenReducer.BirdsScreenEffect>(
-    initialState = BirdsScreenReducer.BirdsScreenState.initial(),
-    reducer = BirdsScreenReducer()
+) : BaseViewModel<BirdsScreenUiStateManager.BirdsScreenState, BirdsScreenUiStateManager.BirdsScreenEvent,
+        BirdsScreenUiStateManager.BirdsScreenEffect>(
+    initialState = BirdsScreenUiStateManager.BirdsScreenState.initial(),
+    uiStateManager = BirdsScreenUiStateManager()
 ) {
 
     init {
@@ -65,7 +65,7 @@ class BirdsViewModel @Inject constructor(
     }
 
     fun callBirds() {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.Loading)
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.Loading)
         getBirds()
     }
 
@@ -76,12 +76,12 @@ class BirdsViewModel @Inject constructor(
             when (val response = getBirdsUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Bird>> -> {
-                    sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        BirdsScreenReducer.BirdsScreenEvent.DataReceived(
+                        BirdsScreenUiStateManager.BirdsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -94,19 +94,19 @@ class BirdsViewModel @Inject constructor(
     }
 
     fun getBirdsWithTempData() {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.Loading)
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.Loading)
         viewModelScope.launch {
 
             delay(3000)
             when (val response = getBirdsWithTemporaryDataUseCase.runUseCase()) {
 
                 is ApiResponse.Success<List<Bird>> -> {
-                    sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataReceived(response.data, null))
+                    sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.DataReceived(response.data, null))
                 }
 
                 is ApiResponse.Error -> {
                     sendEvent(
-                        BirdsScreenReducer.BirdsScreenEvent.DataReceived(
+                        BirdsScreenUiStateManager.BirdsScreenEvent.DataReceived(
                             null, context.getString(
                                 R.string.error_message
                             )
@@ -123,7 +123,7 @@ class BirdsViewModel @Inject constructor(
             val searchType = getSearchTypeUseCase.runUseCase()
             val listType = getListTypeUseCase.runUseCase()
             val settingsType = getSettingsTypeUseCase.runUseCase()
-            sendEvent(BirdsScreenReducer.BirdsScreenEvent.LoadSettings(searchType, settingsType, listType))
+            sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.LoadSettings(searchType, settingsType, listType))
         }
     }
 
@@ -131,7 +131,7 @@ class BirdsViewModel @Inject constructor(
         viewModelScope.launch {
             if (addFavoriteBirdUseCase.runUseCase(bird)) {
                 Log.d("room-test", "added favorite bird " + bird.name)
-                sendEvent(BirdsScreenReducer.BirdsScreenEvent.UpdateBirdIsFollowed(bird))
+                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.UpdateBirdIsFollowed(bird))
             }
         }
     }
@@ -140,7 +140,7 @@ class BirdsViewModel @Inject constructor(
         viewModelScope.launch {
             if (deleteFavoriteBirdUseCase.runUseCase(bird)) {
                 Log.d("room-test", "deleted favorite bird " + bird.name)
-                sendEvent(BirdsScreenReducer.BirdsScreenEvent.UpdateBirdIsFollowed(bird.copy(isFavorite = false)))
+                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.UpdateBirdIsFollowed(bird.copy(isFavorite = false)))
             }
         }
     }
@@ -156,21 +156,21 @@ class BirdsViewModel @Inject constructor(
             }
         }
 
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataChanged(result))
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.DataChanged(result))
     }
 
     fun remoteSearch(query: String) {
         if (query.isEmpty()) {
-            sendEvent(BirdsScreenReducer.BirdsScreenEvent.DataChanged(state.value.birdsBackup!!))
+            sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.DataChanged(state.value.birdsBackup!!))
         } else {
-            sendEvent(BirdsScreenReducer.BirdsScreenEvent.Loading)
+            sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.Loading)
             viewModelScope.launch {
                 //delay for test
                 delay(3000)
                 when (val response = searchForBirdsUseCase.runUseCase(query)) {
                     is ApiResponse.Success<List<Bird>> -> {
                         sendEvent(
-                            BirdsScreenReducer.BirdsScreenEvent.DataReceivedWithSearch(
+                            BirdsScreenUiStateManager.BirdsScreenEvent.DataReceivedWithSearch(
                                 response.data,
                                 null
                             )
@@ -179,7 +179,7 @@ class BirdsViewModel @Inject constructor(
 
                     is ApiResponse.Error -> {
                         sendEvent(
-                            BirdsScreenReducer.BirdsScreenEvent.DataReceivedWithSearch(
+                            BirdsScreenUiStateManager.BirdsScreenEvent.DataReceivedWithSearch(
                                 null, context.getString(
                                     R.string.error_message
                                 )
@@ -194,15 +194,15 @@ class BirdsViewModel @Inject constructor(
     }
 
     fun navigateToBirdDetail(bird: Bird) {
-        sendEventForEffect(BirdsScreenReducer.BirdsScreenEvent.BirdDetail(bird))
+        sendEventForEffect(BirdsScreenUiStateManager.BirdsScreenEvent.BirdDetail(bird))
     }
 
     fun navigateToSettings() {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.OpenSettings)
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.OpenSettings)
     }
 
     fun closeSettings() {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.CloseSettings)
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.CloseSettings)
     }
 
     fun settingsUpdated(
@@ -214,7 +214,7 @@ class BirdsViewModel @Inject constructor(
             saveListTypeUseCase.runUseCase(viewTypeForList.name)
             saveSettingsTypeUseCase.runUseCase(viewTypeForSettings.name)
             saveSearchTypeUseCase.runUseCase(searchType.name)
-            sendEvent(BirdsScreenReducer.BirdsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
+            sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.SettingsUpdated(viewTypeForList, viewTypeForSettings, searchType))
         }
     }
 
@@ -222,17 +222,17 @@ class BirdsViewModel @Inject constructor(
         viewModelScope.launch {
             favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
                 Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
-                sendEvent(BirdsScreenReducer.BirdsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
             }
         }
     }
 
     fun showBigImage(bird: Bird) {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.ShowBigImage(bird))
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.ShowBigImage(bird))
     }
 
     fun closeBigImage() {
-        sendEvent(BirdsScreenReducer.BirdsScreenEvent.CloseBigImage)
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.CloseBigImage)
     }
 
 }

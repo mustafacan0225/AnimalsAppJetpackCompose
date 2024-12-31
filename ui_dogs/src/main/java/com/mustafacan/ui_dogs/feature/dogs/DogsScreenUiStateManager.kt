@@ -5,12 +5,12 @@ import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 
-class DogsScreenReducer() : Reducer<DogsScreenReducer.DogsScreenState, DogsScreenReducer.DogsScreenEvent, DogsScreenReducer.DogsScreenEffect> {
+class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsScreenState, DogsScreenUiStateManager.DogsScreenEvent, DogsScreenUiStateManager.DogsScreenEffect> {
 
     @Immutable
-    sealed class DogsScreenEvent : Reducer.ViewEvent {
+    sealed class DogsScreenEvent : UiStateManager.ViewEvent {
         object Loading : DogsScreenEvent()
         data class DogDetail(val dog: Dog) : DogsScreenEvent()
         data class UpdateDogIsFollowed(val dog: Dog) : DogsScreenEvent()
@@ -27,7 +27,7 @@ class DogsScreenReducer() : Reducer<DogsScreenReducer.DogsScreenState, DogsScree
     }
 
     @Immutable
-    sealed class DogsScreenEffect : Reducer.ViewEffect {
+    sealed class DogsScreenEffect : UiStateManager.ViewEffect {
         data class NavigateToDogDetail(val dog: Dog) : DogsScreenEffect()
     }
 
@@ -39,7 +39,7 @@ class DogsScreenReducer() : Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedDogForBigImage: Dog? = null,
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): DogsScreenState {
                 return DogsScreenState(loading = true, errorMessage = null, dogs = null, dogsBackup = null, showSettings = false, favoriteAnimalCount = 0)
@@ -47,7 +47,7 @@ class DogsScreenReducer() : Reducer<DogsScreenReducer.DogsScreenState, DogsScree
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: DogsScreenState,
         event: DogsScreenEvent
     ): Pair<DogsScreenState, DogsScreenEffect?> {

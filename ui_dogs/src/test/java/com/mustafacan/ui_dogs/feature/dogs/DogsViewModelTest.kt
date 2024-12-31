@@ -132,7 +132,7 @@ class DogsViewModelTest {
 
     @Test
     fun `add_favorite_dog`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = false))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = false))))
         `when`(addFavoriteDogUseCase.runUseCase(Dog(id = 1, "Golden", isFavorite = true))).thenReturn(true)
         viewModel.addFavoriteDog(Dog(id = 1, "Golden", isFavorite = true))
         assertTrue(viewModel.state.value.dogs?.get(0)?.isFavorite?: false)
@@ -141,7 +141,7 @@ class DogsViewModelTest {
 
     @Test
     fun `delete_favorite_dog`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true))))
         `when`(deleteFavoriteDogUseCase.runUseCase(Dog(id = 1, "Golden", isFavorite = false))).thenReturn(true)
         viewModel.deleteFavoriteDog(Dog(id = 1, "Golden", isFavorite = false))
         assertFalse(viewModel.state.value.dogs?.get(0)?.isFavorite?: true)
@@ -150,7 +150,7 @@ class DogsViewModelTest {
 
     @Test
     fun `local_search_success_response`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         viewModel.localSearch("golden")
         assertEquals("Golden", viewModel.state.value.dogs?.get(0)?.name)
         assertTrue(viewModel.state.value.dogsBackup?.size == 2)
@@ -158,7 +158,7 @@ class DogsViewModelTest {
 
     @Test
     fun `local_search_empty_response`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         viewModel.localSearch("test")
         assertTrue(viewModel.state.value.dogs?.isEmpty()?: false)
         assertTrue(viewModel.state.value.dogsBackup?.size == 2)
@@ -166,14 +166,14 @@ class DogsViewModelTest {
 
     @Test
     fun `local_search_with_empty_query`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         viewModel.localSearch("")
         assertEquals(viewModel.state.value.dogs, viewModel.state.value.dogsBackup)
     }
 
     @Test
     fun `remote_search_success_response`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         `when`(searchForDogsUseCase.runUseCase("golden")).thenReturn(ApiResponse.Success(listOf(Dog(id = 1, "Golden", isFavorite = false))))
         viewModel.remoteSearch("golden")
         assertEquals("Golden", viewModel.state.value.dogs?.get(0)?.name)
@@ -182,7 +182,7 @@ class DogsViewModelTest {
 
     @Test
     fun `remote_search_empty_response`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         `when`(searchForDogsUseCase.runUseCase("test")).thenReturn(ApiResponse.Success(listOf()))
         viewModel.remoteSearch("test")
         delay(3000)
@@ -192,7 +192,7 @@ class DogsViewModelTest {
 
     @Test
     fun `remote_search_error_response`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         `when`(context.getString(R.string.error_message)).thenReturn("An error occurred")
         `when`(searchForDogsUseCase.runUseCase("test")).thenReturn(ApiResponse.Error(CustomException.ConnectionError("An error occured")))
         viewModel.remoteSearch("test")
@@ -203,7 +203,7 @@ class DogsViewModelTest {
 
     @Test
     fun `remote_search_with_empty_query`() = runTest {
-        viewModel.sendEvent(DogsScreenReducer.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
+        viewModel.sendEvent(DogsScreenUiStateManager.DogsScreenEvent.DataReceived(listOf(Dog(id = 1, "Golden", isFavorite = true), Dog(id = 2, "Bulldog", isFavorite = true))))
         viewModel.remoteSearch("")
         assertEquals(viewModel.state.value.dogs, viewModel.state.value.dogsBackup)
     }

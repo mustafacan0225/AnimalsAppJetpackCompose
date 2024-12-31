@@ -5,12 +5,12 @@ import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.viewmodel.Reducer
+import com.mustafacan.ui_common.viewmodel.UiStateManager
 
-class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsScreenReducer.BirdsScreenEvent, BirdsScreenReducer.BirdsScreenEffect> {
+class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.BirdsScreenState, BirdsScreenUiStateManager.BirdsScreenEvent, BirdsScreenUiStateManager.BirdsScreenEffect> {
 
     @Immutable
-    sealed class BirdsScreenEvent : Reducer.ViewEvent {
+    sealed class BirdsScreenEvent : UiStateManager.ViewEvent {
         object Loading : BirdsScreenEvent()
         data class BirdDetail(val bird: Bird) : BirdsScreenEvent()
         data class UpdateBirdIsFollowed(val bird: Bird) : BirdsScreenEvent()
@@ -27,7 +27,7 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
     }
 
     @Immutable
-    sealed class BirdsScreenEffect : Reducer.ViewEffect {
+    sealed class BirdsScreenEffect : UiStateManager.ViewEffect {
         data class NavigateToBirdDetail(val bird: Bird) : BirdsScreenEffect()
     }
 
@@ -39,7 +39,7 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedBirdForBigImage: Bird? = null,
-    ) : Reducer.ViewState {
+    ) : UiStateManager.ViewState {
         companion object {
             fun initial(): BirdsScreenState {
                 return BirdsScreenState(loading = true, errorMessage = null, birds = null, birdsBackup = null, showSettings = false, favoriteAnimalCount = 0)
@@ -47,7 +47,7 @@ class BirdsScreenReducer() : Reducer<BirdsScreenReducer.BirdsScreenState, BirdsS
         }
     }
 
-    override fun reduce(
+    override fun handleEvent(
         previousState: BirdsScreenState,
         event: BirdsScreenEvent
     ): Pair<BirdsScreenState, BirdsScreenEffect?> {

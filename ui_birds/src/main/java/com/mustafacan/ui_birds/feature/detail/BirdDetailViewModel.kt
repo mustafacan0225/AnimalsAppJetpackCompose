@@ -19,18 +19,17 @@ class BirdDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val addFavoriteBirdUseCase: AddFavoriteBirdUseCase,
     private val deleteFavoriteBirdUseCase: DeleteFavoriteBirdUseCase
-) : BaseViewModel<BirdDetailScreenReducer.BirdDetailScreenState, BirdDetailScreenReducer.BirdDetailScreenEvent,
-        BirdDetailScreenReducer.BirdDetailScreenEffect>(
-    initialState = BirdDetailScreenReducer.BirdDetailScreenState.initial(),
-    reducer = BirdDetailScreenReducer()
+) : BaseViewModel<BirdDetailScreenUiStateManager.BirdDetailScreenState, BirdDetailScreenUiStateManager.BirdDetailScreenEvent,
+        BirdDetailScreenUiStateManager.BirdDetailScreenEffect>(
+    initialState = BirdDetailScreenUiStateManager.BirdDetailScreenState.initial(),
+    uiStateManager = BirdDetailScreenUiStateManager()
 ) {
 
     val bird: Bird? = savedStateHandle["bird"]
 
     fun load() {
         viewModelScope.launch {
-            sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.Load(bird = bird!!))
-
+            sendEvent(BirdDetailScreenUiStateManager.BirdDetailScreenEvent.Load(bird = bird!!))
         }
     }
 
@@ -39,12 +38,12 @@ class BirdDetailViewModel @Inject constructor(
             if (state.value.bird?.isFavorite?: false) {
                 if (deleteFavoriteBirdUseCase.runUseCase(bird!!)) {
                     Log.d("room-test", "deleted favorite bird " + bird.name)
-                    sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.UpdateBirdIsFavorite)
+                    sendEvent(BirdDetailScreenUiStateManager.BirdDetailScreenEvent.UpdateBirdIsFavorite)
                 }
             } else {
                 if (addFavoriteBirdUseCase.runUseCase(bird!!.copy(isFavorite = true))) {
                     Log.d("room-test", "added favorite bird " + bird.name)
-                    sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.UpdateBirdIsFavorite)
+                    sendEvent(BirdDetailScreenUiStateManager.BirdDetailScreenEvent.UpdateBirdIsFavorite)
                 }
 
             }
@@ -52,11 +51,11 @@ class BirdDetailViewModel @Inject constructor(
     }
 
     fun showBigImage() {
-        sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.ShowBigImage)
+        sendEvent(BirdDetailScreenUiStateManager.BirdDetailScreenEvent.ShowBigImage)
     }
 
     fun closeBigImage() {
-        sendEvent(BirdDetailScreenReducer.BirdDetailScreenEvent.CloseBigImage)
+        sendEvent(BirdDetailScreenUiStateManager.BirdDetailScreenEvent.CloseBigImage)
     }
 
 

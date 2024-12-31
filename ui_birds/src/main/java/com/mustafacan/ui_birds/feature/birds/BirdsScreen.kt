@@ -46,7 +46,7 @@ fun BirdsScreen(navController: NavController) {
     LaunchedEffect(effect) {
         effect.collect { action ->
             when (action) {
-                is BirdsScreenReducer.BirdsScreenEffect.NavigateToBirdDetail -> {
+                is BirdsScreenUiStateManager.BirdsScreenEffect.NavigateToBirdDetail -> {
                     navController.navigate(NavDestinationItem.BirdDetailScreen(bird = action.bird))
                 }
             }
@@ -77,7 +77,7 @@ fun BirdsScreen(navController: NavController) {
 @Composable
 fun BirdListContent(
     viewModel: BirdsViewModel,
-    uiState: State<BirdsScreenReducer.BirdsScreenState>
+    uiState: State<BirdsScreenUiStateManager.BirdsScreenState>
 ) {
 
     if (uiState.value.loading) {

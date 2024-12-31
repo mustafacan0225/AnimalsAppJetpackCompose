@@ -43,14 +43,14 @@ import androidx.constraintlayout.compose.atLeast
 import androidx.constraintlayout.compose.atMost
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_birds.R
-import com.mustafacan.ui_birds.feature.birds.BirdsScreenReducer
+import com.mustafacan.ui_birds.feature.birds.BirdsScreenUiStateManager
 import com.mustafacan.ui_common.components.image.CircleImage
 import com.mustafacan.ui_common.components.lottie.LikeAnimation
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
 
 @Composable
 fun BirdList(
-    uiState: State<BirdsScreenReducer.BirdsScreenState>,
+    uiState: State<BirdsScreenUiStateManager.BirdsScreenState>,
     clickedItem: (bird: Bird) -> Unit,
     addFavorite: (bird: Bird) -> Unit,
     deleteFavorite: (bird: Bird) -> Unit,

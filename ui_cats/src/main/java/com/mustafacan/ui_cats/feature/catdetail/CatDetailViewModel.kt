@@ -27,10 +27,10 @@ class CatDetailViewModel @Inject constructor(
     private val deleteFavoriteCatUseCase: DeleteFavoriteCatUseCase,
     private val getTabTypeUseCase: GetTabTypeUseCase,
     private val saveTabTypeUseCase: SaveTabTypeUseCase
-) : BaseViewModel<CatDetailScreenReducer.CatDetailScreenState, CatDetailScreenReducer.CatDetailScreenEvent,
-        CatDetailScreenReducer.CatDetailScreenEffect>(
-    initialState = CatDetailScreenReducer.CatDetailScreenState.initial(),
-    reducer = CatDetailScreenReducer()
+) : BaseViewModel<CatDetailScreenUiStateManager.CatDetailScreenState, CatDetailScreenUiStateManager.CatDetailScreenEvent,
+        CatDetailScreenUiStateManager.CatDetailScreenEffect>(
+    initialState = CatDetailScreenUiStateManager.CatDetailScreenState.initial(),
+    uiStateManager = CatDetailScreenUiStateManager()
 ) {
 
     val cat: Cat? = savedStateHandle["cat"]
@@ -45,27 +45,27 @@ class CatDetailViewModel @Inject constructor(
     fun load(pagerState: PagerState, scope: CoroutineScope) {
         viewModelScope.launch {
             val tabType = getTabTypeUseCase.runUseCase()
-            sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.Load(cat = cat!!, pagerState = pagerState, tabType = tabType, tabList = tabList, scope = scope))
+            sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.Load(cat = cat!!, pagerState = pagerState, tabType = tabType, tabList = tabList, scope = scope))
 
         }
     }
 
     fun onClickTab(index: Int) {
-        sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.OnClickTabItem(index))
+        sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.OnClickTabItem(index))
     }
 
     fun navigateToSettings() {
-        sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.OpenSettings)
+        sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.OpenSettings)
     }
 
     fun closeSettings() {
-        sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.CloseSettings)
+        sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.CloseSettings)
     }
 
     fun settingsUpdated(viewTypeForTab: ViewTypeForTab) {
         viewModelScope.launch {
             saveTabTypeUseCase.runUseCase(viewTypeForTab.name)
-            sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.SettingsUpdated(viewTypeForTab))
+            sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.SettingsUpdated(viewTypeForTab))
         }
     }
 
@@ -74,12 +74,12 @@ class CatDetailViewModel @Inject constructor(
             if (state.value.cat?.isFavorite?: false) {
                 if (deleteFavoriteCatUseCase.runUseCase(cat!!)) {
                     Log.d("room-test", "deleted favorite cat " + cat.name)
-                    sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.UpdateCatIsFavorite)
+                    sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.UpdateCatIsFavorite)
                 }
             } else {
                 if (addFavoriteCatUseCase.runUseCase(cat!!.copy(isFavorite = true))) {
                     Log.d("room-test", "added favorite cat " + cat.name)
-                    sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.UpdateCatIsFavorite)
+                    sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.UpdateCatIsFavorite)
                 }
 
             }
@@ -87,11 +87,11 @@ class CatDetailViewModel @Inject constructor(
     }
 
     fun showBigImage() {
-        sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.ShowBigImage)
+        sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.ShowBigImage)
     }
 
     fun closeBigImage() {
-        sendEvent(CatDetailScreenReducer.CatDetailScreenEvent.CloseBigImage)
+        sendEvent(CatDetailScreenUiStateManager.CatDetailScreenEvent.CloseBigImage)
     }
 
 }
