@@ -7,7 +7,6 @@ import com.mustafacan.data.remote.extension.setImages
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.BirdsRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
@@ -15,8 +14,7 @@ class BirdsRepositoryImpl @Inject constructor(private val remoteDataSource: Bird
     BirdsRepository {
     override suspend fun getBirds(): ApiResponse<List<Bird>> {
         return coroutineScope {
-            val birdListDeferred = async { remoteDataSource.getBirds() }
-            val birdListResponse = birdListDeferred.await()
+            val birdListResponse = remoteDataSource.getBirds()
             birdListResponse.setImages()
             birdListResponse.setFavoriteInfo(dao)
             return@coroutineScope birdListResponse
@@ -25,8 +23,7 @@ class BirdsRepositoryImpl @Inject constructor(private val remoteDataSource: Bird
 
     override suspend fun search(query: String): ApiResponse<List<Bird>> {
         return coroutineScope {
-            val birdListDeferred = async { remoteDataSource.search(query) }
-            val birdListResponse = birdListDeferred.await()
+            val birdListResponse = remoteDataSource.search(query)
             birdListResponse.setImages()
             birdListResponse.setFavoriteInfo(dao)
             return@coroutineScope birdListResponse

@@ -20,17 +20,20 @@ suspend fun ApiResponse<List<Dog>>.setImages() {
 }
 
 suspend fun ApiResponse<List<Dog>>.setFavoriteInfo(dao: FavoriteAnimalsDao) {
-    when (this) {
-        is ApiResponse.Success<List<Dog>> -> {
-            val favoriteAnimals = withContext(Dispatchers.IO) {
-                dao.getDogs()
+    try {
+        when (this) {
+            is ApiResponse.Success<List<Dog>> -> {
+                val favoriteAnimals = withContext(Dispatchers.IO) {
+                    dao.getDogs()
+                }
+
+                favoriteAnimals.forEach { favoriteAnimal ->
+                    this.data.find { it.id == favoriteAnimal.id }?.isFavorite = true
+                }
             }
 
-            favoriteAnimals.forEach { favoriteAnimal ->
-                this.data.find { it.id == favoriteAnimal.id }?.isFavorite = true
-            }
+            is ApiResponse.Error -> {}
         }
+    } catch (e: Exception) { }
 
-        is ApiResponse.Error -> {}
-    }
 }

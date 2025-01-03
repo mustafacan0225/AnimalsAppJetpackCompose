@@ -7,7 +7,6 @@ import com.mustafacan.data.remote.extension.setImages
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.api_repository.DogsRepository
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
@@ -18,8 +17,7 @@ class DogsRepositoryImpl @Inject constructor(
 
     override suspend fun getDogs(): ApiResponse<List<Dog>> {
         return coroutineScope {
-            val dogListDeferred = async { remoteDataSource.getDogs() }
-            val dogListResponse = dogListDeferred.await()
+            val dogListResponse = remoteDataSource.getDogs()
             dogListResponse.setImages()
             dogListResponse.setFavoriteInfo(dao)
             return@coroutineScope dogListResponse
@@ -28,8 +26,7 @@ class DogsRepositoryImpl @Inject constructor(
 
     override suspend fun search(query: String): ApiResponse<List<Dog>> {
         return coroutineScope {
-            val dogListDeferred = async { remoteDataSource.search(query) }
-            val dogListResponse = dogListDeferred.await()
+            val dogListResponse = remoteDataSource.search(query)
             dogListResponse.setImages()
             dogListResponse.setFavoriteInfo(dao)
             return@coroutineScope dogListResponse
