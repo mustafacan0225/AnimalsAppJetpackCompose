@@ -1,6 +1,7 @@
 package com.mustafacan.ui_dogs.feature.dogs
 
 import androidx.compose.runtime.Immutable
+import com.mustafacan.domain.model.AllFavoriteAnimals
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
@@ -17,13 +18,14 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
         object OpenSettings : DogsScreenEvent()
         object CloseSettings : DogsScreenEvent()
         data class DataReceived(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
-        data class FavoriteAnimalCountChanged(val favoriteList: List<Dog>) : DogsScreenEvent()
+        data class FavoriteDogsChanged(val favoriteList: List<Dog>) : DogsScreenEvent()
         data class DataReceivedWithSearch(val list: List<Dog>? = null, val errorMessage: String? = null) : DogsScreenEvent()
         data class DataChanged(val list: List<Dog>? = null) : DogsScreenEvent()
         data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : DogsScreenEvent()
         data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : DogsScreenEvent()
         data class ShowBigImage(val dog: Dog) : DogsScreenEvent()
         object CloseBigImage : DogsScreenEvent()
+        data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : DogsScreenEvent()
     }
 
     @Immutable
@@ -39,6 +41,7 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedDogForBigImage: Dog? = null,
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): DogsScreenState {
@@ -114,7 +117,7 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
                 previousState.copy(dogsBackup = previousState.dogsBackup, dogs = previousState.dogs) to null
             }
 
-            is DogsScreenEvent.FavoriteAnimalCountChanged -> {
+            is DogsScreenEvent.FavoriteDogsChanged -> {
                 previousState.dogs?.map { it.isFavorite = false }
                 previousState.dogsBackup?.map { it.isFavorite = false }
 
@@ -142,6 +145,9 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
                 previousState.copy(showBigImage = false) to null
             }
 
+            is DogsScreenEvent.AllFavoriteAnimalsChanged -> {
+                previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
+            }
         }
     }
 

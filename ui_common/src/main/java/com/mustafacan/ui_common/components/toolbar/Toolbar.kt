@@ -1,12 +1,11 @@
 package com.mustafacan.ui_common.components.toolbar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Badge
@@ -20,7 +19,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,34 +50,26 @@ fun Toolbar(title: String = "", onBackPressed: (() -> Unit)? = null, actionList:
             actionList?.forEach { action ->
                 val actionWithBadge = action as? ToolbarAction.WithBadge
                 if (actionWithBadge != null) {
-                    Box(modifier = Modifier.padding(12.dp)) {
-                        IconButton(onClick = { action.onAction() }) {
-                            Icon(
-                                //modifier = Modifier.size(42.dp),
-                                imageVector = action.imageVector,
-                                contentDescription = "",
-                            )
-                        }
+                    Box {
+                        val value = actionWithBadge?.badgeValue?: 0
+                        val startPadding = if (value < 10 ) 8.dp else if (value < 100) 13.dp else 18.dp
+                        Icon(modifier = Modifier.padding(start = startPadding, 10.dp, 10.dp, 10.dp).clickable { action.onAction() },
+                            imageVector = action.imageVector,
+                            contentDescription = "",
+                        )
 
-                        if (actionWithBadge?.badgeValue?.value?: 0 > 0) {
-                            Badge(
-                                modifier = Modifier
-                                    .border(1.dp, color = Color.White, shape = CircleShape)
-                                    .align(Alignment.TopEnd)
-                                    .clip(CircleShape)
-                            ) {
-                                Text(text = "${actionWithBadge?.badgeValue?.value?: 0}")
+                        if (actionWithBadge?.badgeValue?: 0 > 0) {
+                            Badge(modifier = Modifier.align(Alignment.BottomStart)) {
+                                Text(text = "${actionWithBadge?.badgeValue?: 0}")
                             }
                         }
 
                     }
                 } else {
-                    IconButton(onClick = { action.onAction() }) {
-                        Icon(
-                            imageVector = action.imageVector,
-                            contentDescription = "",
-                        )
-                    }
+                    Icon(modifier = Modifier.clickable { action.onAction() },
+                        imageVector = action.imageVector,
+                        contentDescription = "",
+                    )
                 }
 
             }

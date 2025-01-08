@@ -1,10 +1,10 @@
 package com.mustafacan.ui_cats.feature.cats
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
+import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsUseCase
 import com.mustafacan.domain.usecase.cats.api_usecase.SearchForCatsUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
@@ -24,9 +24,7 @@ import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_cats.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -46,7 +44,8 @@ class CatsViewModel @Inject constructor(
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
-    private val getCatsWithTemporaryDataUseCase: GetCatsWithTemporaryDataUseCase
+    private val getCatsWithTemporaryDataUseCase: GetCatsWithTemporaryDataUseCase,
+    private val getAllFavoriteAnimalsUseCase: GetAllFavoriteAnimalsUseCase,
 ) : BaseViewModel<CatsScreenUiStateManager.CatsScreenState, CatsScreenUiStateManager.CatsScreenEvent,
         CatsScreenUiStateManager.CatsScreenEffect>(
     initialState = CatsScreenUiStateManager.CatsScreenState.initial(),
@@ -56,11 +55,8 @@ class CatsViewModel @Inject constructor(
     init {
 
         callCats()
-
-        viewModelScope.launch {
-            val favoriteAnimalsFlow = getFavoriteCatsUseCase.runUseCase()
-            favoriteAnimalsChanged(favoriteAnimalsFlow)
-        }
+        listenFavoriteCats()
+        listenAllFavoriteAnimals()
 
     }
 
@@ -129,7 +125,6 @@ class CatsViewModel @Inject constructor(
     fun addFavoriteCat(cat: Cat) {
         viewModelScope.launch {
             if (addFavoriteCatUseCase.runUseCase(cat)) {
-                Log.d("room-test", "added favorite cat " + cat.name)
                 sendEvent(CatsScreenUiStateManager.CatsScreenEvent.UpdateCatIsFollowed(cat))
             }
         }
@@ -138,7 +133,6 @@ class CatsViewModel @Inject constructor(
     fun deleteFavoriteCat(cat: Cat) {
         viewModelScope.launch {
             if (deleteFavoriteCatUseCase.runUseCase(cat)) {
-                Log.d("room-test", "deleted favorite cat " + cat.name)
                 sendEvent(CatsScreenUiStateManager.CatsScreenEvent.UpdateCatIsFollowed(cat.copy(isFavorite = false)))
             }
         }
@@ -218,11 +212,20 @@ class CatsViewModel @Inject constructor(
         }
     }
 
-    fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Cat>>) {
+    fun listenFavoriteCats() {
         viewModelScope.launch {
-            favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
-                Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
-                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+            val favoriteCatsFlow = getFavoriteCatsUseCase.runUseCase()
+            favoriteCatsFlow.stateIn(this).collectLatest { favoriteList ->
+                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.FavoriteCatsChanged(favoriteList))
+            }
+        }
+    }
+
+    fun listenAllFavoriteAnimals() {
+        viewModelScope.launch {
+            val allFavoriteAnimalsFlow = getAllFavoriteAnimalsUseCase.runUseCase()
+            allFavoriteAnimalsFlow.collectLatest {
+                sendEvent(CatsScreenUiStateManager.CatsScreenEvent.AllFavoriteAnimalsChanged(it))
             }
         }
     }

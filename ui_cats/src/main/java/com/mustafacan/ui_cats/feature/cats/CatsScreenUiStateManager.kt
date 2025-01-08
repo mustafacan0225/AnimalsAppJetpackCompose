@@ -1,6 +1,7 @@
 package com.mustafacan.ui_cats.feature.cats
 
 import androidx.compose.runtime.Immutable
+import com.mustafacan.domain.model.AllFavoriteAnimals
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
@@ -17,13 +18,14 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
         object OpenSettings : CatsScreenEvent()
         object CloseSettings : CatsScreenEvent()
         data class DataReceived(val list: List<Cat>? = null, val errorMessage: String? = null) : CatsScreenEvent()
-        data class FavoriteAnimalCountChanged(val favoriteList: List<Cat>) : CatsScreenEvent()
+        data class FavoriteCatsChanged(val favoriteList: List<Cat>) : CatsScreenEvent()
         data class DataReceivedWithSearch(val list: List<Cat>? = null, val errorMessage: String? = null) : CatsScreenEvent()
         data class DataChanged(val list: List<Cat>? = null) : CatsScreenEvent()
         data class SettingsUpdated(val viewTypeCats: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : CatsScreenEvent()
         data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : CatsScreenEvent()
         data class ShowBigImage(val cat: Cat) : CatsScreenEvent()
         object CloseBigImage : CatsScreenEvent()
+        data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : CatsScreenEvent()
     }
 
     @Immutable
@@ -39,6 +41,7 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedCatForBigImage: Cat? = null,
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): CatsScreenState {
@@ -114,7 +117,7 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
                 previousState.copy(catsBackup = previousState.catsBackup, cats = previousState.cats) to null
             }
 
-            is CatsScreenEvent.FavoriteAnimalCountChanged -> {
+            is CatsScreenEvent.FavoriteCatsChanged -> {
                 previousState.cats?.map { it.isFavorite = false }
                 previousState.catsBackup?.map { it.isFavorite = false }
 
@@ -140,6 +143,10 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
 
             is CatsScreenEvent.CloseBigImage -> {
                 previousState.copy(showBigImage = false) to null
+            }
+
+            is CatsScreenEvent.AllFavoriteAnimalsChanged -> {
+                previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
             }
 
         }

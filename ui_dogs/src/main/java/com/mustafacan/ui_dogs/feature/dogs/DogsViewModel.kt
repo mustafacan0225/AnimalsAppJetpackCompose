@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
+import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
 import com.mustafacan.domain.usecase.dogs.temp.GetDogsWithTemporaryDataUseCase
@@ -25,10 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +45,8 @@ class DogsViewModel @Inject constructor(
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
-    private val getDogsWithTemporaryDataUseCase: GetDogsWithTemporaryDataUseCase
+    private val getDogsWithTemporaryDataUseCase: GetDogsWithTemporaryDataUseCase,
+    private val getAllFavoriteAnimalsUseCase: GetAllFavoriteAnimalsUseCase
 ) : BaseViewModel<DogsScreenUiStateManager.DogsScreenState, DogsScreenUiStateManager.DogsScreenEvent,
         DogsScreenUiStateManager.DogsScreenEffect>(
     initialState = DogsScreenUiStateManager.DogsScreenState.initial(),
@@ -57,11 +56,8 @@ class DogsViewModel @Inject constructor(
     init {
 
         callDogs()
-
-        viewModelScope.launch {
-            val favoriteAnimalsFlow = getFavoriteDogsUseCase.runUseCase()
-            favoriteAnimalsChanged(favoriteAnimalsFlow)
-        }
+        listenFavoriteDogs()
+        listenAllFavoriteAnimals()
 
     }
 
@@ -217,18 +213,22 @@ class DogsViewModel @Inject constructor(
         }
     }
 
-    fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Dog>>) {
+    fun listenFavoriteDogs() {
         viewModelScope.launch {
-            favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
-                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+            val favoriteDogs = getFavoriteDogsUseCase.runUseCase()
+            favoriteDogs.stateIn(this).collectLatest { favoriteList ->
+                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.FavoriteDogsChanged(favoriteList))
             }
         }
-        val flist: Flow<List<Int>> = listOf(listOf(5,7,8)).asFlow()
+    }
 
-        val a = listOf(5,7,8)
-        val b: List<Int> = listOf(1,2,3,4,5)
-        val cc = flowOf(a)
-
+    fun listenAllFavoriteAnimals() {
+        viewModelScope.launch {
+            val allFavoriteAnimalsFlow = getAllFavoriteAnimalsUseCase.runUseCase()
+            allFavoriteAnimalsFlow.collectLatest {
+                sendEvent(DogsScreenUiStateManager.DogsScreenEvent.AllFavoriteAnimalsChanged(it))
+            }
+        }
     }
 
     fun showBigImage(dog: Dog) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,8 +37,8 @@ fun DogsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar =
-        listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
+    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = {}, state.value.allFavoriteAnimals.getCount()),
+        ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
 

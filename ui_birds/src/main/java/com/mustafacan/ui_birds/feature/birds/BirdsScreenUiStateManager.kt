@@ -1,6 +1,7 @@
 package com.mustafacan.ui_birds.feature.birds
 
 import androidx.compose.runtime.Immutable
+import com.mustafacan.domain.model.AllFavoriteAnimals
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.ui_common.model.enums.SearchType
 import com.mustafacan.ui_common.model.enums.ViewTypeForList
@@ -17,13 +18,14 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
         object OpenSettings : BirdsScreenEvent()
         object CloseSettings : BirdsScreenEvent()
         data class DataReceived(val list: List<Bird>? = null, val errorMessage: String? = null) : BirdsScreenEvent()
-        data class FavoriteAnimalCountChanged(val favoriteList: List<Bird>) : BirdsScreenEvent()
+        data class FavoriteBirdsChanged(val favoriteList: List<Bird>) : BirdsScreenEvent()
         data class DataReceivedWithSearch(val list: List<Bird>? = null, val errorMessage: String? = null) : BirdsScreenEvent()
         data class DataChanged(val list: List<Bird>? = null) : BirdsScreenEvent()
         data class SettingsUpdated(val viewTypeDogs: ViewTypeForList, val viewTypeForSettings: ViewTypeForSettings, val searchType: SearchType) : BirdsScreenEvent()
         data class LoadSettings(val searchType: String?, val settingsType: String?, val listType: String?) : BirdsScreenEvent()
         data class ShowBigImage(val bird: Bird) : BirdsScreenEvent()
         object CloseBigImage : BirdsScreenEvent()
+        data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : BirdsScreenEvent()
     }
 
     @Immutable
@@ -39,6 +41,7 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedBirdForBigImage: Bird? = null,
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): BirdsScreenState {
@@ -114,7 +117,7 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
                 previousState.copy(birdsBackup = previousState.birdsBackup, birds = previousState.birds) to null
             }
 
-            is BirdsScreenEvent.FavoriteAnimalCountChanged -> {
+            is BirdsScreenEvent.FavoriteBirdsChanged -> {
                 previousState.birds?.map { it.isFavorite = false }
                 previousState.birdsBackup?.map { it.isFavorite = false }
 
@@ -140,6 +143,10 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
 
             is BirdsScreenEvent.CloseBigImage -> {
                 previousState.copy(showBigImage = false) to null
+            }
+
+            is BirdsScreenEvent.AllFavoriteAnimalsChanged -> {
+                previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
             }
 
         }

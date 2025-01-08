@@ -38,8 +38,8 @@ fun CatsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar =
-        listOf(ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
+    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = {}, state.value.allFavoriteAnimals.getCount()),
+        ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
 

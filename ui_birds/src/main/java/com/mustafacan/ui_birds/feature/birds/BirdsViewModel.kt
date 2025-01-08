@@ -1,10 +1,10 @@
 package com.mustafacan.ui_birds.feature.birds
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.response.ApiResponse
+import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsUseCase
 import com.mustafacan.domain.usecase.birds.api_usecase.SearchForBirdsUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.AddFavoriteBirdUseCase
@@ -24,9 +24,7 @@ import com.mustafacan.ui_common.viewmodel.BaseViewModel
 import com.mustafacan.ui_birds.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -46,7 +44,8 @@ class BirdsViewModel @Inject constructor(
     private val saveListTypeUseCase: SaveListTypeUseCase,
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase,
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase,
-    private val getBirdsWithTemporaryDataUseCase: GetBirdsWithTemporaryDataUseCase
+    private val getBirdsWithTemporaryDataUseCase: GetBirdsWithTemporaryDataUseCase,
+    private val getAllFavoriteAnimalsUseCase: GetAllFavoriteAnimalsUseCase
 ) : BaseViewModel<BirdsScreenUiStateManager.BirdsScreenState, BirdsScreenUiStateManager.BirdsScreenEvent,
         BirdsScreenUiStateManager.BirdsScreenEffect>(
     initialState = BirdsScreenUiStateManager.BirdsScreenState.initial(),
@@ -56,12 +55,8 @@ class BirdsViewModel @Inject constructor(
     init {
 
         callBirds()
-
-        viewModelScope.launch {
-            val favoriteAnimalsFlow = getFavoriteBirdsUseCase.runUseCase()
-            favoriteAnimalsChanged(favoriteAnimalsFlow)
-        }
-
+        listenFavoriteBirds()
+        listenAllFavoriteAnimals()
     }
 
     fun callBirds() {
@@ -71,7 +66,6 @@ class BirdsViewModel @Inject constructor(
 
     fun getBirds() {
         viewModelScope.launch {
-
             delay(3000)
             when (val response = getBirdsUseCase.runUseCase()) {
 
@@ -130,7 +124,6 @@ class BirdsViewModel @Inject constructor(
     fun addFavoriteBird(bird: Bird) {
         viewModelScope.launch {
             if (addFavoriteBirdUseCase.runUseCase(bird)) {
-                Log.d("room-test", "added favorite bird " + bird.name)
                 sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.UpdateBirdIsFollowed(bird))
             }
         }
@@ -139,7 +132,6 @@ class BirdsViewModel @Inject constructor(
     fun deleteFavoriteBird(bird: Bird) {
         viewModelScope.launch {
             if (deleteFavoriteBirdUseCase.runUseCase(bird)) {
-                Log.d("room-test", "deleted favorite bird " + bird.name)
                 sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.UpdateBirdIsFollowed(bird.copy(isFavorite = false)))
             }
         }
@@ -218,11 +210,20 @@ class BirdsViewModel @Inject constructor(
         }
     }
 
-    fun favoriteAnimalsChanged(favoriteAnimalsFlow: Flow<List<Bird>>) {
+    fun listenFavoriteBirds() {
         viewModelScope.launch {
-            favoriteAnimalsFlow.stateIn(this).collectLatest { favoriteList ->
-                Log.d("room-test", "favorite list count: " + favoriteList.size.toString())
-                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.FavoriteAnimalCountChanged(favoriteList))
+            val favoriteBirdsFlow = getFavoriteBirdsUseCase.runUseCase()
+            favoriteBirdsFlow.stateIn(this).collectLatest { favoriteList ->
+                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.FavoriteBirdsChanged(favoriteList))
+            }
+        }
+    }
+
+    fun listenAllFavoriteAnimals() {
+        viewModelScope.launch {
+            val allFavoriteAnimalsFlow = getAllFavoriteAnimalsUseCase.runUseCase()
+            allFavoriteAnimalsFlow.collectLatest {
+                sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.AllFavoriteAnimalsChanged(it))
             }
         }
     }
