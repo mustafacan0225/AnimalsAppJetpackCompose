@@ -31,5 +31,5 @@
     <string name="do_you_want_to_load_local_data">An API access or internet connection error occurred. Do you want to load local data?</string>
     <string name="retry_local_data">Retry From Local</string>
     <string name="retry_api_data">Retry From API</string>
-
+    <string name="all_favorite_animals_info">You don\'t have any favorite animals yet. You can choose your favorites by clicking on the favorite icon above the animals and you can see all your favorite animals on this page.</string>
 </resources>

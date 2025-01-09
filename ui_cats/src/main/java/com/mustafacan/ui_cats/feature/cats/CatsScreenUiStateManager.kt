@@ -26,6 +26,8 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
         data class ShowBigImage(val cat: Cat) : CatsScreenEvent()
         object CloseBigImage : CatsScreenEvent()
         data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : CatsScreenEvent()
+        object ShowAllFavoriteAnimals : CatsScreenEvent()
+        object CloseAllFavoriteAnimals : CatsScreenEvent()
     }
 
     @Immutable
@@ -41,7 +43,8 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedCatForBigImage: Cat? = null,
-        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals(),
+        val showAllFavoriteAnimalsPopup: Boolean = false
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): CatsScreenState {
@@ -149,6 +152,13 @@ class CatsScreenUiStateManager() : UiStateManager<CatsScreenUiStateManager.CatsS
                 previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
             }
 
+            CatsScreenEvent.CloseAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = false) to null
+            }
+
+            CatsScreenEvent.ShowAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = true) to null
+            }
         }
     }
 

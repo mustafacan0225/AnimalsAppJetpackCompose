@@ -25,6 +25,7 @@ import com.mustafacan.ui_common.components.toolbar.ToolbarAction
 import com.mustafacan.ui_common.navigation.root.NavDestinationItem
 import com.mustafacan.ui_common.util.rememberFlowWithLifecycle
 import com.mustafacan.ui_common.R
+import com.mustafacan.ui_common.components.allfavoriteanimals.ShowAllFavoriteAnimals
 import com.mustafacan.ui_common.components.image.ImageViewer
 import com.mustafacan.ui_common.components.settings.SettingsScreenWithBottomSheet
 import com.mustafacan.ui_common.components.settings.SettingsScreenWithPopup
@@ -37,7 +38,7 @@ fun DogsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = {}, state.value.allFavoriteAnimals.getCount()),
+    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = { viewModel.showAllFavoriteAnimals() }, state.value.allFavoriteAnimals.getCount()),
         ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
@@ -70,6 +71,10 @@ fun DogsScreen(navController: NavController) {
 
         //dog list
         DogListContent(viewModel, state)
+    }
+
+    if (state.value.showAllFavoriteAnimalsPopup) {
+        ShowAllFavoriteAnimals(allFavoriteAnimals = state.value.allFavoriteAnimals, onDismiss = { viewModel.closeAllFavoriteAnimals() })
     }
 
 }

@@ -237,4 +237,12 @@ class CatsViewModel @Inject constructor(
     fun closeBigImage() {
         sendEvent(CatsScreenUiStateManager.CatsScreenEvent.CloseBigImage)
     }
+
+    fun showAllFavoriteAnimals() {
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.ShowAllFavoriteAnimals)
+    }
+
+    fun closeAllFavoriteAnimals() {
+        sendEvent(CatsScreenUiStateManager.CatsScreenEvent.CloseAllFavoriteAnimals)
+    }
 }

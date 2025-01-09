@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mustafacan.ui_birds.feature.birds.list.BirdList
 import com.mustafacan.ui_common.R
+import com.mustafacan.ui_common.components.allfavoriteanimals.ShowAllFavoriteAnimals
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForApiRequest
 import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForSearch
 import com.mustafacan.ui_common.components.image.ImageViewer
@@ -38,7 +39,8 @@ fun BirdsScreen(navController: NavController) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val effect = rememberFlowWithLifecycle(viewModel.effect)
 
-    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = {}, state.value.allFavoriteAnimals.getCount()),
+    val actionListForToolbar = listOf(ToolbarAction.Favorites(action = { viewModel.showAllFavoriteAnimals() },
+        state.value.allFavoriteAnimals.getCount()),
             ToolbarAction.OpenSettings(action = { viewModel.navigateToSettings() }))
 
     LaunchedEffect(Unit) { viewModel.loadSettings() }
@@ -70,7 +72,13 @@ fun BirdsScreen(navController: NavController) {
 
         //bird list
         BirdListContent(viewModel, state)
+
     }
+
+    if (state.value.showAllFavoriteAnimalsPopup) {
+        ShowAllFavoriteAnimals(allFavoriteAnimals = state.value.allFavoriteAnimals, onDismiss = { viewModel.closeAllFavoriteAnimals() })
+    }
+
 }
 
 @SuppressLint("StateFlowValueCalledInComposition")

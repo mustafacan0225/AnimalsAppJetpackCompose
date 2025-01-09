@@ -238,4 +238,14 @@ class DogsViewModel @Inject constructor(
     fun closeBigImage() {
         sendEvent(DogsScreenUiStateManager.DogsScreenEvent.CloseBigImage)
     }
+
+    fun showAllFavoriteAnimals() {
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.ShowAllFavoriteAnimals)
+    }
+
+    fun closeAllFavoriteAnimals() {
+        sendEvent(DogsScreenUiStateManager.DogsScreenEvent.CloseAllFavoriteAnimals)
+    }
+
+
 }

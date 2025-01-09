@@ -26,6 +26,8 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
         data class ShowBigImage(val bird: Bird) : BirdsScreenEvent()
         object CloseBigImage : BirdsScreenEvent()
         data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : BirdsScreenEvent()
+        object ShowAllFavoriteAnimals : BirdsScreenEvent()
+        object CloseAllFavoriteAnimals : BirdsScreenEvent()
     }
 
     @Immutable
@@ -41,7 +43,8 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedBirdForBigImage: Bird? = null,
-        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals(),
+        val showAllFavoriteAnimalsPopup: Boolean = false
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): BirdsScreenState {
@@ -149,6 +152,13 @@ class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.Bir
                 previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
             }
 
+            BirdsScreenEvent.CloseAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = false) to null
+            }
+
+            BirdsScreenEvent.ShowAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = true) to null
+            }
         }
     }
 

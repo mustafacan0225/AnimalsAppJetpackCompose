@@ -26,6 +26,8 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
         data class ShowBigImage(val dog: Dog) : DogsScreenEvent()
         object CloseBigImage : DogsScreenEvent()
         data class AllFavoriteAnimalsChanged(val allFavoriteAnimals: AllFavoriteAnimals) : DogsScreenEvent()
+        object ShowAllFavoriteAnimals : DogsScreenEvent()
+        object CloseAllFavoriteAnimals : DogsScreenEvent()
     }
 
     @Immutable
@@ -41,7 +43,8 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
         val searchType: SearchType = SearchType.LOCAL_SEARCH, val showSettings: Boolean, val favoriteAnimalCount: Int,
         val showBigImage: Boolean = false,
         val selectedDogForBigImage: Dog? = null,
-        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals()
+        val allFavoriteAnimals: AllFavoriteAnimals = AllFavoriteAnimals(),
+        val showAllFavoriteAnimalsPopup: Boolean = false
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(): DogsScreenState {
@@ -147,6 +150,14 @@ class DogsScreenUiStateManager() : UiStateManager<DogsScreenUiStateManager.DogsS
 
             is DogsScreenEvent.AllFavoriteAnimalsChanged -> {
                 previousState.copy(allFavoriteAnimals = event.allFavoriteAnimals) to null
+            }
+
+            DogsScreenEvent.CloseAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = false) to null
+            }
+
+            DogsScreenEvent.ShowAllFavoriteAnimals -> {
+                previousState.copy(showAllFavoriteAnimalsPopup = true) to null
             }
         }
     }

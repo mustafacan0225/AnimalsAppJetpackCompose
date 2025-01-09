@@ -236,4 +236,12 @@ class BirdsViewModel @Inject constructor(
         sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.CloseBigImage)
     }
 
+    fun showAllFavoriteAnimals() {
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.ShowAllFavoriteAnimals)
+    }
+
+    fun closeAllFavoriteAnimals() {
+        sendEvent(BirdsScreenUiStateManager.BirdsScreenEvent.CloseAllFavoriteAnimals)
+    }
+
 }
