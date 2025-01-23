@@ -36,6 +36,8 @@ import org.junit.runner.Description
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import com.mustafacan.dogs.R
+import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 
 class DogsViewModelTest {
     private val context: Context = mock()
@@ -51,6 +53,7 @@ class DogsViewModelTest {
     private val saveSearchTypeUseCase: SaveSearchTypeUseCase = mock()
     private val saveSettingsTypeUseCase: SaveSettingsTypeUseCase = mock()
     private val getDogsWithTemporaryDataUseCase: GetDogsWithTemporaryDataUseCase = mock()
+    private val getAllFavoriteAnimalsUseCase: GetAllFavoriteAnimalsUseCase = mock()
     private lateinit var viewModel: DogsViewModel
 
     @get:Rule(order = 1)
@@ -59,7 +62,8 @@ class DogsViewModelTest {
     @Before
     fun setUp() = runTest{
         `when`(getFavoriteDogsUseCase.runUseCase()).thenReturn(flowOf(listOf()))
-        viewModel = DogsViewModel(context, getDogsUseCase, searchForDogsUseCase, addFavoriteDogUseCase, getFavoriteDogsUseCase, deleteFavoriteDogUseCase, getSearchTypeUseCase, getListTypeUseCase, getSettingsTypeUseCase, saveListTypeUseCase, saveSearchTypeUseCase, saveSettingsTypeUseCase, getDogsWithTemporaryDataUseCase)
+        `when`(getAllFavoriteAnimalsUseCase.runUseCase()).thenReturn(flowOf(AllFavoriteAnimals()))
+        viewModel = DogsViewModel(context, getDogsUseCase, searchForDogsUseCase, addFavoriteDogUseCase, getFavoriteDogsUseCase, deleteFavoriteDogUseCase, getSearchTypeUseCase, getListTypeUseCase, getSettingsTypeUseCase, saveListTypeUseCase, saveSearchTypeUseCase, saveSettingsTypeUseCase, getDogsWithTemporaryDataUseCase, getAllFavoriteAnimalsUseCase)
 
     }
 
