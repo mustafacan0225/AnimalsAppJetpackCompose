@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">reminder</string>
+    <string name="reminder">Reminder</string>
+    <string name="reminder_switch_text_dogs">Reminder notifications for dogs</string>
+    <string name="reminder_switch_text_cats">Reminder notifications for cats</string>
+    <string name="reminder_switch_text_birds">Reminder notifications for birds</string>
+    <string name="reminder_title_dogs">Reminder For Dogs</string>
+    <string name="reminder_title_cats">Reminder For Cats</string>
+    <string name="reminder_title_birds">Reminder For Birds</string>
+    <string name="reminder_title">Reminder From WorkManager</string>
+
+    <string name="reminder_description">You can activate periodic reminder notifications. Even if the application is closed, a request will be sent to the rest API in the background and the data received from the remote server will be displayed as a notification.</string>
+    <string name="reminder_workmanager">WorkManager is used for this feature.</string>
+    <string name="reminder_message_dogs">Current dog count %s. This data is taken from remote server.</string>
+    <string name="reminder_message_cats">Current cat count %s. This data is taken from remote server.</string>
+    <string name="reminder_message_birds">Current bird count %s. This data is taken from remote server.</string>
+</resources>
