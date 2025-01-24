@@ -65,8 +65,8 @@ A Clean Architecture App to show use of multi-module-architecture in a Jetpack C
     <td>APP MODULES</td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/80dced72-2e2e-4d85-9a9c-07e8fd64eb4d"></td>
-     <td width="25%"><img src="https://github.com/user-attachments/assets/a70e38d8-0dcf-4905-b2cb-7cff0468ed96"></td>
+    <td><img src="https://github.com/user-attachments/assets/0d2eb2a6-b83b-43ca-8958-65ba635f4242"></td>
+     <td width="25%"><img src="https://github.com/user-attachments/assets/1352e4ae-e208-4748-be41-197032a30364"></td>
   </tr>
  </table>
  <br>
