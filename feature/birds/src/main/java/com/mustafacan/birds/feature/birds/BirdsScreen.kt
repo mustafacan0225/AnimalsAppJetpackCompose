@@ -14,23 +14,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mustafacan.birds.feature.birds.list.BirdList
-import com.mustafacan.ui_common.R
-import com.mustafacan.ui_common.components.allfavoriteanimals.ShowAllFavoriteAnimals
-import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForApiRequest
-import com.mustafacan.ui_common.components.emptyscreen.EmptyResultForSearch
-import com.mustafacan.ui_common.components.image.ImageViewer
-import com.mustafacan.ui_common.components.loading.LoadingErrorScreen
-import com.mustafacan.ui_common.components.loading.LoadingScreen
-import com.mustafacan.ui_common.components.searchbar.LocalSearch
-import com.mustafacan.ui_common.components.searchbar.RemoteSearch
-import com.mustafacan.ui_common.components.settings.SettingsScreenWithBottomSheet
-import com.mustafacan.ui_common.components.settings.SettingsScreenWithPopup
-import com.mustafacan.ui_common.components.toolbar.Toolbar
-import com.mustafacan.ui_common.components.toolbar.ToolbarAction
-import com.mustafacan.ui_common.model.enums.SearchType
-import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
-import com.mustafacan.ui_common.util.rememberFlowWithLifecycle
+import com.mustafacan.core.R
+import com.mustafacan.core.components.allfavoriteanimals.ShowAllFavoriteAnimals
+import com.mustafacan.core.components.emptyscreen.EmptyResultForApiRequest
+import com.mustafacan.core.components.emptyscreen.EmptyResultForSearch
+import com.mustafacan.core.components.image.ImageViewer
+import com.mustafacan.core.components.loading.LoadingErrorScreen
+import com.mustafacan.core.components.loading.LoadingScreen
+import com.mustafacan.core.components.searchbar.LocalSearch
+import com.mustafacan.core.components.searchbar.RemoteSearch
+import com.mustafacan.core.components.settings.SettingsScreenWithBottomSheet
+import com.mustafacan.core.components.settings.SettingsScreenWithPopup
+import com.mustafacan.core.components.toolbar.Toolbar
+import com.mustafacan.core.components.toolbar.ToolbarAction
+import com.mustafacan.core.model.enums.SearchType
+import com.mustafacan.core.model.enums.ViewTypeForSettings
+import com.mustafacan.core.navigation.root.NavDestinationItem
+import com.mustafacan.core.util.rememberFlowWithLifecycle
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable

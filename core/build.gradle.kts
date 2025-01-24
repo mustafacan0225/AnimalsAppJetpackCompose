@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mustafacan.ui_common"
+    namespace = "com.mustafacan.core"
     compileSdk = 34
 
     defaultConfig {

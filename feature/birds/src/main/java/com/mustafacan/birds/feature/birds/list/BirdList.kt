@@ -44,9 +44,9 @@ import androidx.constraintlayout.compose.atMost
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.birds.R
 import com.mustafacan.birds.feature.birds.BirdsScreenUiStateManager
-import com.mustafacan.ui_common.components.image.CircleImage
-import com.mustafacan.ui_common.components.lottie.LikeAnimation
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
+import com.mustafacan.core.components.image.CircleImage
+import com.mustafacan.core.components.lottie.LikeAnimation
+import com.mustafacan.core.model.enums.ViewTypeForList
 
 @Composable
 fun BirdList(

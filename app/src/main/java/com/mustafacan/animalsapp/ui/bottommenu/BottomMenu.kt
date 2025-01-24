@@ -20,7 +20,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mustafacan.animalsapp.R
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
+import com.mustafacan.core.navigation.root.NavDestinationItem
 
 @Composable
 fun BottomMenu(

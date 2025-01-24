@@ -2,7 +2,7 @@ package com.mustafacan.birds.feature.detail
 
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.ui_common.viewmodel.UiStateManager
+import com.mustafacan.core.viewmodel.UiStateManager
 
 class BirdDetailScreenUiStateManager() :
     UiStateManager<BirdDetailScreenUiStateManager.BirdDetailScreenState, BirdDetailScreenUiStateManager.BirdDetailScreenEvent, BirdDetailScreenUiStateManager.BirdDetailScreenEffect> {

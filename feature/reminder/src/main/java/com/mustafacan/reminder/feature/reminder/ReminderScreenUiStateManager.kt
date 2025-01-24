@@ -2,7 +2,7 @@ package com.mustafacan.reminder.feature.reminder
 
 import androidx.compose.runtime.Immutable
 import com.mustafacan.data.local.datasource.sharedpref.reminder.LocalDataSourceReminder
-import com.mustafacan.ui_common.viewmodel.UiStateManager
+import com.mustafacan.core.viewmodel.UiStateManager
 
 class ReminderScreenUiStateManager() :
     UiStateManager<ReminderScreenUiStateManager.ReminderScreenState, ReminderScreenUiStateManager.ReminderScreenEvent, ReminderScreenUiStateManager.ReminderScreenEffect> {

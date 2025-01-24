@@ -37,10 +37,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.birds.R
-import com.mustafacan.ui_common.components.image.CircleImage
-import com.mustafacan.ui_common.components.image.ImageViewer
-import com.mustafacan.ui_common.components.lottie.LikeAnimation
-import com.mustafacan.ui_common.components.toolbar.Toolbar
+import com.mustafacan.core.components.image.CircleImage
+import com.mustafacan.core.components.image.ImageViewer
+import com.mustafacan.core.components.lottie.LikeAnimation
+import com.mustafacan.core.components.toolbar.Toolbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

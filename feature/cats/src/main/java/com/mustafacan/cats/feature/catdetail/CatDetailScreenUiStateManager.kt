@@ -3,8 +3,8 @@ package com.mustafacan.cats.feature.catdetail
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.cats.Cat
-import com.mustafacan.ui_common.model.enums.ViewTypeForTab
-import com.mustafacan.ui_common.viewmodel.UiStateManager
+import com.mustafacan.core.model.enums.ViewTypeForTab
+import com.mustafacan.core.viewmodel.UiStateManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

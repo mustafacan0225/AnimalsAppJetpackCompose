@@ -30,15 +30,15 @@ import androidx.navigation.NavController
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.cats.R
 import com.mustafacan.cats.feature.catdetail.pager.PagerCatDetail
-import com.mustafacan.ui_common.components.image.CircleImage
-import com.mustafacan.ui_common.components.image.ImageViewer
-import com.mustafacan.ui_common.components.lottie.LikeAnimation
-import com.mustafacan.ui_common.components.settings.SettingsDialog
-import com.mustafacan.ui_common.components.tab.ScrollableTabRowWithCustomIndicator
-import com.mustafacan.ui_common.components.tab.ScrollableTabRowWithDefaultIndicator
-import com.mustafacan.ui_common.components.toolbar.Toolbar
-import com.mustafacan.ui_common.components.toolbar.ToolbarAction
-import com.mustafacan.ui_common.model.enums.ViewTypeForTab
+import com.mustafacan.core.components.image.CircleImage
+import com.mustafacan.core.components.image.ImageViewer
+import com.mustafacan.core.components.lottie.LikeAnimation
+import com.mustafacan.core.components.settings.SettingsDialog
+import com.mustafacan.core.components.tab.ScrollableTabRowWithCustomIndicator
+import com.mustafacan.core.components.tab.ScrollableTabRowWithDefaultIndicator
+import com.mustafacan.core.components.toolbar.Toolbar
+import com.mustafacan.core.components.toolbar.ToolbarAction
+import com.mustafacan.core.model.enums.ViewTypeForTab
 
 @Composable
 fun CatDetailScreen(navController: NavController, viewModel: CatDetailViewModel) {

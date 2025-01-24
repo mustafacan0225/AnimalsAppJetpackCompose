@@ -16,9 +16,9 @@ import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveListTypeUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSearchTypeUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSettingsTypeUseCase
 import com.mustafacan.domain.usecase.dogs.temp.GetDogsWithTemporaryDataUseCase
-import com.mustafacan.ui_common.model.enums.SearchType
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
-import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
+import com.mustafacan.core.model.enums.SearchType
+import com.mustafacan.core.model.enums.ViewTypeForList
+import com.mustafacan.core.model.enums.ViewTypeForSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf

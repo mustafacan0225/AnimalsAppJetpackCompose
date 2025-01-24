@@ -43,9 +43,9 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.atLeast
 import androidx.constraintlayout.compose.atMost
 import com.mustafacan.domain.model.dogs.Dog
-import com.mustafacan.ui_common.components.image.CircleImage
-import com.mustafacan.ui_common.components.lottie.LikeAnimation
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
+import com.mustafacan.core.components.image.CircleImage
+import com.mustafacan.core.components.lottie.LikeAnimation
+import com.mustafacan.core.model.enums.ViewTypeForList
 import com.mustafacan.dogs.R
 import com.mustafacan.dogs.feature.dogs.DogsScreenUiStateManager
 

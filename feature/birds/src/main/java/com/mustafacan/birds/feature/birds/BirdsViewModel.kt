@@ -17,10 +17,10 @@ import com.mustafacan.domain.usecase.birds.sharedpref_usecase.SaveListTypeUseCas
 import com.mustafacan.domain.usecase.birds.sharedpref_usecase.SaveSearchTypeUseCase
 import com.mustafacan.domain.usecase.birds.sharedpref_usecase.SaveSettingsTypeUseCase
 import com.mustafacan.domain.usecase.birds.temp.GetBirdsWithTemporaryDataUseCase
-import com.mustafacan.ui_common.model.enums.SearchType
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
-import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.viewmodel.BaseViewModel
+import com.mustafacan.core.model.enums.SearchType
+import com.mustafacan.core.model.enums.ViewTypeForList
+import com.mustafacan.core.model.enums.ViewTypeForSettings
+import com.mustafacan.core.viewmodel.BaseViewModel
 import com.mustafacan.birds.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

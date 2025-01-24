@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mustafacan.animalsapp.ui.screen.main.MainScreen
 import com.mustafacan.animalsapp.ui.theme.AnimalsAppTheme
-import com.mustafacan.ui_common.util.hasNotificationPermission
+import com.mustafacan.core.util.hasNotificationPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

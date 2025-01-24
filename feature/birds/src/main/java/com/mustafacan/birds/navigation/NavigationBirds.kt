@@ -10,8 +10,8 @@ import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.birds.feature.birds.BirdsScreen
 import com.mustafacan.birds.feature.detail.BirdDetailScreen
 import com.mustafacan.birds.feature.detail.BirdDetailViewModel
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
-import com.mustafacan.ui_common.navigation.root.fromCustom
+import com.mustafacan.core.navigation.root.NavDestinationItem
+import com.mustafacan.core.navigation.root.fromCustom
 import kotlin.reflect.typeOf
 
 @Composable

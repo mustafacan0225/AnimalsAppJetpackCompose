@@ -8,7 +8,7 @@
     <string name="error_message">An error occurred</string>
     <string name="view_mode_lazy_column">Lazy Column</string>
     <string name="view_mode_lazy_vertical_grid">Lazy Vertical Grid</string>
-    <string name="view_mode_description">select view type for dog list</string>
+    <string name="view_mode_description">select view type for list</string>
     <string name="settings_apply">Apply</string>
     <string name="view_mode_settings_popup">Popup</string>
     <string name="view_mode_settings_bottomsheet">Bottomsheet</string>

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mustafacan.ui_common.components.toolbar.Toolbar
+import com.mustafacan.core.components.toolbar.Toolbar
 import com.mustafacan.reminder.R
 import androidx.compose.runtime.State
 import androidx.compose.ui.res.painterResource

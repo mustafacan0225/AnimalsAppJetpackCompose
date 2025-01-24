@@ -10,8 +10,8 @@ import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.DeleteFavoriteCatUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetTabTypeUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.SaveTabTypeUseCase
-import com.mustafacan.ui_common.model.enums.ViewTypeForTab
-import com.mustafacan.ui_common.viewmodel.BaseViewModel
+import com.mustafacan.core.model.enums.ViewTypeForTab
+import com.mustafacan.core.viewmodel.BaseViewModel
 import com.mustafacan.cats.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

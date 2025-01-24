@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.domain.model.dogs.Dog
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
-import com.mustafacan.ui_common.navigation.root.fromCustom
+import com.mustafacan.core.navigation.root.NavDestinationItem
+import com.mustafacan.core.navigation.root.fromCustom
 import com.mustafacan.dogs.feature.dogdetail.DogDetailScreen
 import com.mustafacan.dogs.feature.dogdetail.DogDetailViewModel
 import com.mustafacan.dogs.feature.dogs.DogsScreen

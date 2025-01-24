@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ui_common</string>
+    <string name="app_name">core</string>
     <string name="bottom_menu_title_dogs">Dogs</string>
     <string name="bottom_menu_title_cats">Cats</string>
     <string name="bottom_menu_title_birds">Birds</string>
@@ -11,7 +11,7 @@
     <string name="search_type_description">select type for search settings</string>
     <string name="view_mode_lazy_column">Lazy Column</string>
     <string name="view_mode_lazy_vertical_grid">Lazy Vertical Grid</string>
-    <string name="view_mode_description">select view type for dog list</string>
+    <string name="view_mode_description">select view type for list</string>
     <string name="view_mode_settings_popup">Popup</string>
     <string name="view_mode_settings_bottomsheet">Bottomsheet</string>
     <string name="view_mode_settings_description">select view type for settings</string>

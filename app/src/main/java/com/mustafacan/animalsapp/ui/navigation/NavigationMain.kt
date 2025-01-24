@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.birds.navigation.NavigationBirds
 import com.mustafacan.cats.navigation.NavigationCats
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
+import com.mustafacan.core.navigation.root.NavDestinationItem
 import com.mustafacan.dogs.navigation.NavigationDogs
 import com.mustafacan.reminder.navigation.NavigationReminder
 

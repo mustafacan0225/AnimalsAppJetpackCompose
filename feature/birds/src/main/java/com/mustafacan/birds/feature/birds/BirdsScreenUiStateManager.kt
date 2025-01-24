@@ -3,10 +3,10 @@ package com.mustafacan.birds.feature.birds
 import androidx.compose.runtime.Immutable
 import com.mustafacan.domain.model.AllFavoriteAnimals
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.ui_common.model.enums.SearchType
-import com.mustafacan.ui_common.model.enums.ViewTypeForList
-import com.mustafacan.ui_common.model.enums.ViewTypeForSettings
-import com.mustafacan.ui_common.viewmodel.UiStateManager
+import com.mustafacan.core.model.enums.SearchType
+import com.mustafacan.core.model.enums.ViewTypeForList
+import com.mustafacan.core.model.enums.ViewTypeForSettings
+import com.mustafacan.core.viewmodel.UiStateManager
 
 class BirdsScreenUiStateManager() : UiStateManager<BirdsScreenUiStateManager.BirdsScreenState, BirdsScreenUiStateManager.BirdsScreenEvent, BirdsScreenUiStateManager.BirdsScreenEffect> {
 

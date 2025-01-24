@@ -10,8 +10,8 @@ import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.cats.feature.catdetail.CatDetailScreen
 import com.mustafacan.cats.feature.catdetail.CatDetailViewModel
 import com.mustafacan.cats.feature.cats.CatsScreen
-import com.mustafacan.ui_common.navigation.root.NavDestinationItem
-import com.mustafacan.ui_common.navigation.root.fromCustom
+import com.mustafacan.core.navigation.root.NavDestinationItem
+import com.mustafacan.core.navigation.root.fromCustom
 import kotlin.reflect.typeOf
 
 @Composable

@@ -4,9 +4,9 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.data.local.datasource.sharedpref.reminder.LocalDataSourceReminder
-import com.mustafacan.ui_common.util.hasNotificationPermission
-import com.mustafacan.ui_common.util.openPermissionsPage
-import com.mustafacan.ui_common.viewmodel.BaseViewModel
+import com.mustafacan.core.util.hasNotificationPermission
+import com.mustafacan.core.util.openPermissionsPage
+import com.mustafacan.core.viewmodel.BaseViewModel
 import com.mustafacan.reminder.R
 import com.mustafacan.reminder.feature.worker.ReminderWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
