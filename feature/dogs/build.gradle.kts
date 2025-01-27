@@ -54,9 +54,8 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":core")))
-    implementation(project(mapOf("path" to ":domain")))
-
+    implementation(project(":core"))
+    implementation(project(":domain"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -74,12 +73,6 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-
-    //workmanager
-    implementation(libs.androidx.hilt.work)
-    kapt(libs.androidx.hilt.compiler)
-    annotationProcessor(libs.androidx.hilt.compiler)
-    implementation(libs.work.runtime)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.viewmodel.compose)

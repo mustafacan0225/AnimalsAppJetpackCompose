@@ -9,7 +9,7 @@ import com.mustafacan.domain.usecase.birds.api_usecase.GetBirdsUseCase
 import com.mustafacan.domain.usecase.birds.api_usecase.SearchForBirdsUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.AddFavoriteBirdUseCase
 import com.mustafacan.domain.usecase.birds.roomdb_usecase.DeleteFavoriteBirdUseCase
-import com.mustafacan.domain.usecase.birds.roomdb_usecase.GetFavoriteBirdsUseCase
+import com.mustafacan.domain.usecase.birds.roomdb_usecase.GetFlowFavoriteBirdsUseCase
 import com.mustafacan.domain.usecase.birds.sharedpref_usecase.GetListTypeUseCase
 import com.mustafacan.domain.usecase.birds.sharedpref_usecase.GetSearchTypeUseCase
 import com.mustafacan.domain.usecase.birds.sharedpref_usecase.GetSettingsTypeUseCase
@@ -36,7 +36,7 @@ class BirdsViewModel @Inject constructor(
     private val getBirdsUseCase: GetBirdsUseCase,
     private val searchForBirdsUseCase: SearchForBirdsUseCase,
     private val addFavoriteBirdUseCase: AddFavoriteBirdUseCase,
-    private val getFavoriteBirdsUseCase: GetFavoriteBirdsUseCase,
+    private val getFlowFavoriteBirdsUseCase: GetFlowFavoriteBirdsUseCase,
     private val deleteFavoriteBirdUseCase: DeleteFavoriteBirdUseCase,
     private val getSearchTypeUseCase: GetSearchTypeUseCase,
     private val getListTypeUseCase: GetListTypeUseCase,
@@ -240,7 +240,7 @@ class BirdsViewModel @Inject constructor(
 
     fun listenFavoriteBirds() {
         viewModelScope.launch {
-            val favoriteBirdsFlow = getFavoriteBirdsUseCase.runUseCase()
+            val favoriteBirdsFlow = getFlowFavoriteBirdsUseCase.runUseCase()
             favoriteBirdsFlow.stateIn(this).collectLatest { favoriteList ->
                 sendEvent(
                     BirdsScreenUiStateManager.BirdsScreenEvent.FavoriteBirdsChanged(

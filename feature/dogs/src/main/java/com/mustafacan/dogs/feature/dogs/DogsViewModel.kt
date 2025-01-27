@@ -8,7 +8,7 @@ import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
 import com.mustafacan.domain.usecase.dogs.temp.GetDogsWithTemporaryDataUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFlowFavoriteDogsUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetListTypeUseCase
@@ -37,7 +37,7 @@ class DogsViewModel @Inject constructor(
     private val getDogsUseCase: GetDogsUseCase,
     private val searchForDogsUseCase: SearchForDogsUseCase,
     private val addFavoriteDogUseCase: AddFavoriteDogUseCase,
-    private val getFavoriteDogsUseCase: GetFavoriteDogsUseCase,
+    private val getFlowFavoriteDogsUseCase: GetFlowFavoriteDogsUseCase,
     private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase,
     private val getSearchTypeUseCase: GetSearchTypeUseCase,
     private val getListTypeUseCase: GetListTypeUseCase,
@@ -243,7 +243,7 @@ class DogsViewModel @Inject constructor(
 
     fun listenFavoriteDogs() {
         viewModelScope.launch {
-            val favoriteDogs = getFavoriteDogsUseCase.runUseCase()
+            val favoriteDogs = getFlowFavoriteDogsUseCase.runUseCase()
             favoriteDogs.stateIn(this).collectLatest { favoriteList ->
                 sendEvent(DogsScreenUiStateManager.DogsScreenEvent.FavoriteDogsChanged(favoriteList))
             }

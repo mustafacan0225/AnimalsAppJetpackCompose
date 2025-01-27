@@ -21,10 +21,13 @@ dependencyResolutionManagement {
 
 rootProject.name = "AnimalsApp"
 include(":app")
+include(":data:network")
+include(":data:roomdb")
+include(":data:sharedpreferences")
 include(":domain")
-include(":data")
 include(":core")
 include(":feature:dogs")
 include(":feature:reminder")
 include(":feature:birds")
 include(":feature:cats")
+

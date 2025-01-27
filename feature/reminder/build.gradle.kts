@@ -53,9 +53,9 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":core")))
-    implementation(project(mapOf("path" to ":domain")))
-    implementation(project(mapOf("path" to ":data")))
+    implementation(project(":core"))
+    implementation(project(":domain"))
+    implementation(project(":data:sharedpreferences"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)

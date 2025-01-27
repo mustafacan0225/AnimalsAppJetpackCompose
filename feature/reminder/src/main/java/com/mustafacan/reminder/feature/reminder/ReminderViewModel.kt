@@ -3,10 +3,10 @@ package com.mustafacan.reminder.feature.reminder
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.data.local.datasource.sharedpref.reminder.LocalDataSourceReminder
 import com.mustafacan.core.util.hasNotificationPermission
 import com.mustafacan.core.util.openPermissionsPage
 import com.mustafacan.core.viewmodel.BaseViewModel
+import com.mustafacan.data.sharedpreferences.reminder.ReminderSettings
 import com.mustafacan.reminder.R
 import com.mustafacan.reminder.feature.worker.ReminderWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,12 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReminderViewModel @Inject constructor(@ApplicationContext private val context: Context,
-                                            private val localDataSourceReminder: LocalDataSourceReminder) :
+                                            private val reminderSettings: ReminderSettings) :
     BaseViewModel<ReminderScreenUiStateManager.ReminderScreenState,
             ReminderScreenUiStateManager.ReminderScreenEvent,
             ReminderScreenUiStateManager.ReminderScreenEffect>(
         initialState = ReminderScreenUiStateManager.ReminderScreenState.initial(
-            localDataSourceReminder
+            reminderSettings
         ), uiStateManager = ReminderScreenUiStateManager()
     ) {
 
@@ -48,7 +48,7 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
     }
 
     fun saveDogsReminder(isReminder: Boolean) {
-        localDataSourceReminder.saveReminderDogs(isReminder)
+        reminderSettings.saveReminderDogs(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.DogsReminderUpdate(isReminder))
     }
 
@@ -74,7 +74,7 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
     }
 
     fun saveCatsReminder(isReminder: Boolean) {
-        localDataSourceReminder.saveReminderCats(isReminder)
+        reminderSettings.saveReminderCats(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.CatsReminderUpdate(isReminder))
     }
 
@@ -100,7 +100,7 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
     }
 
     fun saveBirdsReminder(isReminder: Boolean) {
-        localDataSourceReminder.saveReminderBirds(isReminder)
+        reminderSettings.saveReminderBirds(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.BirdsReminderUpdate(isReminder))
     }
 }

@@ -8,7 +8,7 @@ import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
 import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
 import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFlowFavoriteDogsUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetListTypeUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSearchTypeUseCase
 import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSettingsTypeUseCase
@@ -44,7 +44,7 @@ class DogsViewModelTest {
     private val getDogsUseCase: GetDogsUseCase = mock()
     private val searchForDogsUseCase: SearchForDogsUseCase = mock()
     private val addFavoriteDogUseCase: AddFavoriteDogUseCase = mock()
-    private val getFavoriteDogsUseCase: GetFavoriteDogsUseCase = mock()
+    private val getFlowFavoriteDogsUseCase: GetFlowFavoriteDogsUseCase = mock()
     private val deleteFavoriteDogUseCase: DeleteFavoriteDogUseCase = mock()
     private val getSearchTypeUseCase: GetSearchTypeUseCase = mock()
     private val getListTypeUseCase: GetListTypeUseCase = mock()
@@ -61,9 +61,9 @@ class DogsViewModelTest {
 
     @Before
     fun setUp() = runTest{
-        `when`(getFavoriteDogsUseCase.runUseCase()).thenReturn(flowOf(listOf()))
+        `when`(getFlowFavoriteDogsUseCase.runUseCase()).thenReturn(flowOf(listOf()))
         `when`(getAllFavoriteAnimalsUseCase.runUseCase()).thenReturn(flowOf(AllFavoriteAnimals()))
-        viewModel = DogsViewModel(context, getDogsUseCase, searchForDogsUseCase, addFavoriteDogUseCase, getFavoriteDogsUseCase, deleteFavoriteDogUseCase, getSearchTypeUseCase, getListTypeUseCase, getSettingsTypeUseCase, saveListTypeUseCase, saveSearchTypeUseCase, saveSettingsTypeUseCase, getDogsWithTemporaryDataUseCase, getAllFavoriteAnimalsUseCase)
+        viewModel = DogsViewModel(context, getDogsUseCase, searchForDogsUseCase, addFavoriteDogUseCase, getFlowFavoriteDogsUseCase, deleteFavoriteDogUseCase, getSearchTypeUseCase, getListTypeUseCase, getSettingsTypeUseCase, saveListTypeUseCase, saveSearchTypeUseCase, saveSettingsTypeUseCase, getDogsWithTemporaryDataUseCase, getAllFavoriteAnimalsUseCase)
 
     }
 

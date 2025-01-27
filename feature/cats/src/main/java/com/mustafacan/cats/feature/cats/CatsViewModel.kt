@@ -9,7 +9,7 @@ import com.mustafacan.domain.usecase.cats.api_usecase.GetCatsUseCase
 import com.mustafacan.domain.usecase.cats.api_usecase.SearchForCatsUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
 import com.mustafacan.domain.usecase.cats.roomdb_usecase.DeleteFavoriteCatUseCase
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFavoriteCatsUseCase
+import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFlowFavoriteCatsUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetListTypeUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetSearchTypeUseCase
 import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetSettingsTypeUseCase
@@ -36,7 +36,7 @@ class CatsViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase,
     private val searchForCatsUseCase: SearchForCatsUseCase,
     private val addFavoriteCatUseCase: AddFavoriteCatUseCase,
-    private val getFavoriteCatsUseCase: GetFavoriteCatsUseCase,
+    private val getFlowFavoriteCatsUseCase: GetFlowFavoriteCatsUseCase,
     private val deleteFavoriteCatUseCase: DeleteFavoriteCatUseCase,
     private val getSearchTypeUseCase: GetSearchTypeUseCase,
     private val getListTypeUseCase: GetListTypeUseCase,
@@ -242,7 +242,7 @@ class CatsViewModel @Inject constructor(
 
     fun listenFavoriteCats() {
         viewModelScope.launch {
-            val favoriteCatsFlow = getFavoriteCatsUseCase.runUseCase()
+            val favoriteCatsFlow = getFlowFavoriteCatsUseCase.runUseCase()
             favoriteCatsFlow.stateIn(this).collectLatest { favoriteList ->
                 sendEvent(CatsScreenUiStateManager.CatsScreenEvent.FavoriteCatsChanged(favoriteList))
             }

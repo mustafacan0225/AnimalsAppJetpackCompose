@@ -1,8 +1,8 @@
 package com.mustafacan.reminder.feature.reminder
 
 import androidx.compose.runtime.Immutable
-import com.mustafacan.data.local.datasource.sharedpref.reminder.LocalDataSourceReminder
 import com.mustafacan.core.viewmodel.UiStateManager
+import com.mustafacan.data.sharedpreferences.reminder.ReminderSettings
 
 class ReminderScreenUiStateManager() :
     UiStateManager<ReminderScreenUiStateManager.ReminderScreenState, ReminderScreenUiStateManager.ReminderScreenEvent, ReminderScreenUiStateManager.ReminderScreenEffect> {
@@ -25,12 +25,12 @@ class ReminderScreenUiStateManager() :
     ) : UiStateManager.ViewState {
         companion object {
             fun initial(
-                localDataSourceReminder: LocalDataSourceReminder
+                reminderSettings: ReminderSettings
             ): ReminderScreenState {
                 return ReminderScreenState(
-                    dogsReminderState = localDataSourceReminder.getReminderDogs(),
-                    catsReminderState = localDataSourceReminder.getReminderCats(),
-                    birdsReminderState = localDataSourceReminder.getReminderBirds()
+                    dogsReminderState = reminderSettings.getReminderDogs(),
+                    catsReminderState = reminderSettings.getReminderCats(),
+                    birdsReminderState = reminderSettings.getReminderBirds()
                 )
             }
         }

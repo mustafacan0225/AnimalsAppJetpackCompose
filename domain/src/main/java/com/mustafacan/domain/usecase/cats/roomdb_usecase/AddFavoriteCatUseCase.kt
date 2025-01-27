@@ -1,7 +1,7 @@
 package com.mustafacan.domain.usecase.cats.roomdb_usecase
 
 import com.mustafacan.domain.model.cats.Cat
-import com.mustafacan.domain.repository.roomdb_repository.FavoriteAnimalsRepository
+import com.mustafacan.domain.repository.roomdb.FavoriteAnimalsRepository
 import javax.inject.Inject
 
 class AddFavoriteCatUseCase @Inject constructor(private val repository: FavoriteAnimalsRepository) {

@@ -64,11 +64,13 @@ android {
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":core")))
-    implementation(project(mapOf("path" to ":feature:dogs")))
-    implementation(project(mapOf("path" to ":feature:birds")))
-    implementation(project(mapOf("path" to ":feature:cats")))
-    implementation(project(mapOf("path" to ":feature:reminder")))
+    implementation(project(":core"))
+    implementation(project(":feature:dogs"))
+    implementation(project(":feature:birds"))
+    implementation(project(":feature:cats"))
+    implementation(project(":feature:reminder"))
+    implementation(project(":data:network"))
+    implementation(project(":data:roomdb"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -106,4 +108,8 @@ dependencies {
     implementation(libs.glide)
 
     implementation(libs.constraintlayout)
+}
+
+kapt {
+    correctErrorTypes = true
 }
