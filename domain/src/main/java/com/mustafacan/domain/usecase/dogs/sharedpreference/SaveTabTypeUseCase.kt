@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class SaveTabTypeUseCase @Inject constructor(private val repository: DogsSettingsRepository) {
     suspend fun runUseCase(type: String) {
-        return repository.saveTabTypeForDogDetail(type)
+        repository.saveTabTypeForDogDetail(type)
     }
 }

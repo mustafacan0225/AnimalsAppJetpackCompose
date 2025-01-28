@@ -6,7 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.mustafacan.core.util.hasNotificationPermission
 import com.mustafacan.core.util.openPermissionsPage
 import com.mustafacan.core.viewmodel.BaseViewModel
-import com.mustafacan.data.sharedpreferences.reminder.ReminderSettings
+import com.mustafacan.domain.usecase.reminder.GetReminderBirdsUseCase
+import com.mustafacan.domain.usecase.reminder.GetReminderCatsUseCase
+import com.mustafacan.domain.usecase.reminder.GetReminderDogsUseCase
+import com.mustafacan.domain.usecase.reminder.SaveReminderBirdsUseCase
+import com.mustafacan.domain.usecase.reminder.SaveReminderCatsUseCase
+import com.mustafacan.domain.usecase.reminder.SaveReminderDogsUseCase
 import com.mustafacan.reminder.R
 import com.mustafacan.reminder.feature.worker.ReminderWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,40 +20,57 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReminderViewModel @Inject constructor(@ApplicationContext private val context: Context,
-                                            private val reminderSettings: ReminderSettings) :
+class ReminderViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val getReminderDogsUseCase: GetReminderDogsUseCase,
+    private val getReminderCatsUseCase: GetReminderCatsUseCase,
+    private val getReminderBirdsUseCase: GetReminderBirdsUseCase,
+    private val saveReminderDogsUseCase: SaveReminderDogsUseCase,
+    private val saveReminderCatsUseCase: SaveReminderCatsUseCase,
+    private val saveReminderBirdsUseCase: SaveReminderBirdsUseCase
+) :
     BaseViewModel<ReminderScreenUiStateManager.ReminderScreenState,
             ReminderScreenUiStateManager.ReminderScreenEvent,
             ReminderScreenUiStateManager.ReminderScreenEffect>(
-        initialState = ReminderScreenUiStateManager.ReminderScreenState.initial(
-            reminderSettings
-        ), uiStateManager = ReminderScreenUiStateManager()
+        initialState = ReminderScreenUiStateManager.ReminderScreenState.initial(),
+        uiStateManager = ReminderScreenUiStateManager()
     ) {
+
+    init {
+        viewModelScope.launch {
+            updateDogsReminder(getReminderDogsUseCase.runUseCase())
+            updateCatsReminder(getReminderCatsUseCase.runUseCase())
+            updateBirdsReminder(getReminderBirdsUseCase.runUseCase())
+        }
+
+    }
 
     fun dogsReminderUpdate(isReminder: Boolean) {
         viewModelScope.launch {
             if (isReminder) {
                 if (context.hasNotificationPermission()) {
-                    saveDogsReminder(isReminder)
-                    ReminderWorker.initWorker(context,
+                    updateDogsReminder(isReminder)
+                    ReminderWorker.initWorker(
+                        context,
                         ReminderWorker.ReminderType.REMINDER_DOGS,
                         R.string.reminder_title_dogs,
-                        R.drawable.temperament)
+                        R.drawable.temperament
+                    )
                 } else {
                     Toast.makeText(context, "Permission Required", Toast.LENGTH_LONG).show()
                     context.openPermissionsPage()
                 }
 
             } else {
-                saveDogsReminder(isReminder)
+                updateDogsReminder(isReminder)
                 ReminderWorker.cancelWorker(context, ReminderWorker.ReminderType.REMINDER_DOGS.name)
             }
         }
 
     }
 
-    fun saveDogsReminder(isReminder: Boolean) {
-        reminderSettings.saveReminderDogs(isReminder)
+    suspend fun updateDogsReminder(isReminder: Boolean) {
+        saveReminderDogsUseCase.runUseCase(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.DogsReminderUpdate(isReminder))
     }
 
@@ -56,25 +78,27 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
         viewModelScope.launch {
             if (isReminder) {
                 if (context.hasNotificationPermission()) {
-                    saveCatsReminder(isReminder)
-                    ReminderWorker.initWorker(context,
+                    updateCatsReminder(isReminder)
+                    ReminderWorker.initWorker(
+                        context,
                         ReminderWorker.ReminderType.REMINDER_CATS,
                         R.string.reminder_title_cats,
-                        R.drawable.kitten)
+                        R.drawable.kitten
+                    )
                 } else {
                     Toast.makeText(context, "Permission Required", Toast.LENGTH_LONG).show()
                     context.openPermissionsPage()
                 }
 
             } else {
-                saveCatsReminder(isReminder)
+                updateCatsReminder(isReminder)
                 ReminderWorker.cancelWorker(context, ReminderWorker.ReminderType.REMINDER_CATS.name)
             }
         }
     }
 
-    fun saveCatsReminder(isReminder: Boolean) {
-        reminderSettings.saveReminderCats(isReminder)
+    suspend fun updateCatsReminder(isReminder: Boolean) {
+        saveReminderCatsUseCase.runUseCase(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.CatsReminderUpdate(isReminder))
     }
 
@@ -82,25 +106,30 @@ class ReminderViewModel @Inject constructor(@ApplicationContext private val cont
         viewModelScope.launch {
             if (isReminder) {
                 if (context.hasNotificationPermission()) {
-                    saveBirdsReminder(isReminder)
-                    ReminderWorker.initWorker(context,
+                    updateBirdsReminder(isReminder)
+                    ReminderWorker.initWorker(
+                        context,
                         ReminderWorker.ReminderType.REMINDER_BIRDS,
                         R.string.reminder_title_birds,
-                        R.drawable.bird)
+                        R.drawable.bird
+                    )
                 } else {
                     Toast.makeText(context, "Permission Required", Toast.LENGTH_LONG).show()
                     context.openPermissionsPage()
                 }
 
             } else {
-                saveBirdsReminder(isReminder)
-                ReminderWorker.cancelWorker(context, ReminderWorker.ReminderType.REMINDER_BIRDS.name)
+                updateBirdsReminder(isReminder)
+                ReminderWorker.cancelWorker(
+                    context,
+                    ReminderWorker.ReminderType.REMINDER_BIRDS.name
+                )
             }
         }
     }
 
-    fun saveBirdsReminder(isReminder: Boolean) {
-        reminderSettings.saveReminderBirds(isReminder)
+    suspend fun updateBirdsReminder(isReminder: Boolean) {
+        saveReminderBirdsUseCase.runUseCase(isReminder)
         sendEvent(ReminderScreenUiStateManager.ReminderScreenEvent.BirdsReminderUpdate(isReminder))
     }
 }

@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class SaveListTypeUseCase @Inject constructor(private val repository: CatsSettingsRepository) {
     suspend fun runUseCase(type: String) {
-        return repository.saveListTypeForCatList(type)
+        repository.saveListTypeForCatList(type)
     }
 }

@@ -8,9 +8,12 @@ import com.mustafacan.data.sharedpreferences.cats.CatsSettings
 import com.mustafacan.data.sharedpreferences.cats.CatsSettingsRepositoryImpl
 import com.mustafacan.data.sharedpreferences.dogs.DogsSettings
 import com.mustafacan.data.sharedpreferences.dogs.DogsSettingsRepositoryImpl
+import com.mustafacan.data.sharedpreferences.reminder.ReminderSettings
+import com.mustafacan.data.sharedpreferences.reminder.ReminderSettingsRepositoryImpl
 import com.mustafacan.domain.repository.sharedpreference.BirdsSettingsRepository
 import com.mustafacan.domain.repository.sharedpreference.CatsSettingsRepository
 import com.mustafacan.domain.repository.sharedpreference.DogsSettingsRepository
+import com.mustafacan.domain.repository.sharedpreference.ReminderSettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +47,12 @@ object SharedPreferencesModule {
     @Provides
     fun provideCatsSettings(catSettings: CatsSettings): CatsSettingsRepository {
         return CatsSettingsRepositoryImpl(catSettings)
+    }
+
+    @Singleton
+    @Provides
+    fun provideReminderSettings(reminderSettings: ReminderSettings): ReminderSettingsRepository {
+        return ReminderSettingsRepositoryImpl(reminderSettings)
     }
 
 }

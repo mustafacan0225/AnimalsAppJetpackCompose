@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class SaveTabTypeUseCase @Inject constructor(private val repository: CatsSettingsRepository) {
     suspend fun runUseCase(type: String) {
-        return repository.saveTabTypeForCatDetail(type)
+        repository.saveTabTypeForCatDetail(type)
     }
 }
