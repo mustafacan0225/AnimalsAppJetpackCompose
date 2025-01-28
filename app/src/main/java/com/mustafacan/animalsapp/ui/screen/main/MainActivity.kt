@@ -1,14 +1,8 @@
-package com.mustafacan.animalsapp.ui
+package com.mustafacan.animalsapp.ui.screen.main
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -20,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mustafacan.animalsapp.ui.screen.main.MainScreen
 import com.mustafacan.animalsapp.ui.theme.AnimalsAppTheme
 import com.mustafacan.core.util.hasNotificationPermission
 import dagger.hilt.android.AndroidEntryPoint

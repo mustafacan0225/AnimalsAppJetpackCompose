@@ -1,4 +1,4 @@
-package com.mustafacan.animalsapp.ui
+package com.mustafacan.animalsapp
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
