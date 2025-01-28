@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.birds.Bird
-import com.mustafacan.domain.usecase.birds.roomdb_usecase.AddFavoriteBirdUseCase
-import com.mustafacan.domain.usecase.birds.roomdb_usecase.DeleteFavoriteBirdUseCase
+import com.mustafacan.domain.usecase.birds.roomdb.AddFavoriteBirdUseCase
+import com.mustafacan.domain.usecase.birds.roomdb.DeleteFavoriteBirdUseCase
 import com.mustafacan.core.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

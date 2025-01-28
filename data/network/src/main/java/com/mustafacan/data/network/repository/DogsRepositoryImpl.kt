@@ -3,11 +3,10 @@ package com.mustafacan.data.network.repository
 import com.mustafacan.data.network.datasource.DogsRemoteDataSource
 import com.mustafacan.data.network.extension.setFavoriteInfo
 import com.mustafacan.data.network.extension.setImages
-//import com.mustafacan.data.roomdb.FavoriteAnimalsDao
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.repository.api_repository.DogsRepository
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.repository.api.DogsRepository
+import com.mustafacan.domain.usecase.dogs.roomdb.GetFavoriteDogsUseCase
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 

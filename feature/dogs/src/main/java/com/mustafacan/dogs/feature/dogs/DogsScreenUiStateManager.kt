@@ -1,7 +1,7 @@
 package com.mustafacan.dogs.feature.dogs
 
 import androidx.compose.runtime.Immutable
-import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.model.all.AllFavoriteAnimals
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.core.model.enums.SearchType
 import com.mustafacan.core.model.enums.ViewTypeForList

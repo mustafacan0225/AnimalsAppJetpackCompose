@@ -4,17 +4,17 @@ import android.content.Context
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.error.CustomException
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.dogs.api_usecase.GetDogsUseCase
-import com.mustafacan.domain.usecase.dogs.api_usecase.SearchForDogsUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.AddFavoriteDogUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.DeleteFavoriteDogUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFlowFavoriteDogsUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetListTypeUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSearchTypeUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.GetSettingsTypeUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveListTypeUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSearchTypeUseCase
-import com.mustafacan.domain.usecase.dogs.sharedpref_usecase.SaveSettingsTypeUseCase
+import com.mustafacan.domain.usecase.dogs.api.GetDogsUseCase
+import com.mustafacan.domain.usecase.dogs.api.SearchForDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.AddFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.DeleteFavoriteDogUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.GetFlowFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.GetListTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.GetSearchTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.GetSettingsTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.SaveListTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.SaveSearchTypeUseCase
+import com.mustafacan.domain.usecase.dogs.sharedpreference.SaveSettingsTypeUseCase
 import com.mustafacan.domain.usecase.dogs.temp.GetDogsWithTemporaryDataUseCase
 import com.mustafacan.core.model.enums.SearchType
 import com.mustafacan.core.model.enums.ViewTypeForList
@@ -36,7 +36,7 @@ import org.junit.runner.Description
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import com.mustafacan.dogs.R
-import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.model.all.AllFavoriteAnimals
 import com.mustafacan.domain.usecase.allanimals.GetAllFavoriteAnimalsUseCase
 
 class DogsViewModelTest {

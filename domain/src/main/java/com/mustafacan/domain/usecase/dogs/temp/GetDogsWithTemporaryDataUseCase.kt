@@ -2,7 +2,6 @@ package com.mustafacan.domain.usecase.dogs.temp
 
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.repository.api_repository.DogsRepository
 import com.mustafacan.domain.repository.temp.TempRepository
 import javax.inject.Inject
 

@@ -1,13 +1,10 @@
 package com.mustafacan.data.network.extension
 
 import com.mustafacan.data.network.datasource.ImagesOfAnimals
-//import com.mustafacan.data.roomdb.FavoriteAnimalsDao
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFavoriteCatsUseCase
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFlowFavoriteCatsUseCase
+import com.mustafacan.domain.usecase.cats.roomdb.GetFavoriteCatsUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 
 suspend fun ApiResponse<List<Cat>>.setImages() {

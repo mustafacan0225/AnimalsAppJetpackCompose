@@ -8,11 +8,9 @@ import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
 import com.mustafacan.domain.repository.temp.TempRepository
-import com.mustafacan.domain.usecase.birds.roomdb_usecase.GetFavoriteBirdsUseCase
-import com.mustafacan.domain.usecase.birds.roomdb_usecase.GetFlowFavoriteBirdsUseCase
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFavoriteCatsUseCase
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.GetFlowFavoriteCatsUseCase
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.birds.roomdb.GetFavoriteBirdsUseCase
+import com.mustafacan.domain.usecase.cats.roomdb.GetFavoriteCatsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.GetFavoriteDogsUseCase
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 

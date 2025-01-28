@@ -10,7 +10,7 @@ import com.mustafacan.data.network.datasource.DogsRemoteDataSource
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.error.CustomException
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.GetFavoriteDogsUseCase
 
 class DogsRepositoryImplTest {
     private val remoteDataSource: DogsRemoteDataSource = mock()

@@ -1,7 +1,7 @@
 package com.mustafacan.birds.feature.birds
 
 import androidx.compose.runtime.Immutable
-import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.model.all.AllFavoriteAnimals
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.core.model.enums.SearchType
 import com.mustafacan.core.model.enums.ViewTypeForList

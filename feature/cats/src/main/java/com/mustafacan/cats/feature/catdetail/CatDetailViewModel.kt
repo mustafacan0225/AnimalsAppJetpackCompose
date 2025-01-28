@@ -6,10 +6,10 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.domain.model.cats.Cat
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.AddFavoriteCatUseCase
-import com.mustafacan.domain.usecase.cats.roomdb_usecase.DeleteFavoriteCatUseCase
-import com.mustafacan.domain.usecase.cats.sharedpref_usecase.GetTabTypeUseCase
-import com.mustafacan.domain.usecase.cats.sharedpref_usecase.SaveTabTypeUseCase
+import com.mustafacan.domain.usecase.cats.roomdb.AddFavoriteCatUseCase
+import com.mustafacan.domain.usecase.cats.roomdb.DeleteFavoriteCatUseCase
+import com.mustafacan.domain.usecase.cats.sharedpreference.GetTabTypeUseCase
+import com.mustafacan.domain.usecase.cats.sharedpreference.SaveTabTypeUseCase
 import com.mustafacan.core.model.enums.ViewTypeForTab
 import com.mustafacan.core.viewmodel.BaseViewModel
 import com.mustafacan.cats.R

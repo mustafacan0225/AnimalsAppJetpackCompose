@@ -4,9 +4,9 @@ import com.mustafacan.data.network.repository.BirdsRepositoryImpl
 import com.mustafacan.data.network.repository.CatsRepositoryImpl
 import com.mustafacan.data.network.repository.DogsRepositoryImpl
 import com.mustafacan.data.network.repository.TemporaryDataRepositoryImpl
-import com.mustafacan.domain.repository.api_repository.BirdsRepository
-import com.mustafacan.domain.repository.api_repository.CatsRepository
-import com.mustafacan.domain.repository.api_repository.DogsRepository
+import com.mustafacan.domain.repository.api.BirdsRepository
+import com.mustafacan.domain.repository.api.CatsRepository
+import com.mustafacan.domain.repository.api.DogsRepository
 import com.mustafacan.domain.repository.temp.TempRepository
 import dagger.Module
 import dagger.Provides

@@ -1,7 +1,7 @@
 package com.mustafacan.cats.feature.cats
 
 import androidx.compose.runtime.Immutable
-import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.model.all.AllFavoriteAnimals
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.core.model.enums.SearchType
 import com.mustafacan.core.model.enums.ViewTypeForList

@@ -1,10 +1,9 @@
 package com.mustafacan.data.network.extension
 
 import com.mustafacan.data.network.datasource.ImagesOfAnimals
-//import com.mustafacan.data.roomdb.FavoriteAnimalsDao
 import com.mustafacan.domain.model.dogs.Dog
 import com.mustafacan.domain.model.response.ApiResponse
-import com.mustafacan.domain.usecase.dogs.roomdb_usecase.GetFavoriteDogsUseCase
+import com.mustafacan.domain.usecase.dogs.roomdb.GetFavoriteDogsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

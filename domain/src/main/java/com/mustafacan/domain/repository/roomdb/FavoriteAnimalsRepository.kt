@@ -1,6 +1,6 @@
 package com.mustafacan.domain.repository.roomdb
 
-import com.mustafacan.domain.model.AllFavoriteAnimals
+import com.mustafacan.domain.model.all.AllFavoriteAnimals
 import com.mustafacan.domain.model.birds.Bird
 import com.mustafacan.domain.model.cats.Cat
 import com.mustafacan.domain.model.dogs.Dog
